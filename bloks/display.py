@@ -49,7 +49,7 @@ def predict_and_show():
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         # combined_layers = np.copy(frame)                            # Frame to add annotations to
 
-        print("Time to preprocess frame: {time.time() - time_now}")
+        print(f"Time to preprocess frame: {time.time() - time_now}")
 
         # Marker Layer
         # cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)

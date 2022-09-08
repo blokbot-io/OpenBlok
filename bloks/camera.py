@@ -18,7 +18,7 @@ import numpy as np
 
 print("INFO | camera module loaded")
 
-FPS = 30  # Frames per second
+FPS = 60  # Frames per second
 
 
 # ------------------------ Continuous Capture Thread ------------------------ #
@@ -60,10 +60,14 @@ def continuous_capture():
             else:
                 # Rotate the frame if needed
                 if config.rotational_offset is not None:
+                    time_now = time.time()
+
                     rotation_matrix = cv2.getRotationMatrix2D(
                         (config.rotational_offset[0], config.rotational_offset[1]),
                         config.rotational_offset[2], 1)
                     frame = cv2.warpAffine(frame, rotation_matrix, (frame.shape[1], frame.shape[0]))
+
+                    print(f"Time to rotate: {time.time() - time_now}")
 
                 config.requested_frame = [np.copy(frame), Decimal(time.time())]
                 continue
