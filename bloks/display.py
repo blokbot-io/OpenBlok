@@ -5,6 +5,7 @@ TODO:
 '''
 
 import os
+import time
 import threading
 from decimal import Decimal
 
@@ -36,12 +37,19 @@ def predict_and_show():
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
+        time_now = time.time()  # Get the current time
+
         frame, frame_time = camera.grab_frame()                # Grab frame
         frame_time = Decimal(frame_time)     # Copy frame & time
-        frame_time_int = int(frame_time)                            # Convert time to int
+
+        print(f"Time to take frame: {time.time() - time_now}")
+
+        time_now = time.time()  # Get the current time
 
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         # combined_layers = np.copy(frame)                            # Frame to add annotations to
+
+        print("Time to preprocess frame: {time.time() - time_now}")
 
         # Marker Layer
         # cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
