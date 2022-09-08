@@ -88,7 +88,7 @@ def grab_frame():
     while config.frame_queue is None:
         time.sleep(.001)
 
-    config.requested_frame = np.copy(config.frame_queue[0], config.frame_queue[1])
+    config.requested_frame = [np.copy(config.frame_queue[0]), np.copy(config.frame_queue[1])]
     config.frame_queue = None  # When set to none, the next frame will be saved.
 
     return config.requested_frame[0], config.requested_frame[1]
