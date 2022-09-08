@@ -27,9 +27,10 @@ config.AruCo_center_y = None            # Variable | AruCo Marker Center Y
 config.AruCo_px_per_inch = None         # Variable | AruCo Marker Pixels Per Inch
 config.AruCo_angle_offset = None        # Variable | AruCo Marker Angle Offset
 
-config.mirror_offset = 4.075             # Configuration | Mirror Offset
-
-#  "marker_y_offset": "0.000", "y_bounding_offset": "2.250", "x_bounding_offset": "0.000"
+config.mirror_offset = 4.075            # Configuration | Mirror Offset
+config.marker_y_offset = 0.0            # Configuration | Marker Y Offset
+config.y_bounding_offset = 2.250        # Configuration | Y Bounding Offset
+config.x_bounding_offset = 0            # Configuration | X Bounding Offset
 
 check_results = []
 check_results.append(precheck.validate_requirements())
