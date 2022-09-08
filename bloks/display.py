@@ -27,8 +27,6 @@ def predict_and_show():
     Results are displayed on the screen.
     Grabs a frame and then predicts the blok.
     '''
-    blok_log.update_status("Starting camera preview.")  # Status update
-
     # --------------------------- Display Configuration -------------------------- #
     if os.environ.get('DISPLAY', '') == '':
         os.environ.__setitem__('DISPLAY', ':0')
@@ -102,8 +100,6 @@ def predict_and_show():
             break
 
     cv2.destroyAllWindows()
-
-    blok_log.update_status("Successfully stopped identification.")  # Status update
 
 
 # ---------------------------------------------------------------------------- #
