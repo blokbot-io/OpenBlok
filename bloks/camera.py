@@ -27,18 +27,6 @@ def continuous_capture():
     Camera continues streaming frames. Only the last frame is saved when requested.
     Launch this function in a thread.
     '''
-    def set_manual_exposure(dev_video_id, exposure_time):
-        '''
-        Manual exposure control
-        '''
-        commands = [
-            ("v4l2-ctl --device /dev/video"+str(dev_video_id)+" -c exposure_auto=3"),
-            ("v4l2-ctl --device /dev/video"+str(dev_video_id)+" -c exposure_auto=1"),
-            ("v4l2-ctl --device /dev/video"+str(dev_video_id)+" -c exposure_absolute="+str(exposure_time))
-        ]
-        for command in commands:
-            os.system(command)
-
     # Set Camera Parameters
     cap = cv2.VideoCapture(0)                   # Opens the USB camera stream
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)     # Set the width of the frame
@@ -47,7 +35,7 @@ def continuous_capture():
     cap.set(cv2.CAP_PROP_FPS, FPS)              # Set frames per second
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)         # Set the buffer size to 1
 
-    set_manual_exposure(0, 40)
+
 
     last_frame = None                           # Last frame taken
     while True:

@@ -18,7 +18,7 @@ from screeninfo import get_monitors  # Required to get monitor info
 from bloks import camera
 
 
-from bloks.utils import annotate, preprocess, bounding_boxes
+from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
 
 
 from modeled import location
@@ -69,26 +69,6 @@ def predict_and_show():
         side, top = location.get_location(preprocessed_frame)
 
         # ----------------------------- Object Locations ----------------------------- #
-        # Top View
-        try:
-            # combined_layers = annotate.mark_object_center(
-            #     combined_layers,
-            #     (top[0]+bound_corners[0][0],
-            #      top[1]+bound_corners[0][1])
-            # )
-
-            preprocessed_frame = annotate.mark_object_center(
-                preprocessed_frame,
-                (top[0], top[1])
-            )
-
-            part_in_frame = True
-        except (TypeError, IndexError, cv2.error):
-            if part_in_frame:
-                print("INFO | No top view center found, getting next frame.")
-                part_in_frame = False
-            continue
-
         # Side View
         try:
             # combined_layers = annotate.mark_object_center(
@@ -111,7 +91,44 @@ def predict_and_show():
                 part_in_frame = False
             continue
 
+        # Top View
+        try:
+            # combined_layers = annotate.mark_object_center(
+            #     combined_layers,
+            #     (top[0]+bound_corners[0][0],
+            #      top[1]+bound_corners[0][1])
+            # )
 
+            preprocessed_frame = annotate.mark_object_center(
+                preprocessed_frame,
+                (top[0], top[1])
+            )
+
+            top_crop = crop_square(
+                preprocessed_frame[:, preprocessed_frame.shape[1]//3:],
+                (top[0], top[1])
+            )
+
+            # combined_layers = annotate.visualize_crop(
+            #     combined_layers,
+            #     (top_crop[1][0]+bound_corners[0][0],
+            #      top_crop[1][1]+bound_corners[0][1]),
+            #     (top_crop[2][0]+bound_corners[0][0],
+            #      top_crop[2][1]+bound_corners[0][1])
+            # )
+
+            preprocessed_frame = annotate.visualize_crop(
+                preprocessed_frame,
+                (top_crop[1][0], top_crop[1][1]),
+                (top_crop[2][0], top_crop[2][1])
+            )
+
+            part_in_frame = True
+        except (TypeError, IndexError, cv2.error):
+            if part_in_frame:
+                print("INFO | No top view center found, getting next frame.")
+                part_in_frame = False
+            continue
 
 
         # ----------------------------- Display ----------------------------- #
