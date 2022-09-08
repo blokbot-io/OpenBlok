@@ -57,9 +57,9 @@ def continuous_capture():
 
         if not ret or last_frame is None:
             print("WARNING | Can't receive frame (stream end?). Exiting ...")
-            config.requested_frame = None
+            config.frame_queue = None
 
-        if config.requested_frame is None:
+        if config.frame_queue is None:
             # Rotate the frame if needed
             if config.rotational_offset is not None:
                 time_now = time.time()
@@ -71,7 +71,7 @@ def continuous_capture():
 
                 print(f"Time to rotate: {time.time() - time_now}")
 
-            config.requested_frame = [np.copy(last_frame), Decimal(time.time())]
+            config.frame_queue = [np.copy(last_frame), Decimal(time.time())]
             continue
 
 
@@ -81,10 +81,14 @@ def grab_frame():
     Call to get frame, returns the last taken frame.
     Returns: frame, time_stamp
     '''
-    config.requested_frame = None  # When set to none, the next frame will be saved.
+    if config.requested_frame is None:
+        config.frame_queue = None  # When set to none, the next frame will be saved.
 
     # Wait for the frame to be saved.
-    while config.requested_frame is None:
+    while config.frame_queue is None:
         time.sleep(.001)
+
+    config.requested_frame = np.copy(config.frame_queue[0], config.frame_queue[1])
+    config.frame_queue = None  # When set to none, the next frame will be saved.
 
     return config.requested_frame[0], config.requested_frame[1]

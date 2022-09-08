@@ -15,6 +15,7 @@ print("INFO | OpenBlok Loading...")
 # ---------------------------------------------------------------------------- #
 config.rotational_offset = None         # Degrees to rotate frame for alignment.
 
+config.frame_queue = None                 # Queue of frames to be displayed.
 config.requested_frame = None           # Flag | None to request a frame, else contains the frame.
 
 config.enable_sine_wave = False         # TEMP TO TEST
