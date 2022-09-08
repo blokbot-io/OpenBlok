@@ -57,22 +57,21 @@ def continuous_capture():
 
         if not ret or last_frame is None:
             print("WARNING | Can't receive frame (stream end?). Exiting ...")
-            config.frame_queue = None
-
-        if config.frame_queue is None:
-            # Rotate the frame if needed
-            if config.rotational_offset is not None:
-                time_now = time.time()
-
-                rotation_matrix = cv2.getRotationMatrix2D(
-                    (config.rotational_offset[0], config.rotational_offset[1]),
-                    config.rotational_offset[2], 1)
-                frame = cv2.warpAffine(last_frame, rotation_matrix, (last_frame.shape[1], last_frame.shape[0]))
-
-                print(f"Time to rotate: {time.time() - time_now}")
-
-            config.frame_queue = [np.copy(last_frame), Decimal(time.time())]
             continue
+
+        # Rotate the frame if needed
+        if config.rotational_offset is not None:
+            time_now = time.time()
+
+            rotation_matrix = cv2.getRotationMatrix2D(
+                (config.rotational_offset[0], config.rotational_offset[1]),
+                config.rotational_offset[2], 1)
+            frame = cv2.warpAffine(last_frame, rotation_matrix, (last_frame.shape[1], last_frame.shape[0]))
+
+            print(f"Time to rotate: {time.time() - time_now}")
+
+        config.frame_queue.put([np.copy(last_frame), Decimal(time.time())])
+        continue
 
 
 # ---------------------------- Grab Frame Function --------------------------- #
@@ -81,14 +80,12 @@ def grab_frame():
     Call to get frame, returns the last taken frame.
     Returns: frame, time_stamp
     '''
-    if config.requested_frame is None:
-        config.frame_queue = None  # When set to none, the next frame will be saved.
 
     # Wait for the frame to be saved.
-    while config.frame_queue is None:
-        time.sleep(.001)
+    # while config.frame_queue is None:
+    #     time.sleep(.001)
 
-    config.requested_frame = [np.copy(config.frame_queue[0]), Decimal(config.frame_queue[1])]
-    config.frame_queue = None  # When set to none, the next frame will be saved.
+    frame = config.frame_queue.get()
+    config.requested_frame = [frame[0], frame[1]]
 
     return config.requested_frame[0], config.requested_frame[1]
