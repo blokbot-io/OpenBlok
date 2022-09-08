@@ -85,6 +85,6 @@ def grab_frame():
 
     # Wait for the frame to be saved.
     while config.requested_frame is None:
-        time.sleep(.01)
+        time.sleep(.001)
 
     return config.requested_frame[0], config.requested_frame[1]
