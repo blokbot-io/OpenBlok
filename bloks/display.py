@@ -50,7 +50,7 @@ def predict_and_show():
         # combined_layers = np.copy(frame)                            # Frame to add annotations to
 
         # ------------------------------ Save the frame ------------------------------ #
-        cv2.imwrite(f"opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
         print(f"Time to preprocess frame: {time.time() - time_now}")
 
