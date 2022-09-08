@@ -3,6 +3,7 @@
 import cv2
 import numpy as np
 
+from .bounding_areas import bounding_boxes
 
 def bounding_areas(frame, bounding_corners):
     '''

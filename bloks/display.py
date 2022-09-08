@@ -36,7 +36,7 @@ def predict_and_show():
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        frame, frame_time = blok_camera.grab_frame()                # Grab frame
+        frame, frame_time = camera.grab_frame()                # Grab frame
         frame_time = Decimal(frame_time)     # Copy frame & time
         frame_time_int = int(frame_time)                            # Convert time to int
 
