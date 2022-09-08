@@ -51,7 +51,9 @@ def continuous_capture():
 
     last_frame = None                           # Last frame taken
     while True:
+        time_now = time.time()                  # Get the current time
         ret, last_frame = cap.read()                 # Read the frame
+        print(f"Time to read frame: {time.time() - time_now}")
 
         if not ret or last_frame is None:
             print("WARNING | Can't receive frame (stream end?). Exiting ...")
