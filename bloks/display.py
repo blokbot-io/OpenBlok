@@ -49,6 +49,9 @@ def predict_and_show():
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         # combined_layers = np.copy(frame)                            # Frame to add annotations to
 
+        # ------------------------------ Save the frame ------------------------------ #
+        cv2.imwrite(f"opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
         print(f"Time to preprocess frame: {time.time() - time_now}")
 
         # Marker Layer
@@ -107,6 +110,9 @@ def predict_and_show():
                 print("INFO | No side view center found, getting next frame.")
                 part_in_frame = False
             continue
+
+
+
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor
