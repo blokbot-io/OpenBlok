@@ -3,19 +3,16 @@
 import signal
 import threading
 
-
 import config
 
-from bloks.modules import camera
+from bloks import camera, display, precheck
 
-from bloks import precheck
-import display
 
+print("INFO | OpenBlok Loading...")
 
 # ---------------------------------------------------------------------------- #
 #                              Flags and Variables                             #
 # ---------------------------------------------------------------------------- #
-config.identifying = False
 config.rotational_offset = None         # Degrees to rotate frame for alignment.
 
 config.requested_frame = None           # Flag | None to request a frame, else contains the frame.
@@ -47,9 +44,10 @@ start_camera.start()
 print("INFO | Camera thread started.")
 
 # Display Thread
-start_display = threading.Thread(target=display.show)
-start_display.start()
+# start_display = threading.Thread(target=display.show)
+# start_display.start()
 
+display.predict_and_show_thread()
 
 print("Starting Infinite Loop...")
 signal.pause()      # Run until interrupted.

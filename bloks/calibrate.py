@@ -2,7 +2,7 @@
 
 import config
 
-from bloks.modules import camera
+from bloks import camera
 from bloks.utils import get_aruco, get_aruco_details
 
 
