@@ -41,18 +41,18 @@ def predict_and_show():
         frame_time_int = int(frame_time)                            # Convert time to int
 
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
-        combined_layers = np.copy(frame)                            # Frame to add annotations to
+        # combined_layers = np.copy(frame)                            # Frame to add annotations to
 
         # Marker Layer
-        cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
+        # cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
 
         # Split Line Layer
-        cut_distance = int(config.AruCo_center_x + (config.mirror_offset*config.AruCo_px_per_inch))
-        cv2.line(combined_layers, (cut_distance, 0), (cut_distance, frame.shape[0]), (0, 0, 255), 2)
+        # cut_distance = int(config.AruCo_center_x + (config.mirror_offset*config.AruCo_px_per_inch))
+        # cv2.line(combined_layers, (cut_distance, 0), (cut_distance, frame.shape[0]), (0, 0, 255), 2)
 
         # Bounding Box Layer
-        bound_corners = bounding_boxes()
-        combined_layers = annotate.bounding_areas(combined_layers, bound_corners)
+        # bound_corners = bounding_boxes()
+        # combined_layers = annotate.bounding_areas(combined_layers, bound_corners)
 
         # Get Object Locations
         side, top = location.get_location(preprocessed_frame)
@@ -60,10 +60,15 @@ def predict_and_show():
         # ----------------------------- Object Locations ----------------------------- #
         # Top View
         try:
-            combined_layers = annotate.mark_object_center(
-                combined_layers,
-                (top[0]+bound_corners[0][0],
-                 top[1]+bound_corners[0][1])
+            # combined_layers = annotate.mark_object_center(
+            #     combined_layers,
+            #     (top[0]+bound_corners[0][0],
+            #      top[1]+bound_corners[0][1])
+            # )
+
+            preprocessed_frame = annotate.mark_object_center(
+                preprocessed_frame,
+                (top[0], top[1])
             )
 
             part_in_frame = True
@@ -75,10 +80,16 @@ def predict_and_show():
 
         # Side View
         try:
-            combined_layers = annotate.mark_object_center(
-                combined_layers,
-                (side[0]+bound_corners[2][0],
-                 side[1]+bound_corners[0][1]),
+            # combined_layers = annotate.mark_object_center(
+            #     combined_layers,
+            #     (side[0]+bound_corners[2][0],
+            #      side[1]+bound_corners[0][1]),
+            #     (255, 0, 0)
+            # )
+
+            preprocessed_frame = annotate.mark_object_center(
+                preprocessed_frame,
+                (side[0], side[1]),
                 (255, 0, 0)
             )
 
@@ -91,13 +102,14 @@ def predict_and_show():
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor
-        frame_resized = cv2.resize(combined_layers, (monitor.width, monitor.height))
+        # frame_resized = cv2.resize(combined_layers, (monitor.width, monitor.height))
+        frame_resized = cv2.resize(preprocessed_frame, (monitor.width, monitor.height))
 
         # ----------------------------- Display Image ------------------------------- #
-        # cv2.imshow('Combined', frame_resized)
+        cv2.imshow('Combined', frame_resized)
 
-        # if cv2.waitKey(10) & 0xFF == ord('q'):
-        #     break
+        if cv2.waitKey(10) & 0xFF == ord('q'):
+            break
 
     cv2.destroyAllWindows()
 
