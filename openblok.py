@@ -5,7 +5,7 @@ import threading
 
 import config
 
-from bloks import camera, display, precheck
+from bloks import camera, calibrate, display, precheck
 
 
 print("INFO | OpenBlok Loading...")
@@ -51,7 +51,18 @@ print("INFO | Camera thread started.")
 # start_display = threading.Thread(target=display.show)
 # start_display.start()
 
-display.predict_and_show_thread()
 
+# ---------------------------------------------------------------------------- #
+#                                  Calibration                                 #
+# ---------------------------------------------------------------------------- #
+if calibrate.calibration():
+    print("INFO | Calibration successful.")
+
+
+
+# ---------------------------------------------------------------------------- #
+#                                   Main Loop                                  #
+# ---------------------------------------------------------------------------- #
+display.predict_and_show_thread()
 print("Starting Infinite Loop...")
 signal.pause()      # Run until interrupted.
