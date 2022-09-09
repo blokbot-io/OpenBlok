@@ -58,6 +58,7 @@ def predict_and_show():
         # Get Object Locations
         side, top = location.get_location(preprocessed_frame)
 
+        top[0] = top[0] - preprocessed_frame.shape[1]//3
 
         # ----------------------------- Object Locations ----------------------------- #
         # Side View
