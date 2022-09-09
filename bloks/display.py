@@ -47,7 +47,7 @@ def predict_and_show():
         time_now = time.time()  # Get the current time
 
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
-        # combined_layers = np.copy(frame)                            # Frame to add annotations to
+        combined_layers = np.copy(frame)                            # Frame to add annotations to
 
         # ------------------------------ Save the frame ------------------------------ #
         cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
@@ -55,15 +55,15 @@ def predict_and_show():
         print(f"Time to preprocess frame: {time.time() - time_now}")
 
         # Marker Layer
-        # cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
+        cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
 
         # Split Line Layer
-        # cut_distance = int(config.AruCo_center_x + (config.mirror_offset*config.AruCo_px_per_inch))
-        # cv2.line(combined_layers, (cut_distance, 0), (cut_distance, frame.shape[0]), (0, 0, 255), 2)
+        cut_distance = int(config.AruCo_center_x + (config.mirror_offset*config.AruCo_px_per_inch))
+        cv2.line(combined_layers, (cut_distance, 0), (cut_distance, frame.shape[0]), (0, 0, 255), 2)
 
         # Bounding Box Layer
-        # bound_corners = bounding_boxes()
-        # combined_layers = annotate.bounding_areas(combined_layers, bound_corners)
+        bound_corners = bounding_boxes()
+        combined_layers = annotate.bounding_areas(combined_layers, bound_corners)
 
         # Get Object Locations
         side, top = location.get_location(preprocessed_frame)
@@ -132,9 +132,9 @@ def predict_and_show():
 
 
         # ----------------------------- Display ----------------------------- #
-        # Resize image to fit monitor
-        # frame_resized = cv2.resize(combined_layers, (monitor.width, monitor.height))
-        frame_resized = cv2.resize(preprocessed_frame, (monitor.width, monitor.height))
+        # Resize image to fit monitor (does not maintain aspect ratio)
+        frame_resized = cv2.resize(combined_layers, (monitor.width, monitor.height))
+
 
         # ----------------------------- Display Image ------------------------------- #
         cv2.imshow('Combined', frame_resized)
