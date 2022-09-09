@@ -58,72 +58,81 @@ def predict_and_show():
         # Get Object Locations
         side, top = location.get_location(preprocessed_frame)
 
-        top[0] = top[0] - preprocessed_frame.shape[1]//3
+        if side[0] > 0 and side[1] > 0 and top[0] > 0 and top[1] > 0:
+            top[0] = top[0] - preprocessed_frame.shape[1]//3
 
-        # ----------------------------- Object Locations ----------------------------- #
-        # Side View
-        combined_layers = annotate.mark_object_center(
-            combined_layers,
-            (side[0]+bound_corners[2][0], side[1]+bound_corners[0][1]),
-            (255, 0, 0)
-        )
-
-        side_crop = crop_square(
-            preprocessed_frame[:, :preprocessed_frame.shape[1]//3],
-            (side[0], side[1])
-        )
-
-        combined_layers = annotate.visualize_crop(
-            combined_layers,
-            (side_crop[1][0]+bound_corners[2][0], side_crop[1][1]+bound_corners[2][1]),
-            (side_crop[2][0]+bound_corners[2][0], side_crop[2][1]+bound_corners[2][1]),
-            (255, 0, 0)
-        )
-
-        # Top View
-        combined_layers = annotate.mark_object_center(
-            combined_layers,
-            (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
-        )
-
-        top_crop = crop_square(
-            preprocessed_frame[:, preprocessed_frame.shape[1]//3:],
-            (top[0], top[1])
-        )
-
-        combined_layers = annotate.visualize_crop(
-            combined_layers,
-            (top_crop[1][0]+bound_corners[0][0], top_crop[1][1]+bound_corners[0][1]),
-            (top_crop[2][0]+bound_corners[0][0], top_crop[2][1]+bound_corners[0][1])
-        )
-
-        # --------------------------- object Classification -------------------------- #
-        view_concatenated = np.concatenate((side_crop[0], top_crop[0]), axis=1)
-        predictions = e2e.get_predictions(view_concatenated)
-        design = predictions["design"][0]
-        design_confidence = predictions["design"][1]
-        category = predictions["category"][0]
-        category_confidence = predictions["category"][1]
-
-        if predictions is not None:
-            combined_layers = cv2.putText(
+            # ----------------------------- Object Locations ----------------------------- #
+            # Side View
+            combined_layers = annotate.mark_object_center(
                 combined_layers,
-                f"Design | #{design} | {design_confidence:.2f}%",
-                (top[0], top[1]-50),
-                cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+                (side[0]+bound_corners[2][0], side[1]+bound_corners[0][1]),
+                (255, 0, 0)
             )
 
-            combined_layers = cv2.putText(
-                combined_layers,
-                f"Category | {category} | {category_confidence:.2f}%",
-                (top[0], top[1]-1),
-                cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+            side_crop = crop_square(
+                preprocessed_frame[:, :preprocessed_frame.shape[1]//3],
+                (side[0], side[1])
             )
 
-        # ------------------------------ Save the frame ------------------------------ #
-        # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-        # cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-        # cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            combined_layers = annotate.visualize_crop(
+                combined_layers,
+                (side_crop[1][0]+bound_corners[2][0], side_crop[1][1]+bound_corners[2][1]),
+                (side_crop[2][0]+bound_corners[2][0], side_crop[2][1]+bound_corners[2][1]),
+                (255, 0, 0)
+            )
+
+            # Top View
+            combined_layers = annotate.mark_object_center(
+                combined_layers,
+                (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
+            )
+
+            top_crop = crop_square(
+                preprocessed_frame[:, preprocessed_frame.shape[1]//3:],
+                (top[0], top[1])
+            )
+
+            combined_layers = annotate.visualize_crop(
+                combined_layers,
+                (top_crop[1][0]+bound_corners[0][0], top_crop[1][1]+bound_corners[0][1]),
+                (top_crop[2][0]+bound_corners[0][0], top_crop[2][1]+bound_corners[0][1])
+            )
+
+            # --------------------------- object Classification -------------------------- #
+            view_concatenated = np.concatenate((side_crop[0], top_crop[0]), axis=1)
+            predictions = e2e.get_predictions(view_concatenated)
+            design = predictions["design"][0]
+            design_confidence = predictions["design"][1]
+            category = predictions["category"][0]
+            category_confidence = predictions["category"][1]
+
+            if predictions is not None:
+                combined_layers = cv2.putText(
+                    combined_layers,
+                    f"Design | #{design} | {design_confidence:.2f}%",
+                    (top[0], top[1]-50),
+                    cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+                )
+
+                combined_layers = cv2.putText(
+                    combined_layers,
+                    f"Category | {category} | {category_confidence:.2f}%",
+                    (top[0], top[1]-1),
+                    cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+                )
+
+            # ------------------------------ Save the frame ------------------------------ #
+            # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            # cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            # cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+        else:
+            combined_layers = cv2.putText(
+                    combined_layers,
+                    "LEGO NOT FOUND",
+                    (combined_layers.shape[1]/3, top[1]-50),
+                    cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
+                )
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor (does not maintain aspect ratio)
