@@ -31,7 +31,7 @@ def continuous_capture():
     cap = cv2.VideoCapture(0)                   # Opens the USB camera stream
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)     # Set the width of the frame
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1440)    # Set the height of the frame
-    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)         # Set the buffer size to 1
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 2)         # Set the buffer size to 1
     cap.set(cv2.CAP_PROP_FPS, FPS)              # Set frames per second
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
@@ -57,6 +57,10 @@ def continuous_capture():
             last_frame = cv2.warpAffine(last_frame, rotation_matrix, (last_frame.shape[1], last_frame.shape[0]))
 
             print(f"Time to rotate: {time.time() - time_now}")
+
+        # Remove stale frame from queue
+        if config.frame_queue.full():
+            config.frame_queue.get()
 
         config.frame_queue.put([np.copy(last_frame), Decimal(time.time())])
         continue
