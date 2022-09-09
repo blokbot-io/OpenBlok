@@ -2,7 +2,7 @@
 
 import config
 
-BOX_WIDTH = 4.5
+BOX_WIDTH = 5
 
 
 def bounding_boxes():
@@ -24,7 +24,7 @@ def bounding_boxes():
     center_y = config.AruCo_center_y - (config.AruCo_px_per_inch * config.marker_y_offset)  # Pixels
     top_y = int(center_y - (box_width_pixel / 2))  # Pixels
 
-    cut_distance_right_offset = int(cut_distance + (config.AruCo_px_per_inch * .25))
+    cut_distance_right_offset = int(cut_distance + (config.AruCo_px_per_inch * .5))
 
     top_bounding_box_starting_point = (cut_distance_right_offset, top_y)
 
