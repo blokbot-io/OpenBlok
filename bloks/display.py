@@ -110,7 +110,7 @@ def predict_and_show():
                 combined_layers = cv2.putText(
                     combined_layers,
                     f"Design | #{design} | {design_confidence:.2f}%",
-                    (top[0], top[1]-50),
+                    (top[0]-10, top[1]-30),
                     cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
                 )
 
