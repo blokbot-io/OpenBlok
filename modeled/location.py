@@ -4,7 +4,6 @@ import os
 import json
 
 import cv2
-
 import tensorflow as tf
 
 
