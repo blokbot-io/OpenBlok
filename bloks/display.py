@@ -37,22 +37,12 @@ def predict_and_show():
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        time_now = time.time()  # Get the current time
-
-        frame, frame_time = camera.grab_frame()                # Grab frame
-        frame_time = Decimal(frame_time)     # Copy frame & time
-
-        print(f"Time to take frame: {time.time() - time_now}")
-
-        time_now = time.time()  # Get the current time
+        frame, frame_time = camera.grab_frame() # Grab frame
+        frame_time = Decimal(frame_time)        # Copy frame & time
 
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         combined_layers = np.copy(frame)                            # Frame to add annotations to
 
-        # ------------------------------ Save the frame ------------------------------ #
-        cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-
-        print(f"Time to preprocess frame: {time.time() - time_now}")
 
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
@@ -67,6 +57,7 @@ def predict_and_show():
 
         # Get Object Locations
         side, top = location.get_location(preprocessed_frame)
+
 
         # ----------------------------- Object Locations ----------------------------- #
         # Side View
@@ -104,6 +95,13 @@ def predict_and_show():
             (top_crop[1][0]+bound_corners[0][0], top_crop[1][1]+bound_corners[0][1]),
             (top_crop[2][0]+bound_corners[0][0], top_crop[2][1]+bound_corners[0][1])
         )
+
+        # --------------------------- object Classification -------------------------- #
+        view_concatenated = np.concatenate((side_crop[0], top_crop[0]), axis=1)
+
+        # ------------------------------ Save the frame ------------------------------ #
+        cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+        cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor (does not maintain aspect ratio)
