@@ -44,4 +44,4 @@ def get_location(frame):
     top_x = int(top[0][0] * frame_shape[1])
     top_y = int(top[0][1] * frame_shape[0])
 
-    return (side_x, side_y), (top_x, top_y)
+    return [side_x, side_y], [top_x, top_y]
