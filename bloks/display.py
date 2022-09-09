@@ -119,8 +119,8 @@ def predict_and_show():
 
             preprocessed_frame = annotate.visualize_crop(
                 preprocessed_frame,
-                (top_crop[1][0], top_crop[1][1]),
-                (top_crop[2][0], top_crop[2][1])
+                (top_crop[1][0]+preprocessed_frame.shape[1]//3, top_crop[1][1]),
+                (top_crop[2][0]+preprocessed_frame.shape[1]//3, top_crop[2][1])
             )
 
             part_in_frame = True
