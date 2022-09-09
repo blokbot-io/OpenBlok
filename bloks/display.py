@@ -71,18 +71,18 @@ def predict_and_show():
         # ----------------------------- Object Locations ----------------------------- #
         # Side View
         try:
-            # combined_layers = annotate.mark_object_center(
-            #     combined_layers,
-            #     (side[0]+bound_corners[2][0],
-            #      side[1]+bound_corners[0][1]),
-            #     (255, 0, 0)
-            # )
-
-            preprocessed_frame = annotate.mark_object_center(
-                preprocessed_frame,
-                (side[0], side[1]),
+            combined_layers = annotate.mark_object_center(
+                combined_layers,
+                (side[0]+bound_corners[2][0],
+                 side[1]+bound_corners[0][1]),
                 (255, 0, 0)
             )
+
+            # preprocessed_frame = annotate.mark_object_center(
+            #     preprocessed_frame,
+            #     (side[0], side[1]),
+            #     (255, 0, 0)
+            # )
 
             part_in_frame = True
         except (TypeError, IndexError, cv2.error):
