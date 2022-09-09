@@ -76,11 +76,22 @@ def predict_and_show():
             (255, 0, 0)
         )
 
+        side_crop = crop_square(
+            preprocessed_frame[:, :preprocessed_frame.shape[1]//3],
+            (side[0], side[1])
+        )
+
+        combined_layers = annotate.visualize_crop(
+            combined_layers,
+            (side_crop[1][0]+bound_corners[2][0], side_crop[1][1]+bound_corners[2][1]),
+            (side_crop[2][0]+bound_corners[2][0], side_crop[2][1]+bound_corners[2][1]),
+            (255, 0, 0)
+        )
+
         # Top View
         combined_layers = annotate.mark_object_center(
             combined_layers,
-            (top[0]+bound_corners[0][0],
-                top[1]+bound_corners[0][1])
+            (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
         )
 
         top_crop = crop_square(
@@ -90,10 +101,8 @@ def predict_and_show():
 
         combined_layers = annotate.visualize_crop(
             combined_layers,
-            (top_crop[1][0]+bound_corners[0][0],
-                top_crop[1][1]+bound_corners[0][1]),
-            (top_crop[2][0]+bound_corners[0][0],
-                top_crop[2][1]+bound_corners[0][1])
+            (top_crop[1][0]+bound_corners[0][0], top_crop[1][1]+bound_corners[0][1]),
+            (top_crop[2][0]+bound_corners[0][0], top_crop[2][1]+bound_corners[0][1])
         )
 
         # ----------------------------- Display ----------------------------- #
