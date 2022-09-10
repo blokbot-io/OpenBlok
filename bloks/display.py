@@ -130,7 +130,7 @@ def predict_and_show():
             combined_layers = cv2.putText(
                     combined_layers,
                     "LEGO NOT FOUND",
-                    (combined_layers.shape[1]//3, 50),
+                    (combined_layers.shape[1]//3, 200),
                     cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
                 )
 
