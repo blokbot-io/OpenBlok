@@ -9,6 +9,8 @@
 #define RELAYPIN 3
 #define ledpin 13 // led on arduino pin 13 to visualize beam breaking
 
+int sensorState = 0, lastState = 0; // variable for reading the breakbeam status
+
 void setup()
 {
     pinMode(pwm, OUTPUT);
