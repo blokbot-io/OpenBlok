@@ -127,6 +127,8 @@ def predict_and_show():
             # cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
         else:
+            cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
             combined_layers = cv2.putText(
                     combined_layers,
                     "LEGO NOT FOUND",
