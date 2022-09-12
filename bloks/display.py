@@ -57,6 +57,7 @@ def predict_and_show():
 
         # Get Object Locations
         side, top = location.get_location(preprocessed_frame)
+        og_top = top.copy()
 
         if side[0] > 0 and side[1] > 0 and top[0] > 0 and top[1] > 0:
             top[0] = top[0] - preprocessed_frame.shape[1]//3
@@ -122,12 +123,14 @@ def predict_and_show():
                 )
 
             # ------------------------------ Save the frame ------------------------------ #
-            cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             # cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             # cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
         else:
-            cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+            # reduced_size = cv2.resize(preprocessed_frame, (900, 600), interpolation=cv2.INTER_CUBIC)
+            # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{og_top[0]}_{og_top[1]}.png", reduced_size, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
             combined_layers = cv2.putText(
                     combined_layers,
