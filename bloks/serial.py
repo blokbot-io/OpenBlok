@@ -50,8 +50,8 @@ def update_position_schedule(capture_time, position, part_number, confidence):
         BIN_ASSIGNMENT.append(str(part_number))
 
     # If part number exceeds the number of bins available, place it in the last bin.
-    if BIN_ASSIGNMENT.index(str(part_number)) > 11:
-        bin_number = 12
+    if BIN_ASSIGNMENT.index(str(part_number)) > 35:
+        bin_number = 36
     else:
         bin_number = BIN_ASSIGNMENT.index(str(part_number))+1
 
