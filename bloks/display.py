@@ -110,7 +110,7 @@ def predict_and_show():
 
             if predictions is not None:
 
-                if design_confidence<0.5 and category_confidence<0.5:
+                if design_confidence<0.5 or category_confidence<0.5:
                      combined_layers = cv2.putText(
                     combined_layers,
                     "CONFIDENCE TOO LOW",
