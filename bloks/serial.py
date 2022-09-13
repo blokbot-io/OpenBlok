@@ -72,10 +72,8 @@ def update_position_schedule(capture_time, position, part_number, confidence):
         print(f"-----> Part Velocity: {config.part_velocity} <-----")
         drop_time = time.time()
     else:
-        try:
-            time_left_to_drop = Decimal(remaining_distance) / config.part_velocity  # in seconds
-        except decimal.DivisionByZero:
-            time_left_to_drop = 0
+
+        time_left_to_drop = Decimal(remaining_distance) / config.part_velocity  # in seconds
         drop_time = capture_time + Decimal(time_left_to_drop)            # in seconds
 
     if len(POSITION_SCHEDULE) == 0:
