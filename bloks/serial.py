@@ -12,7 +12,8 @@ try:
 except serial.serialutil.SerialException as err:
     print(f"Error starting serial connection: {err}")
 
-config.part_velocity = None  # in/s origional .635 then 0.66
+# config.part_velocity = None  # in/s origional .635 then 0.66
+config.part_velocity = 0.66
 
 
 TRAVEL_DISTANCE = 40  # in
