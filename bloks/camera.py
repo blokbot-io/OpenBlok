@@ -41,7 +41,7 @@ def continuous_capture():
     while True:
         time_now = time.time()                  # Get the current time
         ret, last_frame = cap.read()                 # Read the frame
-        print(f"Time to read frame: {time.time() - time_now}")
+        # print(f"Time to read frame: {time.time() - time_now}")
 
         if not ret or last_frame is None:
             print("WARNING | Can't receive frame (stream end?). Exiting ...")
@@ -56,7 +56,7 @@ def continuous_capture():
                 config.rotational_offset[2], 1)
             last_frame = cv2.warpAffine(last_frame, rotation_matrix, (last_frame.shape[1], last_frame.shape[0]))
 
-            print(f"Time to rotate: {time.time() - time_now}")
+            # print(f"Time to rotate: {time.time() - time_now}")
 
         # Remove stale frame from queue
         if config.frame_queue.full():

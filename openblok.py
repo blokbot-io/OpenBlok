@@ -6,7 +6,7 @@ from queue import Queue
 
 import config
 
-from bloks import camera, calibrate, display, precheck
+from bloks import camera, calibrate, display, precheck, serial
 
 
 print("INFO | OpenBlok Loading...")
@@ -49,6 +49,11 @@ if False in check_results:
 start_camera = threading.Thread(target=camera.continuous_capture)
 start_camera.start()
 print("INFO | Camera thread started.")
+
+# Start Carousel Position Thread
+carousel_position = threading.Thread(target=serial.carousel_position)
+carousel_position.start()
+print("Carousel position thread started.")
 
 # Display Thread
 # start_display = threading.Thread(target=display.show)
