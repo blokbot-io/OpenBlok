@@ -128,13 +128,7 @@ def predict_and_show():
                     design, design_confidence
                 )
 
-                for count, next_bin in enumerate(bin_schedule):
-                    combined_layers = cv2.putText(
-                        combined_layers,
-                        f"Bin #{next_bin[0]}",
-                        (20, (count*50)+30),
-                        cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
-                    )
+
 
             # ------------------------------ Save the frame ------------------------------ #
             # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
@@ -152,6 +146,29 @@ def predict_and_show():
                     (combined_layers.shape[1]//3, 200),
                     cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
                 )
+
+        for count, next_bin in enumerate(bin_schedule):
+            combined_layers = cv2.putText(
+                combined_layers,
+                f"Bin #{next_bin[0]}",
+                (20, (count*50)+30),
+                cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
+            )
+
+        # Display part velocity in lower left
+        combined_layers = cv2.putText(
+            combined_layers,
+            f"Part Velocity: {config.part_velocity:.2f} in/s",
+            (20, combined_layers.shape[0]-200),
+            cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
+        )
+
+        # Display the resulting frame
+        cv2.imshow('frame', combined_layers)
+
+        # Press Q on keyboard to  exit
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor (does not maintain aspect ratio)
