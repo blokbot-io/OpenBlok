@@ -33,7 +33,8 @@ def predict_and_show():
         os.environ.__setitem__('DISPLAY', ':0')
     monitor = get_monitors()[0]  # Return monitor parameters (width, height)
 
-    part_in_frame = True  # Flag to indicate if a part is in the frame
+    bin_schedule = None
+
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
@@ -146,14 +147,14 @@ def predict_and_show():
                     (combined_layers.shape[1]//3, 200),
                     cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
                 )
-
-        for count, next_bin in enumerate(bin_schedule):
-            combined_layers = cv2.putText(
-                combined_layers,
-                f"Bin #{next_bin[0]}",
-                (20, (count*50)+30),
-                cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
-            )
+        if bin_schedule is not None:
+            for count, next_bin in enumerate(bin_schedule):
+                combined_layers = cv2.putText(
+                    combined_layers,
+                    f"Bin #{next_bin[0]}",
+                    (20, (count*50)+30),
+                    cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
+                )
 
         # Display part velocity in lower left
         combined_layers = cv2.putText(
