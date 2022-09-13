@@ -144,12 +144,12 @@ def predict_and_show():
             # ------------------------------ Save the frame ------------------------------ #
             # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
             # cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-            cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            # cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
         else:
 
-            # reduced_size = cv2.resize(preprocessed_frame, (900, 600), interpolation=cv2.INTER_CUBIC)
-            # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{og_top[0]}_{og_top[1]}.png", reduced_size, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+            reduced_size = cv2.resize(preprocessed_frame, (900, 600), interpolation=cv2.INTER_CUBIC)
+            cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{og_top[0]}_{og_top[1]}.png", reduced_size, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
             combined_layers = cv2.putText(
                     combined_layers,
