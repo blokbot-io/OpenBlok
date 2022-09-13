@@ -129,7 +129,7 @@ def predict_and_show():
                     combined_layers = cv2.putText(
                         combined_layers,
                         f"Category | {category} | {category_confidence:.2f}%",
-                        (combined_layers.shape[1]//3, 400),
+                        (combined_layers.shape[1]//3, 300),
                         cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
                     )
 
