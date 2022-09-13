@@ -15,7 +15,7 @@ import numpy as np
 from screeninfo import get_monitors  # Required to get monitor info
 
 
-from bloks import camera
+from bloks import camera, serial
 
 
 from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
@@ -121,6 +121,20 @@ def predict_and_show():
                     (top[0], top[1]-1),
                     cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
                 )
+
+            # Set bin location to prediction
+                bin_schedule = serial.update_position_schedule(
+                    frame_time, top[0],
+                    design, design_confidence
+                )
+
+                for count, next_bin in enumerate(bin_schedule):
+                    combined_layers = cv2.putText(
+                        combined_layers,
+                        f"Bin #{next_bin[0]}",
+                        (20, (count*50)+30),
+                        cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
+                    )
 
             # ------------------------------ Save the frame ------------------------------ #
             # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
