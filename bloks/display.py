@@ -60,7 +60,7 @@ def predict_and_show():
         side, top = location.get_location(preprocessed_frame)
         og_top = top.copy()
 
-        if side[0] > 0 and side[1] > 0 and top[0] > 0 and top[1] > 0:
+        if side[0] > 0 and side[1] > 0 and top[0] > 0 and top[1] > 0 or top[0]>preprocessed_frame.shape[1]//3:
             top[0] = top[0] - preprocessed_frame.shape[1]//3
 
             # ----------------------------- Object Locations ----------------------------- #
@@ -110,7 +110,7 @@ def predict_and_show():
 
             if predictions is not None:
 
-                if design_confidence<75 or category_confidence<75:
+                if design_confidence<60 or category_confidence<60:
                      combined_layers = cv2.putText(
                     combined_layers,
                     "CONFIDENCE TOO LOW",

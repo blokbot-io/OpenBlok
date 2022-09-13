@@ -50,6 +50,11 @@ start_camera = threading.Thread(target=camera.continuous_capture)
 start_camera.start()
 print("INFO | Camera thread started.")
 
+ # Start Serial Listener
+serial_listener = threading.Thread(target=serial.serial_listener)
+serial_listener.start()
+print("Serial listener thread started.")
+
 # Start Carousel Position Thread
 carousel_position = threading.Thread(target=serial.carousel_position)
 carousel_position.start()
