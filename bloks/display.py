@@ -109,25 +109,35 @@ def predict_and_show():
             category_confidence = predictions["category"][1]
 
             if predictions is not None:
-                combined_layers = cv2.putText(
+
+                if design_confidence<0.5 and category_confidence<0.5:
+                     combined_layers = cv2.putText(
                     combined_layers,
-                    f"Design | #{design} | {design_confidence:.2f}%",
-                    (top[0]-10, top[1]-30),
-                    cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+                    "CONFIDENCE TOO LOW",
+                    (combined_layers.shape[1]//3, 200),
+                    cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
                 )
 
-                combined_layers = cv2.putText(
-                    combined_layers,
-                    f"Category | {category} | {category_confidence:.2f}%",
-                    (top[0], top[1]-1),
-                    cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
-                )
+                else:
+                    combined_layers = cv2.putText(
+                        combined_layers,
+                        f"Design | #{design} | {design_confidence:.2f}%",
+                        (combined_layers.shape[1]//3, 200),
+                        cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+                    )
 
-            # Set bin location to prediction
-                bin_schedule = serial.update_position_schedule(
-                    frame_time, top[0],
-                    design, design_confidence
-                )
+                    combined_layers = cv2.putText(
+                        combined_layers,
+                        f"Category | {category} | {category_confidence:.2f}%",
+                        (combined_layers.shape[1]//3, 400),
+                        cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+                    )
+
+                    # Set bin location to prediction
+                    bin_schedule = serial.update_position_schedule(
+                        frame_time, top[0],
+                        design, design_confidence
+                    )
 
 
 

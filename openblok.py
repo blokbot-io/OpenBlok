@@ -53,7 +53,7 @@ print("INFO | Camera thread started.")
 # Start Carousel Position Thread
 carousel_position = threading.Thread(target=serial.carousel_position)
 carousel_position.start()
-print("Carousel position thread started.")
+print("INFO | Carousel position thread started.")
 
 # Display Thread
 # start_display = threading.Thread(target=display.show)
