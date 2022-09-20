@@ -7,6 +7,13 @@
 
 </div>
 
+## Table of Contents
+
+- [blokbot.io | OpenBlok](#blokbotio--openblok)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+- [Directory Structure](#directory-structure)
+
 OpenBlok is an open source Lego identification and sorting system using AI models developed by [blokbot.io](https://blokbot.io)
 
 The identification system requires a specific camera setup that can be purchased from [blokbot.io](https://blokbot.io) or can be created by referencing our technical guide.
