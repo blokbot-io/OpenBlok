@@ -1,4 +1,6 @@
 ''' Manages the cv2 output for the display module '''
+# pylint: disable=C2801
+
 
 import os
 import sys
