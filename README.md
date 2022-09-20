@@ -2,6 +2,9 @@
 
 # blokbot.io | OpenBlok
 
+[![Code Quality](https://github.com/blokbot-io/OpenBlok/actions/workflows/pylint.yml/badge.svg)](https://github.com/blokbot-io/OpenBlok/actions/workflows/pylint.yml)
+&nbsp;
+
 </div>
 
 OpenBlok is an open source Lego identification and sorting system using AI models developed by [blokbot.io](https://blokbot.io)

@@ -1,6 +1,7 @@
 ''' Manages the cv2 output for the display module '''
 
 import os
+import sys
 
 import cv2
 import numpy as np
@@ -22,4 +23,4 @@ cv2.imshow('canvas', canvas)
 
 if cv2.waitKey(1) & 0xFF == ord('q'):
     cv2.destroyAllWindows()
-    exit()
+    sys.exit()
