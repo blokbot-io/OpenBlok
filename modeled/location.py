@@ -15,8 +15,9 @@ LOCATION_MODEL = os.path.join(MODELS, 'location_model.h5')
 
 # -------------------------------- Load Model -------------------------------- #
 model = tf.keras.models.load_model(LOCATION_MODEL)
-with open(os.path.join(MODELS, 'location_model.json')) as properties_file:
+with open(os.path.join(MODELS, 'location_model.json'), encoding="UTF-8") as properties_file:
     model_properties = json.load(properties_file)
+
 
 def get_location(frame):
     '''
@@ -28,7 +29,7 @@ def get_location(frame):
     frame_resized = cv2.resize(
         frame,
         (model_properties['input_width'], model_properties['input_height']),
-        interpolation = cv2.INTER_CUBIC
+        interpolation=cv2.INTER_CUBIC
     )
 
     frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)

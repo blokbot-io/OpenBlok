@@ -15,8 +15,9 @@ E2E_MODEL = os.path.join(MODELS, 'e2e_model.h5')
 
 # -------------------------------- Load Model -------------------------------- #
 model = tf.keras.models.load_model(E2E_MODEL)
-with open(os.path.join(MODELS, 'e2e_model.json')) as properties_file:
+with open(os.path.join(MODELS, 'e2e_model.json'), encoding="UTF-8") as properties_file:
     model_properties = json.load(properties_file)
+
 
 def get_predictions(raw):
     '''

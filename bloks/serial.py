@@ -2,7 +2,6 @@
 
 import time
 from decimal import Decimal
-from unicodedata import decimal
 
 import config
 import serial

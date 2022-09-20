@@ -5,7 +5,6 @@ TODO:
 '''
 
 import os
-import time
 import threading
 from decimal import Decimal
 
@@ -23,6 +22,7 @@ from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
 
 from modeled import location, e2e
 
+
 def predict_and_show():
     '''
     Results are displayed on the screen.
@@ -35,15 +35,13 @@ def predict_and_show():
 
     bin_schedule = None
 
-
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        frame, frame_time = camera.grab_frame() # Grab frame
+        frame, frame_time = camera.grab_frame()  # Grab frame
         frame_time = Decimal(frame_time)        # Copy frame & time
 
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         combined_layers = np.copy(frame)                            # Frame to add annotations to
-
 
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
@@ -58,9 +56,8 @@ def predict_and_show():
 
         # Get Object Locations
         side, top = location.get_location(preprocessed_frame)
-        og_top = top.copy()
 
-        if side[0] > 0 and side[1] > 0 and top[0] > 0 and top[1] > 0 and top[0] > preprocessed_frame.shape[1]//3:
+        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > preprocessed_frame.shape[1]//3:
             top[0] = top[0] - preprocessed_frame.shape[1]//3
 
             # ----------------------------- Object Locations ----------------------------- #
@@ -110,13 +107,13 @@ def predict_and_show():
 
             if predictions is not None:
 
-                if design_confidence<60 or category_confidence<60:
-                     combined_layers = cv2.putText(
-                    combined_layers,
-                    "CONFIDENCE TOO LOW",
-                    (combined_layers.shape[1]//3, 200),
-                    cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
-                )
+                if design_confidence < 60 or category_confidence < 60:
+                    combined_layers = cv2.putText(
+                        combined_layers,
+                        "CONFIDENCE TOO LOW",
+                        (combined_layers.shape[1]//3, 200),
+                        cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
+                    )
 
                 else:
                     combined_layers = cv2.putText(
@@ -139,24 +136,14 @@ def predict_and_show():
                         design, design_confidence
                     )
 
-
-
-            # ------------------------------ Save the frame ------------------------------ #
-            # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{top[0]}_{top[1]}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-            # cv2.imwrite(f"/opt/stream/{int(frame_time)}.png", preprocessed_frame, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-            # cv2.imwrite(f"/opt/predict/{int(frame_time)}.png", view_concatenated, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-
         else:
 
-            # reduced_size = cv2.resize(preprocessed_frame, (900, 600), interpolation=cv2.INTER_CUBIC)
-            # cv2.imwrite(f"/opt/stream/{int(frame_time)}_{side[0]}_{side[1]}_{og_top[0]}_{og_top[1]}.png", reduced_size, [cv2.IMWRITE_PNG_COMPRESSION, 0])
-
             combined_layers = cv2.putText(
-                    combined_layers,
-                    "LEGO NOT FOUND",
-                    (combined_layers.shape[1]//3, 200),
-                    cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
-                )
+                combined_layers,
+                "LEGO NOT FOUND",
+                (combined_layers.shape[1]//3, 200),
+                cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
+            )
         if bin_schedule is not None:
             for count, next_bin in enumerate(bin_schedule):
                 combined_layers = cv2.putText(
@@ -184,7 +171,6 @@ def predict_and_show():
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor (does not maintain aspect ratio)
         frame_resized = cv2.resize(combined_layers, (monitor.width, monitor.height))
-
 
         # ----------------------------- Display Image ------------------------------- #
         cv2.imshow('Combined', frame_resized)

@@ -8,7 +8,6 @@ Use the function grab_frame() to get the last frame.
 '''
 #pylint: disable=C0301
 
-import os
 import time
 from decimal import Decimal
 
@@ -35,8 +34,6 @@ def continuous_capture():
     cap.set(cv2.CAP_PROP_FPS, FPS)              # Set frames per second
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
-
-
     last_frame = None                           # Last frame taken
     while True:
         time_now = time.time()                  # Get the current time
@@ -49,14 +46,12 @@ def continuous_capture():
 
         # Rotate the frame if needed
         if config.rotational_offset is not None:
-            time_now = time.time()
 
             rotation_matrix = cv2.getRotationMatrix2D(
                 (config.rotational_offset[0], config.rotational_offset[1]),
                 config.rotational_offset[2], 1)
-            last_frame = cv2.warpAffine(last_frame, rotation_matrix, (last_frame.shape[1], last_frame.shape[0]))
-
-            # print(f"Time to rotate: {time.time() - time_now}")
+            last_frame = cv2.warpAffine(last_frame, rotation_matrix,
+                                        (last_frame.shape[1], last_frame.shape[0]))
 
         # Remove stale frame from queue
         if config.frame_queue.full():

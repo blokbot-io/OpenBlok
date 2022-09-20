@@ -91,7 +91,10 @@ def get_aruco_details(marker_locations, marker_ids, selected_id=0):
                 config.AruCo_px_per_inch = px_per_inch
                 config.AruCo_angle_offset = angle_offset
 
-        return config.AruCo_center_x, config.AruCo_center_y, config.AruCo_px_per_inch, config.AruCo_angle_offset
+        return [
+            config.AruCo_center_x, config.AruCo_center_y,
+            config.AruCo_px_per_inch, config.AruCo_angle_offset
+        ]
 
     except (UnboundLocalError, AttributeError):
         print("ERROR | get_aruco_details: No AruCo marker detected")

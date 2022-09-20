@@ -1,5 +1,6 @@
 ''' Main program for OpenBlok '''
 
+import sys
 import signal
 import threading
 from queue import Queue
@@ -40,7 +41,7 @@ check_results.append(precheck.validate_requirements())
 
 if False in check_results:
     print("OpenBlok cannot be run, please check the requirements and peripherals")
-    exit()
+    sys.exit()
 
 # ---------------------------------------------------------------------------- #
 #                                 Start Threads                                #
@@ -50,7 +51,7 @@ start_camera = threading.Thread(target=camera.continuous_capture)
 start_camera.start()
 print("INFO | Camera thread started.")
 
- # Start Serial Listener
+# Start Serial Listener
 serial_listener = threading.Thread(target=serial.serial_listener)
 serial_listener.start()
 print("Serial listener thread started.")
@@ -70,7 +71,6 @@ print("INFO | Carousel position thread started.")
 # ---------------------------------------------------------------------------- #
 if calibrate.calibration():
     print("INFO | Calibration successful.")
-
 
 
 # ---------------------------------------------------------------------------- #
