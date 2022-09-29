@@ -1,8 +1,11 @@
 ''' Module | Calibrate '''
 
 import config
+import threading
 
-from bloks import camera
+import cv2
+
+from bloks import camera, upload
 from bloks.utils import get_aruco, get_aruco_details
 
 
@@ -25,12 +28,24 @@ def calibration():
     '''
     # 3 Attempt to get the ArUco marker locations
     for _ in range(3):
-        frame = camera.grab_frame()[0]
+        frame, frame_time = camera.grab_frame()
         marker_locations = get_aruco(frame)[0]
         if marker_locations is not None:
             break
 
         print("No ArUco detected, trying again.")
+
+        threading.Thread(
+            target=upload.stream_upload,
+            args=(
+                "conveyor", f"raw/{int(frame_time)}.png",
+                cv2.imencode(
+                    '.png', frame,
+                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
+                )[1].tostring(),
+                'image/png'
+            )
+        ).start()
 
     if config.AruCo_corners is not None:
         rotation_correction()
