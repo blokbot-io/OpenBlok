@@ -149,8 +149,8 @@ def predict_and_show():
                         design, design_confidence
                     )
 
-                    # Save procesed frame
-                    cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
+                    # # Save procesed frame
+                    # cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
 
         else:
 
