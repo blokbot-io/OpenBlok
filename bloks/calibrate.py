@@ -35,17 +35,14 @@ def calibration():
 
         print("No ArUco detected, trying again.")
 
-        threading.Thread(
-            target=upload.stream_upload,
-            args=(
-                "conveyor", f"raw/{int(frame_time)}.png",
-                cv2.imencode(
-                    '.png', frame,
-                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
-                )[1].tostring(),
-                'image/png'
-            )
-        ).start()
+        upload.stream_upload(
+            "conveyor", f"raw/{int(frame_time)}.png",
+            cv2.imencode(
+                '.png', frame,
+                [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
+            )[1].tostring(),
+            'image/png'
+        )
 
     if config.AruCo_corners is not None:
         rotation_correction()
