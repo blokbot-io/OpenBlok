@@ -15,7 +15,7 @@ import numpy as np
 from screeninfo import get_monitors  # Required to get monitor info
 
 
-from bloks import camera, serial
+from bloks import camera, serial, upload
 
 
 from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
@@ -43,6 +43,18 @@ def predict_and_show():
 
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         combined_layers = np.copy(frame)                            # Frame to add annotations to
+
+        threading.Thread(
+            target=upload.stream_upload,
+            args=(
+                "conveyor", f"raw/{int(frame_time)}.png",
+                cv2.imencode(
+                    '.png', preprocessed_frame,
+                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
+                )[1].tostring(),
+                'image/png'
+            )
+        ).start()
 
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
