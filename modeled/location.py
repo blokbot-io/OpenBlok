@@ -37,7 +37,7 @@ def get_location(frame):
     frame_batch = tf.expand_dims(frame_tensor, 0)
 
     predictions = model.predict(frame_batch)
-    side, top = predictions[1:2]
+    _, side, top = predictions
 
     side_x = int(side[0][0] * frame_shape[1])
     side_y = int(side[0][1] * frame_shape[0])
