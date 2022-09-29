@@ -44,20 +44,17 @@ def predict_and_show():
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         combined_layers = np.copy(frame)                            # Frame to add annotations to
 
-        threading.Thread(
-            target=upload.stream_upload,
-            args=(
-                "conveyor", f"raw/{int(frame_time)}.png",
-                cv2.imencode(
-                    '.png', preprocessed_frame,
-                    [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
-                )[1].tostring(),
-                'image/png'
-            )
-        ).start()
-
-        # Save procesed frame
-        cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
+        # threading.Thread(
+        #     target=upload.stream_upload,
+        #     args=(
+        #         "conveyor", f"raw/{int(frame_time)}.png",
+        #         cv2.imencode(
+        #             '.png', preprocessed_frame,
+        #             [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
+        #         )[1].tostring(),
+        #         'image/png'
+        #     )
+        # ).start()
 
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
@@ -151,6 +148,9 @@ def predict_and_show():
                         frame_time, top[0],
                         design, design_confidence
                     )
+
+                    # Save procesed frame
+                    cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
 
         else:
 
