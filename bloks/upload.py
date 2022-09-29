@@ -5,7 +5,7 @@ from boto3 import session
 from boto3.s3.transfer import S3Transfer
 from botocore.config import Config
 
-import settings
+import settings  # pylint: disable=E0401
 
 # ---------------------------------------------------------------------------- #
 #                                 Storage Setup                                #
