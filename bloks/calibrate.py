@@ -1,11 +1,8 @@
 ''' Module | Calibrate '''
 
 import config
-import threading
 
-import cv2
-
-from bloks import camera, upload
+from bloks import camera
 from bloks.utils import get_aruco, get_aruco_details
 
 
@@ -34,17 +31,6 @@ def calibration():
             break
 
         print("No ArUco detected, trying again.")
-
-        upload.stream_upload(
-            "conveyor", f"raw/{int(frame_time)}.png",
-            cv2.imencode(
-                '.png', frame,
-                [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
-            )[1].tostring(),
-            'image/png'
-        )
-
-        print("Uploaded frame to server.")
 
     if config.AruCo_corners is not None:
         rotation_correction()

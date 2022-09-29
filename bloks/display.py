@@ -56,6 +56,9 @@ def predict_and_show():
             )
         ).start()
 
+        # Save procesed frame
+        cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
+
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
 
