@@ -71,7 +71,7 @@ def predict_and_show():
         combined_layers = annotate.bounding_areas(combined_layers, bound_corners)
 
         # Get Object Locations
-        _, side, top = location.get_location(preprocessed_frame)
+        side, top = location.get_location(preprocessed_frame)
 
         if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > preprocessed_frame.shape[1]//3:
             top[0] = top[0] - preprocessed_frame.shape[1]//3
