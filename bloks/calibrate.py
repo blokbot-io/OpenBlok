@@ -44,6 +44,8 @@ def calibration():
             'image/png'
         )
 
+        print("Uploaded frame to server.")
+
     if config.AruCo_corners is not None:
         rotation_correction()
         return True
