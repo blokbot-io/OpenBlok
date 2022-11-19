@@ -1,9 +1,11 @@
 #include <AccelStepper.h>
 
-#define dirPin 4 // Direction Pin
-#define stepPin 5
+#define dirPin 5 // Direction Pin
+#define stepPin 2
 #define motorInterfaceType 1
-#define posSensor 8
+#define posSensor 9
+
+#define stepperEnable 8 // Stepper Driver Enable Pin
 
 AccelStepper stepper = AccelStepper(motorInterfaceType, stepPin, dirPin);
 
@@ -13,6 +15,8 @@ void setup()
     Serial.println("Starting blokbot - Carousel");
 
     pinMode(posSensor, INPUT);
+
+  pinMode(stepperEnable, OUTPUT);
 
     // Set the maximum speed and acceleration:
     stepper.setMaxSpeed(20000); // Steps per second
