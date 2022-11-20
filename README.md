@@ -13,6 +13,7 @@
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
 - [Directory Structure](#directory-structure)
+- [Community and Contributing](#community-and-contributing)
 
 OpenBlok is an open source Lego identification and sorting system using AI models developed by [blokbot.io](https://blokbot.io)
 
@@ -36,3 +37,12 @@ The identification system requires a specific camera setup that can be purchased
 └── modeled             # AI model implementation
     └── models          # AI model files
 ```
+# Community and Contributing
+
+OpenBlock is developed by [Blok Bot](https://blokbot.io/) and by users like you. We welcome both pull requests and issues on [GitHub](https://github.com/blokbot-io/OpenBlok). Bug fixes and new features are encouraged.
+
+<div align="center">
+
+<a target="_blank" href="https://discord.gg/jftVESxMPY">![Discord Banner 2](https://discordapp.com/api/guilds/1017172382336696451/widget.png?style=banner2)</a>
+
+</div>

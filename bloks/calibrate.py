@@ -25,7 +25,7 @@ def calibration():
     '''
     # 3 Attempt to get the ArUco marker locations
     for _ in range(3):
-        frame, frame_time = camera.grab_frame()
+        frame = camera.grab_frame()[0]
         marker_locations = get_aruco(frame)[0]
         if marker_locations is not None:
             break

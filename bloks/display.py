@@ -15,7 +15,7 @@ import numpy as np
 from screeninfo import get_monitors  # Required to get monitor info
 
 
-from bloks import camera, serial, upload
+from bloks import camera, serial #, upload
 
 
 from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
