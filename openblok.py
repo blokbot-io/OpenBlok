@@ -7,7 +7,7 @@ from queue import Queue
 
 import config
 
-from bloks import camera, calibrate, display, precheck, serial
+from bloks import camera, calibrate, display, precheck, serial, updater
 
 
 print("INFO | OpenBlok Loading...")
@@ -15,10 +15,12 @@ print("INFO | OpenBlok Loading...")
 # ---------------------------------------------------------------------------- #
 #                              Flags and Variables                             #
 # ---------------------------------------------------------------------------- #
-config.rotational_offset = None         # Degrees to rotate frame for alignment.
+# Degrees to rotate frame for alignment.
+config.rotational_offset = None
 
 config.frame_queue = Queue(maxsize=3)  # Queue of frames to be displayed.
-config.requested_frame = None           # Flag | None to request a frame, else contains the frame.
+# Flag | None to request a frame, else contains the frame.
+config.requested_frame = None
 
 config.enable_sine_wave = False         # TEMP TO TEST
 
@@ -42,6 +44,9 @@ check_results.append(precheck.validate_requirements())
 if False in check_results:
     print("OpenBlok cannot be run, please check the requirements and peripherals")
     sys.exit()
+
+# Update models
+    updater.update_models()
 
 # ---------------------------------------------------------------------------- #
 #                                 Start Threads                                #

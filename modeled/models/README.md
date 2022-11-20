@@ -5,6 +5,8 @@ OpenBlok utilizes two networks to perform the following tasks:
 1. Identify the location of the object in the image.
 2. Predict the objects feature sets.
 
+The weights can be downloaded from the [model storage](https://cdn.blokbot.io/)
+
 ## Location
 
 Location input format is an image with height of 100 px, width of 150 px, and 3 channels.
