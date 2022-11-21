@@ -22,36 +22,47 @@ def update_models():
     available_models = xmltodict.parse(available_models.text)
     available_models = available_models['ListBucketResult']['Contents']
 
-    location_models = []
-    for model in available_models:
-        model_version = re.search(
-            r'(?:models\/location\/location_)(\d*)(?:\.h5)', model['Key'])
-        if model_version:
-            location_models.append(int(model_version.group(1)))
+    # Check if new models are available
+    for model_type in ['location', 'e2e']:
+        versions = []
+        for model in available_models:
 
-    if not location_models:
-        print('ERROR | No location models available.')
-        return
+            model_version = None
 
-    location_models.sort(reverse=True)
+            if model_type == 'location':
+                model_version = re.search(
+                    r'(?:models\/location\/location_)(\d*)(?:\.h5)', model['Key'])
 
-    if location_models[0] > system_info['models']['location']['version']:
-        print('INFO | Downloading new location model...')
-        models_folder = '/opt/OpenBlok/modeled/models'
+            if model_type == 'e2e':
+                model_version = re.search(
+                    r'(?:models\/e2e\/e2e_)(\d*)(?:\.h5)', model['Key'])
 
-        # Download new model weights
-        location_model_h5 = requests.get(
-            f'{model_repository}/models/location/location_{location_models[0]}.h5', timeout=10)
-        with open(f'{models_folder}/location_{location_models[0]}.h5', 'wb') as model_file:
-            model_file.write(location_model_h5.content)
+            if model_version:
+                versions.append(int(model_version.group(1)))
 
-        # Download new model json
-        location_model_json = requests.get(
-            f'{model_repository}/models/location/location_{location_models[0]}.json', timeout=10)
-        with open(f'{models_folder}/location_{location_models[0]}.json', 'wb') as model_file:
-            model_file.write(location_model_json.content)
+        if not versions:
+            print(f'ERROR | No {model_type} models available.')
+            return
 
-        # Update system info
-        system_info['models']['location']['version'] = location_models[0]
-        with open('/opt/OpenBlok/system.json', 'w', encoding="UTF-8") as system_file:
-            json.dump(system_info, system_file)
+        versions.sort(reverse=True)
+
+        if versions[0] > system_info['models'][f'{model_type}']['version']:
+            print(f'INFO | Downloading new {model_type} model...')
+            models_folder = '/opt/OpenBlok/modeled/models'
+
+            # Download new model weights
+            model_h5 = requests.get(
+                f'{model_repository}/models/{model_type}/{model_type}_{versions[0]}.h5', timeout=10)
+            with open(f'{models_folder}/{model_type}_{versions[0]}.h5', 'wb') as model_file:
+                model_file.write(model_h5.content)
+
+            # Download new model json
+            model_json = requests.get(
+                f'{model_repository}/models/{model_type}/{model_type}_{versions[0]}.json', timeout=10)
+            with open(f'{models_folder}/{model_type}_{versions[0]}.json', 'wb') as model_file:
+                model_file.write(model_json.content)
+
+            # Update system info
+            system_info['models'][f'{model_type}']['version'] = versions[0]
+            with open('/opt/OpenBlok/system.json', 'w', encoding="UTF-8") as system_file:
+                json.dump(system_info, system_file)
