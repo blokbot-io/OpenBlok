@@ -33,7 +33,7 @@ def update_models():
         print('ERROR | No location models available.')
         return
 
-    location_models = location_models.sort(reverse=True)
+    location_models.sort(reverse=True)
 
     if location_models[0] > system_info['models']['location']['version']:
         print('INFO | Downloading new location model...')
