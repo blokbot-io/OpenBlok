@@ -37,6 +37,7 @@ def predict_and_show():
     bin_schedule = None
 
     location_model = location.LocationInference()
+    e2e_model = e2e.PartInference()
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
@@ -125,7 +126,7 @@ def predict_and_show():
             # --------------------------- object Classification -------------------------- #
             view_concatenated = np.concatenate(
                 (side_crop[0], top_crop[0]), axis=1)
-            predictions = e2e.get_predictions(view_concatenated)
+            predictions = e2e_model.get_predictions(view_concatenated)
             design = predictions["design"][0]
             design_confidence = predictions["design"][1]
             category = predictions["category"][0]

@@ -13,6 +13,7 @@ MODELS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
 
 
 class LocationInference:
+    ''' Interacts with the location model to get the location of the object in the frame. '''
 
     def __init__(self):
         # -------------------------------- Load Model -------------------------------- #
