@@ -3,7 +3,7 @@ All in one file for the display and prediction.
 TODO:
     - Break the visualization into a separate file.
 '''
-# pylint: disable=R0914,C2801
+# pylint: disable=R0914,C2801,R0915
 
 import os
 import threading

@@ -1,4 +1,5 @@
 ''' Returns both the design and category of a given part.'''
+# pylint: disable=R0903
 
 import os
 import json
@@ -25,7 +26,10 @@ class PartInference:
 
         self.model = tf.keras.models.load_model(
             os.path.join(MODELS, f'e2e_{model_version}.h5'), compile=False)
-        with open(os.path.join(MODELS, f'e2e_{model_version}.json'), encoding="UTF-8") as properties_file:
+
+        properties_file_location = os.path.join(
+            MODELS, f'e2e_{model_version}.json')
+        with open(properties_file_location, encoding="UTF-8") as properties_file:
             self.model_properties = json.load(properties_file)
 
     def get_predictions(self, raw):

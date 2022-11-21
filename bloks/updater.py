@@ -15,9 +15,9 @@ def update_models():
     with open('/opt/OpenBlok/system.json', 'r', encoding="UTF-8") as system_file:
         system_info = json.load(system_file)
 
-    model_repository = 'https://cdn.blokbot.io'
+    model_repo = 'https://cdn.blokbot.io'
 
-    available_models = requests.get(model_repository, timeout=10)
+    available_models = requests.get(model_repo, timeout=10)
 
     available_models = xmltodict.parse(available_models.text)
     available_models = available_models['ListBucketResult']['Contents']
@@ -52,13 +52,13 @@ def update_models():
 
             # Download new model weights
             model_h5 = requests.get(
-                f'{model_repository}/models/{model_type}/{model_type}_{versions[0]}.h5', timeout=10)
+                f'{model_repo}/models/{model_type}/{model_type}_{versions[0]}.h5', timeout=10)
             with open(f'{models_folder}/{model_type}_{versions[0]}.h5', 'wb') as model_file:
                 model_file.write(model_h5.content)
 
             # Download new model json
             model_json = requests.get(
-                f'{model_repository}/models/{model_type}/{model_type}_{versions[0]}.json', timeout=10)
+                f'{model_repo}/models/{model_type}/{model_type}_{versions[0]}.json', timeout=10)
             with open(f'{models_folder}/{model_type}_{versions[0]}.json', 'wb') as model_file:
                 model_file.write(model_json.content)
 

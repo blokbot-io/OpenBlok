@@ -1,4 +1,5 @@
 ''' Interacts with the location model to get the location of the object in the frame. '''
+# pylint: disable=R0903
 
 import os
 import json
@@ -24,7 +25,9 @@ class LocationInference:
 
         self.model = tf.keras.models.load_model(
             os.path.join(MODELS, f'location_{model_version}.h5'), compile=False)
-        with open(os.path.join(MODELS, f'location_{model_version}.json'), encoding="UTF-8") as properties_file:
+        
+        properties_file_location = os.path.join(MODELS, f'location_{model_version}.json')
+        with open(properties_file_location, encoding="UTF-8") as properties_file:
             self.model_properties = json.load(properties_file)
 
     def get_location(self, frame):

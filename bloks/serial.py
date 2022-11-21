@@ -1,4 +1,5 @@
 ''' Module | serial '''
+# pylint: disable=R0912
 
 import time
 from decimal import Decimal
