@@ -42,7 +42,7 @@ def update_models():
         # Download new model weights
         location_model_h5 = requests.get(
             f'{model_repository}/models/location/location_{location_models[0]}.h5', timeout=10)
-        with open(f'{models_folder}/location.h5', 'wb') as model_file:
+        with open(f'{models_folder}/location_{location_models[0]}.h5', 'wb') as model_file:
             model_file.write(location_model_h5.content)
 
         # Download new model json
