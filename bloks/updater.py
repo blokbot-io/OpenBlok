@@ -17,7 +17,7 @@ def update_models():
 
     model_repository = 'https://cdn.blokbot.io'
 
-    available_models = requests.get(model_repository)
+    available_models = requests.get(model_repository, timeout=10)
 
     available_models = xmltodict.parse(available_models.text)
     available_models = available_models['ListBucketResult']['Contents']
@@ -29,19 +29,24 @@ def update_models():
         if model_version:
             location_models.append(int(model_version.group(1)))
 
+    if not location_models:
+        print('ERROR | No location models available.')
+        return
+
     location_models = location_models.sort(reverse=True)
 
-    if location_models and location_models[0] > system_info['models']['location']['version']:
+    if location_models[0] > system_info['models']['location']['version']:
         print('INFO | Downloading new location model...')
+        models_folder = '/opt/OpenBlok/modeled/models'
 
         # Download new model weights
         location_model_h5 = requests.get(
-            f'{model_repository}/models/location/location_{location_models[0]}.h5')
-        with open('/opt/OpenBlok/modeled/models/location.h5', 'wb') as model_file:
+            f'{model_repository}/models/location/location_{location_models[0]}.h5', timeout=10)
+        with open(f'{models_folder}/location.h5', 'wb') as model_file:
             model_file.write(location_model_h5.content)
 
         # Download new model json
         location_model_json = requests.get(
-            f'{model_repository}/models/location/location_{location_models[0]}.json')
-        with open('/opt/OpenBlok/modeled/models/location_{location_models[0]}.json', 'wb') as model_file:
+            f'{model_repository}/models/location/location_{location_models[0]}.json', timeout=10)
+        with open(f'{models_folder}/location_{location_models[0]}.json', 'wb') as model_file:
             model_file.write(location_model_json.content)
