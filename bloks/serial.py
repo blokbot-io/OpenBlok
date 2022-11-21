@@ -48,16 +48,22 @@ def update_position_schedule(capture_time, position, part_number, confidence):
     if str(part_number) not in BIN_ASSIGNMENT:
         BIN_ASSIGNMENT.append(str(part_number))
 
+    # Assign None to bin_assignment if the next index is 13, 25, 37, 49
+    if len(BIN_ASSIGNMENT)+1 in [13, 25, 37, 49]:
+        BIN_ASSIGNMENT.append(None)
+
     # If part number exceeds the number of bins available, place it in the last bin.
-    if BIN_ASSIGNMENT.index(str(part_number)) > 35:
-        bin_number = 36
+    if BIN_ASSIGNMENT.index(str(part_number)) > 59:
+        bin_number = 60
     else:
         bin_number = BIN_ASSIGNMENT.index(str(part_number))+1
 
     print(f"Bin Number: {bin_number}")
 
-    relative_position = (position-config.AruCo_center_y)/config.AruCo_px_per_inch
-    remaining_distance = TRAVEL_DISTANCE - relative_position  # Remaining distance to the bin
+    relative_position = (position-config.AruCo_center_y) / \
+        config.AruCo_px_per_inch
+    remaining_distance = TRAVEL_DISTANCE - \
+        relative_position  # Remaining distance to the bin
 
     if config.part_velocity is None:
         config.part_velocity = True
@@ -74,8 +80,10 @@ def update_position_schedule(capture_time, position, part_number, confidence):
         drop_time = time.time()
     else:
 
-        time_left_to_drop = Decimal(remaining_distance) / config.part_velocity  # in seconds
-        drop_time = capture_time + Decimal(time_left_to_drop)            # in seconds
+        time_left_to_drop = Decimal(
+            remaining_distance) / config.part_velocity  # in seconds
+        drop_time = capture_time + \
+            Decimal(time_left_to_drop)            # in seconds
 
     if len(POSITION_SCHEDULE) == 0:
         bin_time = time.time()
@@ -106,7 +114,8 @@ def update_position_schedule(capture_time, position, part_number, confidence):
 
     print("--- Bin Schedule Updated ---")
     for bin_position in POSITION_SCHEDULE:
-        print(f"Bin: {bin_position[0]} Drop Time: {bin_position[1]} Bin Time: {bin_position[2]}")
+        print(
+            f"Bin: {bin_position[0]} Drop Time: {bin_position[1]} Bin Time: {bin_position[2]}")
 
     return POSITION_SCHEDULE
 
@@ -130,7 +139,8 @@ def carousel_position():
                 current_bin = bin_number
 
             if drop_time <= time.time():
-                print(f"Part {POSITION_SCHEDULE[0][0]} is falling into bin {bin_number}")
+                print(
+                    f"Part {POSITION_SCHEDULE[0][0]} is falling into bin {bin_number}")
                 POSITION_SCHEDULE.pop(0)
         time.sleep(3)
 
