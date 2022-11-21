@@ -13,8 +13,8 @@ arduino = serial.Serial(port='/dev/ttyACM0', baudrate=9600, timeout=.3)
 # except serial.serialutil.SerialException as err:
 #     print(f"Error starting serial connection: {err}")
 
-# config.part_velocity = None  # in/s origional .635 then 0.66
-config.part_velocity = Decimal(0.66)
+# config.part_velocity = None  # in/s original .635 then 0.66
+config.part_velocity = Decimal(1.95)
 
 
 TRAVEL_DISTANCE = 40  # in
