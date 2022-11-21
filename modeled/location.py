@@ -22,7 +22,7 @@ class LocationInference:
         model_version = system_info['models']['location']['version']
 
         self.model = tf.keras.models.load_model(
-            os.path.join(MODELS, f'location_{model_version}.h5'))
+            os.path.join(MODELS, f'location_{model_version}.h5'), compile=False)
         with open(os.path.join(MODELS, f'location_{model_version}.json'), encoding="UTF-8") as properties_file:
             self.model_properties = json.load(properties_file)
 

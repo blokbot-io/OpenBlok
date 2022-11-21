@@ -14,7 +14,7 @@ MODELS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
 E2E_MODEL = os.path.join(MODELS, 'e2e_model.h5')
 
 # -------------------------------- Load Model -------------------------------- #
-model = tf.keras.models.load_model(E2E_MODEL)
+model = tf.keras.models.load_model(E2E_MODEL, compile=False)
 with open(os.path.join(MODELS, 'e2e_model.json'), encoding="UTF-8") as properties_file:
     model_properties = json.load(properties_file)
 
