@@ -6,43 +6,51 @@ import json
 import cv2
 import tensorflow as tf
 
-
 # ---------------------------------------------------------------------------- #
 #                             Directories and Paths                            #
 # ---------------------------------------------------------------------------- #
 MODELS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
-LOCATION_MODEL = os.path.join(MODELS, 'location_model.h5')
-
-# -------------------------------- Load Model -------------------------------- #
-model = tf.keras.models.load_model(LOCATION_MODEL)
-with open(os.path.join(MODELS, 'location_model.json'), encoding="UTF-8") as properties_file:
-    model_properties = json.load(properties_file)
 
 
-def get_location(frame):
-    '''
-    Get the location of the object in the frame.
-    Returns the x,y coordinates for the side and top views.
-    '''
-    frame_shape = frame.shape
+class LocationInference:
 
-    frame_resized = cv2.resize(
-        frame,
-        (model_properties['input_width'], model_properties['input_height']),
-        interpolation=cv2.INTER_CUBIC
-    )
+    def __init__(self):
+        # -------------------------------- Load Model -------------------------------- #
+        # Get system info
+        with open('/opt/OpenBlok/system.json', 'r', encoding="UTF-8") as system_file:
+            system_info = json.load(system_file)
+        model_version = system_info['models']['location']['version']
 
-    frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
-    frame_tensor = tf.convert_to_tensor(frame_rgb, dtype=tf.float32)
-    frame_batch = tf.expand_dims(frame_tensor, 0)
+        self.model = tf.keras.models.load_model(
+            os.path.join(MODELS, f'location_{model_version}.h5'))
+        with open(os.path.join(MODELS, f'location_{model_version}.json'), encoding="UTF-8") as properties_file:
+            self.model_properties = json.load(properties_file)
 
-    predictions = model.predict(frame_batch)
-    _, side, top = predictions
+    def get_location(self, frame):
+        '''
+        Get the location of the object in the frame.
+        Returns the x,y coordinates for the side and top views.
+        '''
+        frame_shape = frame.shape
 
-    side_x = int(side[0][0] * frame_shape[1])
-    side_y = int(side[0][1] * frame_shape[0])
+        frame_resized = cv2.resize(
+            frame,
+            (self.model_properties['input_width'],
+             self.model_properties['input_height']),
+            interpolation=cv2.INTER_CUBIC
+        )
 
-    top_x = int(top[0][0] * frame_shape[1])
-    top_y = int(top[0][1] * frame_shape[0])
+        frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
+        frame_tensor = tf.convert_to_tensor(frame_rgb, dtype=tf.float32)
+        frame_batch = tf.expand_dims(frame_tensor, 0)
 
-    return [side_x, side_y], [top_x, top_y]
+        predictions = self.model.predict(frame_batch)
+        _, side, top = predictions
+
+        side_x = int(side[0][0] * frame_shape[1])
+        side_y = int(side[0][1] * frame_shape[0])
+
+        top_x = int(top[0][0] * frame_shape[1])
+        top_y = int(top[0][1] * frame_shape[0])
+
+        return [side_x, side_y], [top_x, top_y]

@@ -46,7 +46,7 @@ if False in check_results:
     sys.exit()
 
 # Update models
-    updater.update_models()
+updater.update_models()
 
 # ---------------------------------------------------------------------------- #
 #                                 Start Threads                                #

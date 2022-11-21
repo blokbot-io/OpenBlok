@@ -50,3 +50,8 @@ def update_models():
             f'{model_repository}/models/location/location_{location_models[0]}.json', timeout=10)
         with open(f'{models_folder}/location_{location_models[0]}.json', 'wb') as model_file:
             model_file.write(location_model_json.content)
+
+        # Update system info
+        system_info['models']['location']['version'] = location_models[0]
+        with open('/opt/OpenBlok/system.json', 'w', encoding="UTF-8") as system_file:
+            json.dump(system_info, system_file)
