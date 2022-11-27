@@ -3,5 +3,5 @@ boto3
 opencv-contrib-python>=4.6.0.66
 pyserial
 screeninfo>=0.8
-tensorflow==2.9.3
+tensorflow==2.11
 xmltodict==0.13.0
