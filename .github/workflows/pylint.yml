@@ -1,4 +1,4 @@
-name: CI | Python Linting
+name: CI | Pylint
 
 on:
   push:
