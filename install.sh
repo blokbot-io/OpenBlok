@@ -1,6 +1,19 @@
 #!/bin/bash
 
-# Installer for OpenBlok
+# Installer for OpenBlok, for more information see https://github.com/blokbot-io/OpenBlok/blob/master/docs/installer.md
+
+# ---------------------------------------------------------------------------- #
+#                                     Help                                     #
+# ---------------------------------------------------------------------------- #
+Help()
+{
+    # Display Help
+    echo "OpenBlok installation script."
+    echo
+    echo "h     Display this help"
+    echo "u     Set custom URL for OpenBlok"
+    echo "d     Enable debug mode"
+}
 
 # ---------------------------------------------------------------------------- #
 #                                   Defaults                                   #
@@ -40,6 +53,36 @@ if [ "" = "$PKG_OK" ]; then
     sudo apt-get install jq -y
 else
     echo "jq already installed, skipping..."
+fi
+
+# ---------------------------------- ffmpeg ---------------------------------- #
+REQUIRED_PKG="ffmpeg"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+if [ "" = "$PKG_OK" ]; then
+    echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG..."
+    sudo apt-get install ffmpeg -y
+else
+    echo "ffmpeg already installed, skipping..."
+fi
+
+# ---------------------------------- libsm6 ---------------------------------- #
+REQUIRED_PKG="libsm6"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+if [ "" = "$PKG_OK" ]; then
+    echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG..."
+    sudo apt-get install libsm6 -y
+else
+    echo "libsm6 already installed, skipping..."
+fi
+
+# --------------------------------- libxext6 --------------------------------- #
+REQUIRED_PKG="libxext6"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+if [ "" = "$PKG_OK" ]; then
+    echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG..."
+    sudo apt-get install libxext6 -y
+else
+    echo "libxext6 already installed, skipping..."
 fi
 
 
@@ -90,13 +133,13 @@ if ! [ -f "/opt/OpenBlok/system.json" ]; then
         "timezone": "UTC",
         "url": "'$URL'",
         "version": "'$VERSION'",
-        "debug": "'$DEBUG'",
+        "debug": '$DEBUG',
         "models": {
             "location": {
-                "version": 0
+                "version": null
             },
             "e2e": {
-                "version": 0
+                "version": null
             }
         }
     }' > /opt/OpenBlok/system.json
