@@ -31,13 +31,13 @@ REQUIRED_PKG="python3.10 -venv"
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
 if [ "" = "$PKG_OK" ]; then
     echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG..."
-    sudo apt-get install python3.10.8-venv -y
+    sudo apt-get install python3.10-venv -y
 else
     echo "python3.10 -venv already installed, skipping..."
 fi
 
-if [ ! -d "/opt/blok/env" ]; then
-    python3.10.8 -m venv /opt/OpenBlok/env
+if [ ! -d "/opt/OpenBlok/env" ]; then
+    python3.10 -m venv /opt/OpenBlok/env
 fi
 
 . /opt/OpenBlok/env/bin/activate
