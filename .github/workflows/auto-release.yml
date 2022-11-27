@@ -1,4 +1,4 @@
-name: master -> master-ci -> release
+name: CD | master -> master-ci -> release
 
 on:
   push:
@@ -46,21 +46,21 @@ jobs:
           checkName: lint
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
-      # - name: Wait for Build
-      #   if: steps.wait-for-lint.outputs.conclusion == 'success'
-      #   uses: fountainhead/action-wait-for-check@v1.0.0
-      #   id: wait-for-build
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     checkName: build
-      #     ref: ${{ github.event.pull_request.head.sha || github.sha }}
-      # - name: Merge master -> master-ci
-      #   if: steps.wait-for-build.outputs.conclusion == 'success'
-      #   uses: devmasx/merge-branch@1.4.0
-      #   with:
-      #     type: now
-      #     target_branch: master-ci
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Wait for Build
+        if: steps.wait-for-lint.outputs.conclusion == 'success'
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: wait-for-build
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: build
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Merge master -> master-ci
+        if: steps.wait-for-build.outputs.conclusion == 'success'
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          target_branch: master-ci
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
   # master-ci -> release
   sanitize:

@@ -11,6 +11,7 @@
 
 - [blokbot.io | OpenBlok](#blokbotio--openblok)
   - [Table of Contents](#table-of-contents)
+  - [Hardware Requirements](#hardware-requirements)
   - [Installation](#installation)
   - [Directory Structure](#directory-structure)
   - [Community and Contributing](#community-and-contributing)
@@ -19,9 +20,19 @@ OpenBlok is an open source Lego identification and sorting system using AI model
 
 The identification system requires a specific camera setup that can be purchased from [blokbot.io](https://blokbot.io) or can be created by referencing our technical guide.
 
+## Hardware Requirements
+
+There are several AI models that provide flexibility to the configuration of OpenBlok. Please refer to our standards guide for more information. Additionally, you may purchase the desktop dev kit for a quick start.
+
+A camera stream is required to use OpenBlok, if no input device is found, OpenBlok will download a sample video stream to use as a test. The following cameras have been tested and are known to work:
+
+- [MOKOSE 4K HD USB](https://www.amazon.com/gp/product/B08FHBRKSK/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) with [Arducam 8-50mm C-Mount Zoom Lens](https://www.amazon.com/gp/product/B08PYMBX9T/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1)
+
+To achieve higher frame rates, the use of a graphics card or other AI model accelerator can be used.
+
 ## Installation
 
-OpenBlok has been developed and deigned to run on Ubuntu 22.04 LTS.
+OpenBlok has been developed and deigned to run on Ubuntu 22.04 LTS. It is recommended to run `apt-get update` and `apt-get upgrade` before installing OpenBlok.
 
 For custom installation options, please refer to the [installation guide](docs/installer.md). Otherwise, you can install OpenBlok using the following command:
 
