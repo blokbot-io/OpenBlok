@@ -8,7 +8,7 @@ import cv2
 
 
 def validate_requirements():
-    '''.
+    '''
     Validates all requirements are installed.
     '''
     with open('requirements.txt', 'r', encoding="UTF-8") as requirements_file:
