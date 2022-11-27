@@ -5,4 +5,7 @@
 The installer runs through a serious of operations to install OpenBlok. The operations are listed below:
 
 1. Install Dependencies
-   - Python 3.11
+   - Python 3.10.8
+2. Create Environment
+   - Create virtual environment
+   - Install Python dependencies

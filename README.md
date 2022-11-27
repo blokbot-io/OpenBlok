@@ -4,7 +4,7 @@
 
 [![Code Quality](https://github.com/blokbot-io/OpenBlok/actions/workflows/pylint.yml/badge.svg)](https://github.com/blokbot-io/OpenBlok/actions/workflows/pylint.yml)
 &nbsp;
-
+[![CI | Installer Build](https://github.com/blokbot-io/OpenBlok/actions/workflows/build-installer.yml/badge.svg)](https://github.com/blokbot-io/OpenBlok/actions/workflows/build-installer.yml)
 </div>
 
 ## Table of Contents
