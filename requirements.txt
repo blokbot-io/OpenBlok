@@ -1,5 +1,7 @@
 config>=0.5.1
+boto3
 opencv-contrib-python>=4.6.0.66
 pyserial
 screeninfo>=0.8
-tensorflow==2.9
+tensorflow-cpu==2.11.0
+xmltodict==0.13.0

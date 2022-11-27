@@ -44,7 +44,7 @@ void loop()
         digitalWrite(RELAYPIN, HIGH);
         digitalWrite(ledpin, HIGH);
         analogWrite(pwm, 0);
-        delay(1000);
+        delay(3000);
         ;
     }
     else

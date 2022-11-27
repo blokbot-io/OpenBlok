@@ -1,4 +1,5 @@
 ''' Returns both the design and category of a given part.'''
+# pylint: disable=R0903
 
 import os
 import json
@@ -11,47 +12,60 @@ import tensorflow as tf
 #                             Directories and Paths                            #
 # ---------------------------------------------------------------------------- #
 MODELS = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models')
-E2E_MODEL = os.path.join(MODELS, 'e2e_model.h5')
-
-# -------------------------------- Load Model -------------------------------- #
-model = tf.keras.models.load_model(E2E_MODEL)
-with open(os.path.join(MODELS, 'e2e_model.json'), encoding="UTF-8") as properties_file:
-    model_properties = json.load(properties_file)
 
 
-def get_predictions(raw):
-    '''
-    Uses the AI model to predict the part.
-    '''
-    designs = model_properties['designs']
-    categories = model_properties['categories']
+class PartInference:
+    ''' Returns both the design and category of a given part.'''
 
-    # ----------------------------- Process Raw Frame ---------------------------- #
-    raw = cv2.resize(
-        raw,
-        (model_properties['image_width'], model_properties['image_height']),
-        interpolation=cv2.INTER_CUBIC
-    )
+    def __init__(self):
+        # -------------------------------- Load Model -------------------------------- #
+        # Get system info
+        with open('/opt/OpenBlok/system.json', 'r', encoding="UTF-8") as system_file:
+            system_info = json.load(system_file)
+        model_version = system_info['models']['e2e']['version']
 
-    raw = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
-    raw = tf.convert_to_tensor(raw, dtype=tf.float32)
+        self.model = tf.keras.models.load_model(
+            os.path.join(MODELS, f'e2e_{model_version}.h5'), compile=False)
 
-    img_array = tf.keras.utils.img_to_array(raw)
-    img_array = tf.expand_dims(img_array, 0)
+        properties_file_location = os.path.join(
+            MODELS, f'e2e_{model_version}.json')
+        with open(properties_file_location, encoding="UTF-8") as properties_file:
+            self.model_properties = json.load(properties_file)
 
-    # ----------------------------- Make Predictions ----------------------------- #
-    predictions = model.predict(img_array)
+    def get_predictions(self, raw):
+        '''
+        Uses the AI model to predict the part.
+        '''
+        designs = self.model_properties['designs']
+        categories = self.model_properties['categories']
 
-    design = designs[np.argmax(predictions[0])]
-    design_confidence = 100 * np.max(predictions[0])
+        # ----------------------------- Process Raw Frame ---------------------------- #
+        raw = cv2.resize(
+            raw,
+            (self.model_properties['image_width'],
+             self.model_properties['image_height']),
+            interpolation=cv2.INTER_CUBIC
+        )
 
-    category = categories[np.argmax(predictions[1])]
-    category_confidence = 100 * np.max(predictions[1])
+        raw = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
+        raw = tf.convert_to_tensor(raw, dtype=tf.float32)
 
-    print(f"Design #{design} | {design_confidence:.2f}%")
-    print(f"Category {category} | {category_confidence:.2f}%")
+        img_array = tf.keras.utils.img_to_array(raw)
+        img_array = tf.expand_dims(img_array, 0)
 
-    return {
-        "design": [design, design_confidence],
-        "category": [category, category_confidence]
-    }
+        # ----------------------------- Make Predictions ----------------------------- #
+        predictions = self.model.predict(img_array)
+
+        design = designs[np.argmax(predictions[0])]
+        design_confidence = 100 * np.max(predictions[0])
+
+        category = categories[np.argmax(predictions[1])]
+        category_confidence = 100 * np.max(predictions[1])
+
+        print(f"Design #{design} | {design_confidence:.2f}%")
+        print(f"Category {category} | {category_confidence:.2f}%")
+
+        return {
+            "design": [design, design_confidence],
+            "category": [category, category_confidence]
+        }

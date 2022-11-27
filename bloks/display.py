@@ -3,6 +3,7 @@ All in one file for the display and prediction.
 TODO:
     - Break the visualization into a separate file.
 '''
+# pylint: disable=R0914,C2801,R0915
 
 import os
 import threading
@@ -14,7 +15,7 @@ import numpy as np
 from screeninfo import get_monitors  # Required to get monitor info
 
 
-from bloks import camera, serial
+from bloks import camera, serial  # , upload
 
 
 from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
@@ -35,27 +36,48 @@ def predict_and_show():
 
     bin_schedule = None
 
+    location_model = location.LocationInference()
+    e2e_model = e2e.PartInference()
+
     # ---------------------------- Identification Loop --------------------------- #
     while True:
         frame, frame_time = camera.grab_frame()  # Grab frame
         frame_time = Decimal(frame_time)        # Copy frame & time
 
-        preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
-        combined_layers = np.copy(frame)                            # Frame to add annotations to
+        preprocessed_frame = preprocess.capture_regions(
+            frame)      # Preprocess frame
+        # Frame to add annotations to
+        combined_layers = np.copy(frame)
+
+        # threading.Thread(
+        #     target=upload.stream_upload,
+        #     args=(
+        #         "conveyor", f"raw/{int(frame_time)}.png",
+        #         cv2.imencode(
+        #             '.png', preprocessed_frame,
+        #             [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
+        #         )[1].tostring(),
+        #         'image/png'
+        #     )
+        # ).start()
 
         # Marker Layer
-        cv2.aruco.drawDetectedMarkers(combined_layers, config.AruCo_corners, config.AruCo_ids)
+        cv2.aruco.drawDetectedMarkers(
+            combined_layers, config.AruCo_corners, config.AruCo_ids)
 
         # Split Line Layer
-        cut_distance = int(config.AruCo_center_x + (config.mirror_offset*config.AruCo_px_per_inch))
-        cv2.line(combined_layers, (cut_distance, 0), (cut_distance, frame.shape[0]), (0, 0, 255), 2)
+        cut_distance = int(config.AruCo_center_x +
+                           (config.mirror_offset*config.AruCo_px_per_inch))
+        cv2.line(combined_layers, (cut_distance, 0),
+                 (cut_distance, frame.shape[0]), (0, 0, 255), 2)
 
         # Bounding Box Layer
         bound_corners = bounding_boxes()
-        combined_layers = annotate.bounding_areas(combined_layers, bound_corners)
+        combined_layers = annotate.bounding_areas(
+            combined_layers, bound_corners)
 
         # Get Object Locations
-        side, top = location.get_location(preprocessed_frame)
+        side, top = location_model.get_location(preprocessed_frame)
 
         if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > preprocessed_frame.shape[1]//3:
             top[0] = top[0] - preprocessed_frame.shape[1]//3
@@ -75,8 +97,10 @@ def predict_and_show():
 
             combined_layers = annotate.visualize_crop(
                 combined_layers,
-                (side_crop[1][0]+bound_corners[2][0], side_crop[1][1]+bound_corners[2][1]),
-                (side_crop[2][0]+bound_corners[2][0], side_crop[2][1]+bound_corners[2][1]),
+                (side_crop[1][0]+bound_corners[2][0],
+                 side_crop[1][1]+bound_corners[2][1]),
+                (side_crop[2][0]+bound_corners[2][0],
+                 side_crop[2][1]+bound_corners[2][1]),
                 (255, 0, 0)
             )
 
@@ -93,13 +117,16 @@ def predict_and_show():
 
             combined_layers = annotate.visualize_crop(
                 combined_layers,
-                (top_crop[1][0]+bound_corners[0][0], top_crop[1][1]+bound_corners[0][1]),
-                (top_crop[2][0]+bound_corners[0][0], top_crop[2][1]+bound_corners[0][1])
+                (top_crop[1][0]+bound_corners[0][0],
+                 top_crop[1][1]+bound_corners[0][1]),
+                (top_crop[2][0]+bound_corners[0][0],
+                 top_crop[2][1]+bound_corners[0][1])
             )
 
             # --------------------------- object Classification -------------------------- #
-            view_concatenated = np.concatenate((side_crop[0], top_crop[0]), axis=1)
-            predictions = e2e.get_predictions(view_concatenated)
+            view_concatenated = np.concatenate(
+                (side_crop[0], top_crop[0]), axis=1)
+            predictions = e2e_model.get_predictions(view_concatenated)
             design = predictions["design"][0]
             design_confidence = predictions["design"][1]
             category = predictions["category"][0]
@@ -136,6 +163,9 @@ def predict_and_show():
                         design, design_confidence
                     )
 
+                    # # Save procesed frame
+                    # cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
+
         else:
 
             combined_layers = cv2.putText(
@@ -170,7 +200,8 @@ def predict_and_show():
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor (does not maintain aspect ratio)
-        frame_resized = cv2.resize(combined_layers, (monitor.width, monitor.height))
+        frame_resized = cv2.resize(
+            combined_layers, (monitor.width, monitor.height))
 
         # ----------------------------- Display Image ------------------------------- #
         cv2.imshow('Combined', frame_resized)
