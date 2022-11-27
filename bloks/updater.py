@@ -46,7 +46,7 @@ def update_models():
 
         versions.sort(reverse=True)
 
-        if versions[0] > system_info['models'][f'{model_type}']['version']:
+        if versions[0] > int(system_info['models'][f'{model_type}']['version'] or 0):
             print(f'INFO | Downloading new {model_type} model...')
             models_folder = '/opt/OpenBlok/modeled/models'
 
