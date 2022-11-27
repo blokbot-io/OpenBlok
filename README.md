@@ -6,7 +6,7 @@
 &nbsp;
 [![CI | Installer Build](https://github.com/blokbot-io/OpenBlok/actions/workflows/build-installer.yml/badge.svg)](https://github.com/blokbot-io/OpenBlok/actions/workflows/build-installer.yml)
 &nbsp;
-[![CD | master -> master-ci -> release](https://github.com/blokbot-io/OpenBlok/actions/workflows/auto-release.yml/badge.svg)](https://github.com/blokbot-io/OpenBlok/actions/workflows/auto-release.yml)
+[![CD | Release](https://github.com/blokbot-io/OpenBlok/actions/workflows/auto-release.yml/badge.svg)](https://github.com/blokbot-io/OpenBlok/actions/workflows/auto-release.yml)
 
 </div>
 
