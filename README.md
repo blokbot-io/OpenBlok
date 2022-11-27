@@ -12,8 +12,8 @@
 - [blokbot.io | OpenBlok](#blokbotio--openblok)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
-- [Directory Structure](#directory-structure)
-- [Community and Contributing](#community-and-contributing)
+  - [Directory Structure](#directory-structure)
+  - [Community and Contributing](#community-and-contributing)
 
 OpenBlok is an open source Lego identification and sorting system using AI models developed by [blokbot.io](https://blokbot.io)
 
@@ -21,10 +21,15 @@ The identification system requires a specific camera setup that can be purchased
 
 ## Installation
 
+OpenBlok has been developed and deigned to run on Ubuntu 22.04 LTS.
+
+For custom installation options, please refer to the [installation guide](docs/installer.md). Otherwise, you can install OpenBlok using the following command:
+
 ```bash
+sudo wget -qO- openblok.blokbot.io | bash /dev/stdin
 ```
 
-# Directory Structure
+## Directory Structure
 
 ``` bash
 .
@@ -37,7 +42,8 @@ The identification system requires a specific camera setup that can be purchased
 └── modeled             # AI model implementation
     └── models          # AI model files
 ```
-# Community and Contributing
+
+## Community and Contributing
 
 OpenBlock is developed by [Blok Bot](https://blokbot.io/) and by users like you. We welcome both pull requests and issues on [GitHub](https://github.com/blokbot-io/OpenBlok). Bug fixes and new features are encouraged.
 

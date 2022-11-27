@@ -1,0 +1,27 @@
+name: CI | Installer Build
+
+on:
+  push:
+    branches:
+      - '**'
+      - 'master'
+      - '!master-ci'
+      - '!release'
+
+  pull_request:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run Installation Script
+        run: |
+          chmod +x ./install.sh
+          ./install.sh
