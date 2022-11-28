@@ -24,6 +24,10 @@ from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
 from modeled import location, e2e
 
 
+# if os.environ.get('DISPLAY', '') == '':
+#     os.environ.__setitem__('DISPLAY', ':0.0')
+
+
 def predict_and_show():
     '''
     Results are displayed on the screen.
@@ -191,12 +195,13 @@ def predict_and_show():
             cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
         )
 
+        # Note: Extra?
         # Display the resulting frame
-        cv2.imshow('frame', combined_layers)
+        # cv2.imshow('frame', combined_layers)
 
         # Press Q on keyboard to  exit
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+        # if cv2.waitKey(1) & 0xFF == ord('q'):
+        # break
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor (does not maintain aspect ratio)
