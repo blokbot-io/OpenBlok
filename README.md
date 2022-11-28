@@ -35,13 +35,15 @@ To achieve higher frame rates, the use of a graphics card or other AI model acce
 
 ## Installation
 
-OpenBlok has been developed and deigned to run on Ubuntu 22.04 LTS. It is recommended to run `apt-get update` and `apt-get upgrade` before installing OpenBlok.
+OpenBlok has been developed and deigned to run on *Ubuntu 22.04 LTS. It is recommended to run `apt-get update` and `apt-get upgrade` before installing OpenBlok.
 
 For custom installation options, please refer to the [installation guide](docs/installer.md). Otherwise, you can install OpenBlok using the following command:
 
 ```bash
 sudo wget -qO- openblok.blokbot.io | bash /dev/stdin
 ```
+
+**\* Only tested using desktop version, PR welcome for minimum GUI installation version.**
 
 ## Directory Structure
 
