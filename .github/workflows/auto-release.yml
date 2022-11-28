@@ -117,8 +117,4 @@ jobs:
 
           git diff-index --quiet HEAD || git commit -m "Sanitized"
 
-          git checkout release
-
-          git pull master-ci
-
           git push origin release --force
