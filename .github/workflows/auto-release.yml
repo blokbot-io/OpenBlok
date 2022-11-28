@@ -1,4 +1,5 @@
-name: CD | master -> master-ci -> release
+name: CD | Release
+# CD | master -> master-ci -> release
 
 on:
   push:

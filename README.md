@@ -65,6 +65,6 @@ OpenBlock is developed by [Blok Bot](https://blokbot.io/) and by users like you.
 
 <div align="center">
 
-<a target="_blank" href="https://discord.gg/jftVESxMPY">![Discord Banner 2](https://discordapp.com/api/guilds/1017172382336696451/widget.png?style=banner2)</a>
+<a target="_blank" href="https://discord.gg/nBpAGg69JD">![Discord Banner 2](https://discordapp.com/api/guilds/1017172382336696451/widget.png?style=banner2)</a>
 
 </div>
