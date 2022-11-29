@@ -179,7 +179,7 @@ def predict_and_show():
                 combined_layers = cv2.putText(
                     combined_layers,
                     f"Bin #{next_bin[0]}",
-                    (20, (count*50)+50),
+                    (20, (count*60)+60),
                     cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
                 )
 
@@ -195,7 +195,7 @@ def predict_and_show():
         combined_layers = cv2.putText(
             combined_layers,
             f"FPS: {session_stats.fps()}",
-            (combined_layers.shape[1]-600, 100),
+            (combined_layers.shape[1]-500, 100),
             cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
         )
 

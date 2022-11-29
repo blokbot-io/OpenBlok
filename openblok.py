@@ -15,12 +15,11 @@ print("INFO | OpenBlok Loading...")
 # ---------------------------------------------------------------------------- #
 #                              Flags and Variables                             #
 # ---------------------------------------------------------------------------- #
-# Degrees to rotate frame for alignment.
-config.rotational_offset = None
+config.rotational_offset = None         # Degrees to rotate frame for alignment.
 
-config.frame_queue = Queue(maxsize=3)  # Queue of frames to be displayed.
-# Flag | None to request a frame, else contains the frame.
-config.requested_frame = None
+config.frame_queue = Queue(maxsize=10)  # Queue of frames to be displayed.
+
+config.requested_frame = None   # Flag | None to request a frame, else contains the frame.
 
 config.enable_sine_wave = False         # TEMP TO TEST
 
@@ -37,33 +36,29 @@ config.marker_y_offset = 0.0            # Configuration | Marker Y Offset
 config.y_bounding_offset = 2.250        # Configuration | Y Bounding Offset
 config.x_bounding_offset = 0            # Configuration | X Bounding Offset
 
-check_results = []
-check_results.append(precheck.validate_requirements())
-# check_results.append(precheck.peripheral_check())
-
-if False in check_results:
-    print("OpenBlok cannot be run, please check the requirements and peripherals")
+if not precheck.validate_requirements():
+    print("OpenBlok cannot be run, please check the requirements.")
     sys.exit()
 
-# Update models
-updater.update_models()
+# if not precheck.peripheral_check():
+#     print("OpenBlok cannot be run, please check the peripherals.")
+#     sys.exit()
+
+updater.update_models()  # Update models
 
 # ---------------------------------------------------------------------------- #
 #                                 Start Threads                                #
 # ---------------------------------------------------------------------------- #
 # Camera Thread
-start_camera = threading.Thread(target=camera.continuous_capture)
-start_camera.start()
+threading.Thread(target=camera.continuous_capture).start()
 print("INFO | Camera thread started.")
 
 # Start Serial Listener
-serial_listener = threading.Thread(target=serial.serial_listener)
-serial_listener.start()
+threading.Thread(target=serial.serial_listener).start()
 print("Serial listener thread started.")
 
 # Start Carousel Position Thread
-carousel_position = threading.Thread(target=serial.carousel_position)
-carousel_position.start()
+threading.Thread(target=serial.carousel_position).start()
 print("INFO | Carousel position thread started.")
 
 # Display Thread
