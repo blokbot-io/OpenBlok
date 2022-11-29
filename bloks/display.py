@@ -14,18 +14,12 @@ import config
 import numpy as np
 from screeninfo import get_monitors  # Required to get monitor info
 
-
 from bloks import camera, serial  # , upload
-
-
-from bloks.utils import annotate, preprocess, bounding_boxes, crop_square
-
+from bloks.utils import annotate, preprocess, stats, bounding_boxes, crop_square
 
 from modeled import location, e2e
 
-
-# if os.environ.get('DISPLAY', '') == '':
-#     os.environ.__setitem__('DISPLAY', ':0.0')
+STATS = stats.Stats()
 
 
 def predict_and_show():
@@ -47,6 +41,8 @@ def predict_and_show():
     while True:
         frame, frame_time = camera.grab_frame()  # Grab frame
         frame_time = Decimal(frame_time)        # Copy frame & time
+
+        STATS.add_frame_time(frame_time)        # Add frame time to stats
 
         preprocessed_frame = preprocess.capture_regions(
             frame)      # Preprocess frame
@@ -195,13 +191,13 @@ def predict_and_show():
             cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
         )
 
-        # Note: Extra?
-        # Display the resulting frame
-        # cv2.imshow('frame', combined_layers)
-
-        # Press Q on keyboard to  exit
-        # if cv2.waitKey(1) & 0xFF == ord('q'):
-        # break
+        # Display FPS in the upper right
+        combined_layers = cv2.putText(
+            combined_layers,
+            f"FPS: {STATS.fps}",
+            (combined_layers.shape[1]-300, 100),
+            cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
+        )
 
         # ----------------------------- Display ----------------------------- #
         # Resize image to fit monitor (does not maintain aspect ratio)

@@ -1,6 +1,6 @@
 <div align="center">
 
-# blokbot.io | OpenBlok
+# OpenBlok | blokbot.io
 
 [![CI | Pylint](https://github.com/blokbot-io/OpenBlok/actions/workflows/pylint.yml/badge.svg)](https://github.com/blokbot-io/OpenBlok/actions/workflows/pylint.yml)
 &nbsp;
@@ -12,7 +12,7 @@
 
 ## Table of Contents
 
-- [blokbot.io | OpenBlok](#blokbotio--openblok)
+- [OpenBlok | blokbot.io](#openblok--blokbotio)
   - [Table of Contents](#table-of-contents)
   - [Hardware Requirements](#hardware-requirements)
   - [Installation](#installation)
