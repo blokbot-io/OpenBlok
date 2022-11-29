@@ -21,6 +21,18 @@ Help()
 URL="blokbot.io"
 DEBUG=false
 
+# -------------------------------- Verify Root ------------------------------- #
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root with sudo."
+  exit
+fi
+
+# -------------------------------- Verify User ------------------------------- #
+if ! id blok &>/dev/null; then
+    sudo adduser --disabled-password --gecos "" blok
+    sudo usermod -aG sudo blok
+fi
+
 # ---------------------------------------------------------------------------- #
 #                                 Dependencies                                 #
 # ---------------------------------------------------------------------------- #
@@ -53,6 +65,17 @@ if [ "" = "$PKG_OK" ]; then
     sudo apt-get install jq -y
 else
     echo "jq already installed, skipping..."
+fi
+
+
+# --------------------------------- v4l-utils -------------------------------- #
+REQUIRED_PKG="v4l-utils"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+if [ "" = "$PKG_OK" ]; then
+    echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG..."
+    sudo apt-get install v4l-utils -y
+else
+    echo "v4l-utils already installed, skipping..."
 fi
 
 # ---------------------------------- ffmpeg ---------------------------------- #
