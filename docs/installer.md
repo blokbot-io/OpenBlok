@@ -8,10 +8,7 @@ The installer runs through a serious of operations to install OpenBlok. The oper
    - Python 3.10
    - Package unzip
    - Package jq
-   - cv2 required packages ffmpeg libsm6 libxext6     libxcb-xinerama0
-
-   - Required display packages: xorg openbox
-
+   - cv2 required packages ffmpeg libsm6 libxext6
 2. Get OpenBlok
    - Get latest release version number
    - Download OpenBlok Zip from GitHub
@@ -23,3 +20,4 @@ The installer runs through a serious of operations to install OpenBlok. The oper
    - /opt/OpenBlok/system.json
 5. Housekeeping
    - Remove temp zip file
+   - Set permissions

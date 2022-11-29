@@ -11,9 +11,11 @@ class Stats:
         '''
         Stores time stamps for 1 second of frames
         '''
-        time_difference = frame_time - self.frame_time_log[0]
-        if time_difference > 1:
-            self.frame_time_log.pop(0)
+        if self.frame_time_log:
+            time_difference = frame_time - self.frame_time_log[0]
+
+            if time_difference > 1:
+                self.frame_time_log.pop(0)
 
         self.frame_time_log.append(frame_time)
 

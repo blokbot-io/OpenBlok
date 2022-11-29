@@ -153,6 +153,9 @@ fi
 rm -rf /opt/${VERSION}.zip
 rm -rf /opt/OpenBlok/OpenBlok-${VERSION}
 
+# --------------------------------- Permissions ------------------------------- #
+chmod a+w /opt/OpenBlok/system.json
+chmod a+w /opt/OpenBlok/modeled/models
 
 # ---------------------------------------------------------------------------- #
 echo "OpenBlok installed successfully"
