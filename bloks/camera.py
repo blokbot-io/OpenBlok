@@ -65,11 +65,6 @@ def grab_frame():
     Call to get frame, returns the last taken frame.
     Returns: frame, time_stamp
     '''
-
-    # Wait for the frame to be saved.
-    # while config.frame_queue is None:
-    #     time.sleep(.001)
-
     frame = config.frame_queue.get()
     config.requested_frame = [frame[0], frame[1]]
 
