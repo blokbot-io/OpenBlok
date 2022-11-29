@@ -19,14 +19,14 @@ from bloks.utils import annotate, preprocess, stats, bounding_boxes, crop_square
 
 from modeled import location, e2e
 
-STATS = stats.Stats()
-
 
 def predict_and_show():
     '''
     Results are displayed on the screen.
     Grabs a frame and then predicts the blok.
     '''
+    session_stats = stats.Stats()
+
     # --------------------------- Display Configuration -------------------------- #
     if os.environ.get('DISPLAY', '') == '':
         os.environ.__setitem__('DISPLAY', ':0')
@@ -39,10 +39,10 @@ def predict_and_show():
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        frame, frame_time = camera.grab_frame()  # Grab frame
-        frame_time = Decimal(frame_time)        # Copy frame & time
+        frame, frame_time = camera.grab_frame()     # Grab frame
+        frame_time = Decimal(frame_time)            # Copy frame & time
 
-        STATS.add_frame_time(frame_time)        # Add frame time to stats
+        session_stats.add_frame_time(frame_time)    # Add frame time to stats
 
         preprocessed_frame = preprocess.capture_regions(
             frame)      # Preprocess frame
@@ -179,7 +179,7 @@ def predict_and_show():
                 combined_layers = cv2.putText(
                     combined_layers,
                     f"Bin #{next_bin[0]}",
-                    (20, (count*50)+30),
+                    (20, (count*50)+50),
                     cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
                 )
 
@@ -194,8 +194,8 @@ def predict_and_show():
         # Display FPS in the upper right
         combined_layers = cv2.putText(
             combined_layers,
-            f"FPS: {STATS.fps}",
-            (combined_layers.shape[1]-300, 100),
+            f"FPS: {session_stats.fps()}",
+            (combined_layers.shape[1]-600, 100),
             cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
         )
 
