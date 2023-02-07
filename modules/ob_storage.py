@@ -7,6 +7,7 @@ import os
 import uuid
 import json
 import time
+from decimal import Decimal
 
 import cv2
 import redis
@@ -126,7 +127,7 @@ class RedisStorageManager():
         frame_object = {
             "uuid": frame_uuid,
             "frame": frame_decoded,
-            "timestamp": float(frame_timestamp.decode("utf-8"))
+            "timestamp": Decimal(frame_timestamp.decode("utf-8"))
         }
 
         if delete_frame:
