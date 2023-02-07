@@ -127,6 +127,6 @@ class RedisStorageManager():
             "timestamp": frame_timestamp.decode("utf-8")
         }
 
-        self.redis.delete(f"{queue_name}:{frame_object}")
+        self.redis.delete(f"{queue_name}:{frame_uuid}")
 
         return frame_object
