@@ -60,7 +60,7 @@ class LocalStorageManager:
         Add an image to the local storage
         '''
         if not ob_system.get(['storage', 'local', 'enabled']):
-            print("WARNING | Local storage is disabled. Can't save image.")
+            # print("WARNING | Local storage is disabled. Can't save image.")
             return
 
         if self.current_size < self.max_size_bytes:
