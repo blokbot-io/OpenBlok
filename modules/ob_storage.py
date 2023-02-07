@@ -90,6 +90,9 @@ class RedisStorageManager():
     def __init__(self):
         self.redis = redis.Redis(host=self.HOST, port=self.PORT, password=self.PASSWORD)
 
+        for key in self.redis.scan_iter("*"):
+            self.redis.delete(key)
+
     def add_frame(self, frame, frame_timestamp, queue_name):
         '''
         Adds a frame to the redis queue
@@ -101,8 +104,8 @@ class RedisStorageManager():
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
         )[1].tostring()
 
-        self.redis.hset(frame_uuid, "frame", frame_bytes)
-        self.redis.hset(frame_uuid, "timestamp", frame_timestamp)
+        self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
+        self.redis.hset(f"{queue_name}:{frame_uuid}", "timestamp", frame_timestamp)
 
         self.redis.rpush(queue_name, frame_uuid)
 
@@ -110,11 +113,16 @@ class RedisStorageManager():
         '''
         Gets a frame from the redis queue
         '''
-        frame_object = self.redis.lpop(queue_name)
+        frame_uuid = self.redis.lpop(queue_name)
+
+        frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
+        frame_nparray = cv2.imdecode(frame_bytes, cv2.IMREAD_COLOR)
 
         frame_object = {
-            "frame": self.redis.hget(frame_object, "frame"),
-            "metadata": self.redis.hget(frame_object, "metadata")
+            "frame": frame_nparray,
+            "timestamp": self.redis.hget(f"{queue_name}:{frame_uuid}", "timestamp")
         }
+
+        self.redis.delete(f"{queue_name}:{frame_object}")
 
         return frame_object
