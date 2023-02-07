@@ -23,6 +23,7 @@ FPS = 30  # Frames per second
 
 
 save_local = ob_storage.LocalStorageManager()
+redis_db = ob_storage.RedisStorageManager()
 
 # ------------------------ Continuous Capture Thread ------------------------ #
 
@@ -52,6 +53,9 @@ def continuous_capture():
         # Save the frame to the local storage
         save_local.add_image(last_frame, frame_count)
         frame_count += 1
+
+        # Save the frame to Redis
+        redis_db.add_frame(last_frame, {"timestamp": time.time()})
 
         # Rotate the frame if needed
         if config.rotational_offset is not None:

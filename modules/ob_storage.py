@@ -9,10 +9,14 @@ import json
 import time
 
 import cv2
+import redis
 
 from modules import ob_system
 
 
+# ---------------------------------------------------------------------------- #
+#                                 Local Storage                                #
+# ---------------------------------------------------------------------------- #
 class LocalStorageManager:
     '''Adds images to the local storage and manages the local storage.'''
 
@@ -71,3 +75,34 @@ class LocalStorageManager:
         metadata_path = os.path.join(self.path, self.session_id, 'metadata.json')
         with open(metadata_path, 'w', encoding="UTF-8") as metadata_file:
             json.dump(metadata, metadata_file, indent=4)
+
+
+# ---------------------------------------------------------------------------- #
+#                                     Redis                                    #
+# ---------------------------------------------------------------------------- #
+class RedisStorageManager():
+    '''Manages the redis storage'''
+
+    HOST = ob_system.get(['storage', 'redis', 'host'])
+    PORT = ob_system.get(['storage', 'redis', 'port'])
+    PASSWORD = ob_system.get(['storage', 'redis', 'password'])
+
+    def __init__(self):
+        self.redis = redis.Redis(host=self.HOST, port=self.PORT, password=self.PASSWORD)
+
+    def add_frame(self, frame, frame_metadata, queue_name):
+        '''
+        Adds a frame to the redis queue
+        '''
+        data = {
+            "frame": frame,
+            "metadata": frame_metadata
+        }
+
+        self.redis.rpush(queue_name, data)
+
+    def get_frame(self, queue_name):
+        '''
+        Gets a frame from the redis queue
+        '''
+        return self.redis.lpop(queue_name)
