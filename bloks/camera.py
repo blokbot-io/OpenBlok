@@ -55,7 +55,7 @@ def continuous_capture():
         frame_count += 1
 
         # Save the frame to Redis
-        redis_db.add_frame(last_frame, {"timestamp": time.time()}, "raw")
+        redis_db.add_frame(last_frame, time.time(), "raw")
 
         # Rotate the frame if needed
         if config.rotational_offset is not None:

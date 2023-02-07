@@ -90,7 +90,7 @@ class RedisStorageManager():
     def __init__(self):
         self.redis = redis.Redis(host=self.HOST, port=self.PORT, password=self.PASSWORD)
 
-    def add_frame(self, frame, frame_metadata, queue_name):
+    def add_frame(self, frame, frame_timestamp, queue_name):
         '''
         Adds a frame to the redis queue
         '''
@@ -102,7 +102,7 @@ class RedisStorageManager():
         )[1].tostring()
 
         self.redis.hset(frame_uuid, "frame", frame_bytes)
-        self.redis.hset(frame_uuid, "metadata", frame_metadata)
+        self.redis.hset(frame_uuid, "timestamp", frame_timestamp)
 
         self.redis.rpush(queue_name, frame_uuid)
 
