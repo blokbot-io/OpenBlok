@@ -24,8 +24,10 @@ def rotation_correction(rotation_info):
             (rotation_info['aruco_center_x'], rotation_info['aruco_center_y']),
             rotation_info['angle_offset'], 1)
 
-        last_frame = cv2.warpAffine(frame_object['frame'], rotation_matrix,
-                                    (frame_object['frame'].shape[1], frame_object['frame'].shape[0]))
+        last_frame = cv2.warpAffine(
+            frame_object['frame'], rotation_matrix,
+            (frame_object['frame'].shape[1], frame_object['frame'].shape[0])
+        )
 
         # Save the frame to Redis
         redis_db.add_frame(last_frame, frame_object['timestamp'], "rotated")

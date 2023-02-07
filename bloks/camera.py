@@ -9,11 +9,11 @@ Use the function grab_frame() to get the last frame.
 #pylint: disable=C0301
 
 import time
-from decimal import Decimal
+# from decimal import Decimal
 
 import cv2
 import config
-import numpy as np
+# import numpy as np
 
 from modules import ob_storage
 
