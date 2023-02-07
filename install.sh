@@ -164,6 +164,13 @@ if ! [ -f "/opt/OpenBlok/system.json" ]; then
             "e2e": {
                 "version": null
             }
+        },
+        "storage":{
+            "local": {
+                "path": "/opt/OpenBlok/images",
+                "maxSizeGB": 10,
+                "enabled": true
+            }
         }
     }' > /opt/OpenBlok/system.json
 fi
