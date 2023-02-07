@@ -69,6 +69,9 @@ def continuous_capture():
             last_frame = cv2.warpAffine(frame_object['frame'], rotation_matrix,
                                         (frame_object['frame'].shape[1], frame_object['frame'].shape[0]))
 
+            # Save the frame to Redis
+            redis_db.add_frame(last_frame, time.time(), "rotated")
+
         # Remove stale frame from queue
         if config.frame_queue.full():
             config.frame_queue.get()
