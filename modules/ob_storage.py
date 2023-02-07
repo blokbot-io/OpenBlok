@@ -88,8 +88,7 @@ class RedisStorageManager():
     PASSWORD = ob_system.get(['storage', 'redis', 'password'])
 
     def __init__(self):
-        self.redis = redis.Redis(host=self.HOST, port=self.PORT,
-                                 password=self.PASSWORD, decode_responses=True)
+        self.redis = redis.Redis(host=self.HOST, port=self.PORT, password=self.PASSWORD)
 
         for key in self.redis.scan_iter("*"):
             self.redis.delete(key)
@@ -114,7 +113,7 @@ class RedisStorageManager():
         '''
         Gets a frame from the redis queue
         '''
-        frame_uuid = self.redis.lpop(queue_name)
+        frame_uuid = self.redis.lpop(queue_name).decode("utf-8")
         print(f"frame_uuid: {frame_uuid}")
 
         frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
