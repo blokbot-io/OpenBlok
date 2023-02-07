@@ -115,6 +115,7 @@ class RedisStorageManager():
         Gets a frame from the redis queue
         '''
         frame_uuid = self.redis.blpop(queue_name, timeout=30)
+        print(frame_uuid)
         frame_uuid = frame_uuid.decode("utf-8")
 
         frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
