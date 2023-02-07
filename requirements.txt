@@ -1,6 +1,6 @@
 config==0.5.1
 boto3==1.26.17
-opencv-contrib-python>=4.6.0.66
+opencv-contrib-python==4.7.0.68
 pyserial==3.5
 screeninfo==0.8.1
 tensorflow-gpu==2.11.0
