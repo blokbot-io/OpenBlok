@@ -6,6 +6,7 @@ Manages the storage of images both locally and on the cloud.
 import os
 import uuid
 import json
+import time
 
 import cv2
 
@@ -32,7 +33,7 @@ class LocalStorageManager:
         if hasattr(self, 'current_size'):
             return
         self.current_size = 0
-        self.session_id = str(uuid.uuid4())
+        self.session_id = str(round(time.time()))
         self.path = ob_system.get(['storage', 'local', 'path'])
         self.max_size_gb = ob_system.get(['storage', 'local', 'maxSizeGB'])
         self.max_size_bytes = self.max_size_gb * 1024 * 1024 * 1024
@@ -49,13 +50,13 @@ class LocalStorageManager:
             for file in files:
                 self.current_size += os.path.getsize(os.path.join(path, file))
 
-    def add_image(self, image):
+    def add_image(self, frame, frame_name=uuid.uuid4()):
         '''
         Add an image to the local storage
         '''
         if self.current_size < self.max_size_bytes:
-            image_path = os.path.join(self.path, self.session_id, str(uuid.uuid4()) + '.png')
-            cv2.imwrite(image_path, image)
+            image_path = os.path.join(self.path, self.session_id, str(frame_name) + '.png')
+            cv2.imwrite(image_path, frame)
             self.current_size += os.path.getsize(image_path)
 
     def session_metadata(self, metadata):

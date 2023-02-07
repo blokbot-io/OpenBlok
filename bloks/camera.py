@@ -40,6 +40,7 @@ def continuous_capture():
     cap.set(cv2.CAP_PROP_FPS, FPS)              # Set frames per second
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
+    frame_count = 0                             # Frame counter
     last_frame = None                           # Last frame taken
     while True:
         ret, last_frame = cap.read()                 # Read the frame
@@ -49,7 +50,8 @@ def continuous_capture():
             continue
 
         # Save the frame to the local storage
-        save_local.add_image(last_frame)
+        save_local.add_image(last_frame, frame_count)
+        frame_count += 1
 
         # Rotate the frame if needed
         if config.rotational_offset is not None:
