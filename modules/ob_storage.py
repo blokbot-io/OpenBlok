@@ -10,6 +10,7 @@ import time
 
 import cv2
 import redis
+import numpy as np
 
 from modules import ob_system
 
@@ -117,10 +118,11 @@ class RedisStorageManager():
         print(f"frame_uuid: {frame_uuid}")
 
         frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
-        frame_nparray = cv2.imdecode(frame_bytes, cv2.IMREAD_COLOR)
+        frame_nparray = np.asarray(bytearray(frame_bytes), dtype="uint8")
+        frame_decoded = cv2.imdecode(frame_nparray, cv2.IMREAD_COLOR)
 
         frame_object = {
-            "frame": frame_nparray,
+            "frame": frame_decoded,
             "timestamp": self.redis.hget(f"{queue_name}:{frame_uuid}", "timestamp")
         }
 
