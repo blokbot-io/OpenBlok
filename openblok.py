@@ -71,12 +71,13 @@ print("INFO | Carousel position thread started.")
 #                                  Calibration                                 #
 # ---------------------------------------------------------------------------- #
 if calibrate.calibration():
-    rotate_process = multiprocessing.Process(
-        target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
-    # rotate_process = threading.Thread(
-    #     target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
-    rotate_process.daemon = True
-    rotate_process.start()
+    for _ in range(2):
+        rotate_process = multiprocessing.Process(
+            target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
+        # rotate_process = threading.Thread(
+        #     target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
+        rotate_process.daemon = True
+        rotate_process.start()
     print("INFO | Calibration successful.")
 
 
