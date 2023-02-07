@@ -60,11 +60,14 @@ def continuous_capture():
         # Rotate the frame if needed
         if config.rotational_offset is not None:
 
+            # Get frame from queue
+            frame_object = redis_db.get_frame("raw")
+
             rotation_matrix = cv2.getRotationMatrix2D(
                 (config.rotational_offset[0], config.rotational_offset[1]),
                 config.rotational_offset[2], 1)
-            last_frame = cv2.warpAffine(last_frame, rotation_matrix,
-                                        (last_frame.shape[1], last_frame.shape[0]))
+            last_frame = cv2.warpAffine(frame_object['frame'], rotation_matrix,
+                                        (frame_object['frame'].shape[1], frame_object['frame'].shape[0]))
 
         # Remove stale frame from queue
         if config.frame_queue.full():
