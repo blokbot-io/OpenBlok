@@ -15,12 +15,18 @@ import cv2
 import config
 import numpy as np
 
+from modules import ob_storage
+
 print("INFO | camera module loaded")
 
 FPS = 30  # Frames per second
 
 
+save_local = ob_storage.LocalStorageManager()
+
 # ------------------------ Continuous Capture Thread ------------------------ #
+
+
 def continuous_capture():
     '''
     Camera continues streaming frames. Only the last frame is saved when requested.
@@ -41,6 +47,9 @@ def continuous_capture():
         if not ret or last_frame is None:
             print("WARNING | Can't receive frame (stream end?). Exiting ...")
             continue
+
+        # Save the frame to the local storage
+        save_local.add_image(last_frame)
 
         # Rotate the frame if needed
         if config.rotational_offset is not None:
