@@ -94,15 +94,22 @@ class RedisStorageManager():
         '''
         Adds a frame to the redis queue
         '''
-        data = {
-            "frame": frame,
-            "metadata": frame_metadata
-        }
+        frame_uuid = str(uuid.uuid4())
 
-        self.redis.rpush(queue_name, data)
+        self.redis.hset(frame_uuid, "frame", frame)
+        self.redis.hset(frame_uuid, "metadata", frame_metadata)
+
+        self.redis.rpush(queue_name, frame_uuid)
 
     def get_frame(self, queue_name):
         '''
         Gets a frame from the redis queue
         '''
-        return self.redis.lpop(queue_name)
+        frame_object = self.redis.lpop(queue_name)
+
+        frame_object = {
+            "frame": self.redis.hget(frame_object, "frame"),
+            "metadata": self.redis.hget(frame_object, "metadata")
+        }
+
+        return frame_object
