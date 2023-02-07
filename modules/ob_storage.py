@@ -6,6 +6,8 @@ Manages the storage of images both locally and on the cloud.
 import os
 import uuid
 
+import cv2
+
 from modules import ob_system
 
 
@@ -50,5 +52,5 @@ class LocalStorageManager:
         Add an image to the local storage
         '''
         image_path = os.path.join(self.path, self.session_id, str(uuid.uuid4()) + '.jpg')
-        image.save(image_path, 'JPEG')
+        cv2.imwrite(image_path, image)
         self.current_size += os.path.getsize(image_path)

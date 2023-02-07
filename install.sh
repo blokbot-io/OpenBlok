@@ -165,7 +165,7 @@ if ! [ -f "/opt/OpenBlok/system.json" ]; then
                 "version": null
             }
         },
-        "storage":{
+        "storage": {
             "local": {
                 "path": "/opt/OpenBlok/images",
                 "maxSizeGB": 10,
