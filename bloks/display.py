@@ -7,7 +7,6 @@ TODO:
 
 import os
 import threading
-from decimal import Decimal
 
 import cv2
 import config
@@ -47,11 +46,9 @@ def predict_and_show():
         frame = next_frame['frame']
         frame_time = next_frame['timestamp']
 
-        frame_time = Decimal(frame_time)            # Copy frame & time
         session_stats.add_frame_time(frame_time)    # Add frame time to stats
 
-        preprocessed_frame = preprocess.capture_regions(
-            frame)      # Preprocess frame
+        preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         # Frame to add annotations to
         combined_layers = np.copy(frame)
 

@@ -111,7 +111,7 @@ class RedisStorageManager():
 
         self.redis.rpush(queue_name, frame_uuid)
 
-    def get_frame(self, queue_name):
+    def get_frame(self, queue_name, delete_frame=True):
         '''
         Gets a frame from the redis queue
         '''
@@ -124,10 +124,12 @@ class RedisStorageManager():
         frame_timestamp = self.redis.hget(f"{queue_name}:{frame_uuid}", "timestamp")
 
         frame_object = {
+            "uuid": frame_uuid,
             "frame": frame_decoded,
             "timestamp": frame_timestamp.decode("utf-8")
         }
 
-        self.redis.delete(f"{queue_name}:{frame_uuid}")
+        if delete_frame:
+            self.redis.delete(f"{queue_name}:{frame_uuid}")
 
         return frame_object
