@@ -58,6 +58,8 @@ class LocalStorageManager:
             image_path = os.path.join(self.path, self.session_id, str(frame_name) + '.png')
             cv2.imwrite(image_path, frame)
             self.current_size += os.path.getsize(image_path)
+        else:
+            print("WARNING | Local storage is full. Can't save image.")
 
     def session_metadata(self, metadata):
         '''
