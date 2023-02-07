@@ -8,7 +8,6 @@ import cv2
 from modules import ob_storage
 
 
-save_local = ob_storage.LocalStorageManager()
 redis_db = ob_storage.RedisStorageManager()
 
 
