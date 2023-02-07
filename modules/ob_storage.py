@@ -116,6 +116,7 @@ class RedisStorageManager():
         frame_uuid = self.redis.lpop(queue_name)
 
         frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
+        print(frame_bytes)
         frame_nparray = cv2.imdecode(frame_bytes, cv2.IMREAD_COLOR)
 
         frame_object = {
