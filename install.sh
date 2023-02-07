@@ -108,6 +108,16 @@ else
     echo "libxext6 already installed, skipping..."
 fi
 
+# ----------------------------------- Redis ---------------------------------- #
+REQUIRED_PKG="redis"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
+if [ "" = "$PKG_OK" ]; then
+    echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG..."
+    sudo apt-get install redis -y
+else
+    echo "redis already installed, skipping..."
+fi
+
 
 # ---------------------------------------------------------------------------- #
 #                         Grab Latest OpenBlok Release                         #
@@ -170,6 +180,11 @@ if ! [ -f "/opt/OpenBlok/system.json" ]; then
                 "path": "/opt/OpenBlok/images",
                 "maxSizeGB": 10,
                 "enabled": true
+            },
+            "redis": {
+                "host": "localhost",
+                "port": 6379,
+                "password": null
             }
         }
     }' > /opt/OpenBlok/system.json

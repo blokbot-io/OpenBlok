@@ -14,10 +14,13 @@ import config
 import numpy as np
 from screeninfo import get_monitors  # Required to get monitor info
 
-from bloks import camera, serial  # , upload
+from bloks import serial  # camera, upload
 from bloks.utils import annotate, preprocess, stats, bounding_boxes, crop_square
+from modules import ob_storage
 
 from modeled import location, e2e
+
+redis_db = ob_storage.RedisStorageManager()
 
 
 def predict_and_show():
@@ -39,9 +42,12 @@ def predict_and_show():
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        frame, frame_time = camera.grab_frame()     # Grab frame
-        frame_time = Decimal(frame_time)            # Copy frame & time
+        # frame, frame_time = camera.grab_frame()     # Grab frame
+        next_frame = redis_db.get_frame("rotated")
+        frame = next_frame['frame']
+        frame_time = next_frame['timestamp']
 
+        frame_time = Decimal(frame_time)            # Copy frame & time
         session_stats.add_frame_time(frame_time)    # Add frame time to stats
 
         preprocessed_frame = preprocess.capture_regions(

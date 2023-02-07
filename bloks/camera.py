@@ -9,11 +9,11 @@ Use the function grab_frame() to get the last frame.
 #pylint: disable=C0301
 
 import time
-from decimal import Decimal
+# from decimal import Decimal
 
 import cv2
 import config
-import numpy as np
+# import numpy as np
 
 from modules import ob_storage
 
@@ -23,6 +23,7 @@ FPS = 30  # Frames per second
 
 
 save_local = ob_storage.LocalStorageManager()
+redis_db = ob_storage.RedisStorageManager()
 
 # ------------------------ Continuous Capture Thread ------------------------ #
 
@@ -40,6 +41,7 @@ def continuous_capture():
     cap.set(cv2.CAP_PROP_FPS, FPS)              # Set frames per second
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
 
+    frame_count = 0                             # Frame counter
     last_frame = None                           # Last frame taken
     while True:
         ret, last_frame = cap.read()                 # Read the frame
@@ -49,23 +51,33 @@ def continuous_capture():
             continue
 
         # Save the frame to the local storage
-        save_local.add_image(last_frame)
+        save_local.add_image(last_frame, frame_count)
+        frame_count += 1
+
+        # Save the frame to Redis
+        redis_db.add_frame(last_frame, time.time(), "raw")
 
         # Rotate the frame if needed
-        if config.rotational_offset is not None:
+        # if config.rotational_offset is not None:
 
-            rotation_matrix = cv2.getRotationMatrix2D(
-                (config.rotational_offset[0], config.rotational_offset[1]),
-                config.rotational_offset[2], 1)
-            last_frame = cv2.warpAffine(last_frame, rotation_matrix,
-                                        (last_frame.shape[1], last_frame.shape[0]))
+        #     # Get frame from queue
+        #     frame_object = redis_db.get_frame("raw")
+
+        #     rotation_matrix = cv2.getRotationMatrix2D(
+        #         (config.rotational_offset[0], config.rotational_offset[1]),
+        #         config.rotational_offset[2], 1)
+        #     last_frame = cv2.warpAffine(frame_object['frame'], rotation_matrix,
+        #                                 (frame_object['frame'].shape[1], frame_object['frame'].shape[0]))
+
+        #     # Save the frame to Redis
+        #     redis_db.add_frame(last_frame, time.time(), "rotated")
 
         # Remove stale frame from queue
-        if config.frame_queue.full():
-            config.frame_queue.get()
+        # if config.frame_queue.full():
+        #     config.frame_queue.get()
 
-        config.frame_queue.put([np.copy(last_frame), Decimal(time.time())])
-        continue
+        # config.frame_queue.put([np.copy(last_frame), Decimal(time.time())])
+        # continue
 
 
 # ---------------------------- Grab Frame Function --------------------------- #
