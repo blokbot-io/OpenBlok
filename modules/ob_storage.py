@@ -96,7 +96,12 @@ class RedisStorageManager():
         '''
         frame_uuid = str(uuid.uuid4())
 
-        self.redis.hset(frame_uuid, "frame", frame)
+        frame_bytes = cv2.imencode(
+            '.png', frame,
+            [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
+        )[1].tostring()
+
+        self.redis.hset(frame_uuid, "frame", frame_bytes)
         self.redis.hset(frame_uuid, "metadata", frame_metadata)
 
         self.redis.rpush(queue_name, frame_uuid)
