@@ -3,7 +3,7 @@
 import sys
 import signal
 import threading
-# import multiprocessing
+import multiprocessing
 from queue import Queue
 
 import config
@@ -71,10 +71,10 @@ print("INFO | Carousel position thread started.")
 #                                  Calibration                                 #
 # ---------------------------------------------------------------------------- #
 if calibrate.calibration():
-    # rotate_process = multiprocessing.Process(
-    #     target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
-    rotate_process = threading.Thread(
+    rotate_process = multiprocessing.Process(
         target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
+    # rotate_process = threading.Thread(
+    #     target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
     rotate_process.daemon = True
     rotate_process.start()
     print("INFO | Calibration successful.")
