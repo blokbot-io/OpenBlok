@@ -126,7 +126,7 @@ class RedisStorageManager():
         frame_object = {
             "uuid": frame_uuid,
             "frame": frame_decoded,
-            "timestamp": frame_timestamp.decode("utf-8")
+            "timestamp": float(frame_timestamp.decode("utf-8"))
         }
 
         if delete_frame:
