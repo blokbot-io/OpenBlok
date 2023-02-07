@@ -4,6 +4,9 @@ import config
 
 from bloks import camera
 from bloks.utils import get_aruco, get_aruco_details
+from modules import ob_storage
+
+metadata_storage = ob_storage.LocalStorageManager()
 
 
 def rotation_correction():
@@ -15,6 +18,13 @@ def rotation_correction():
         marker_locations, marker_ids = get_aruco(frame)[:2]
         aruco_center_x, aruco_center_y, _, angle_offset = get_aruco_details(
             marker_locations, marker_ids, 0)  # pylint: disable=C0301
+
+        rotational_offset = {
+            "aruco_center_x": aruco_center_x,
+            "aruco_center_y": aruco_center_y,
+            "angle_offset": angle_offset
+        }
+        metadata_storage.session_metadata(rotational_offset)
 
         config.rotational_offset = aruco_center_x, aruco_center_y, angle_offset
 
