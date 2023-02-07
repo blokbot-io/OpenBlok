@@ -3,7 +3,7 @@
 import sys
 import signal
 import threading
-# import multiprocessing
+import multiprocessing
 from queue import Queue
 
 import config
