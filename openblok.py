@@ -71,7 +71,7 @@ print("INFO | Carousel position thread started.")
 #                                  Calibration                                 #
 # ---------------------------------------------------------------------------- #
 if calibrate.calibration():
-    for _ in range(2):  # Starts 3 multiprocessing processes to correct for rotation.
+    for _ in range(1):  # Starts 2 multiprocessing processes to correct for rotation.
         rotate_process = multiprocessing.Process(
             target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
         # rotate_process = threading.Thread(
