@@ -16,6 +16,7 @@ def rotation_correction(rotation_info):
     '''
     Grabs a frame from the queue and rotates it.
     '''
+    print("Rotating frame", flush=True)
     while True:
         # Get frame from queue
         frame_object = redis_db.get_frame("raw")
