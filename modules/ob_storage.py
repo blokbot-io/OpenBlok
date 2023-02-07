@@ -61,6 +61,7 @@ class LocalStorageManager:
         '''
         if not ob_system.get(['storage', 'local', 'enabled']):
             print("WARNING | Local storage is disabled. Can't save image.")
+            return
 
         if self.current_size < self.max_size_bytes:
             image_path = os.path.join(self.path, self.session_id, str(frame_name) + '.png')

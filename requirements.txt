@@ -4,5 +4,5 @@ opencv-contrib-python==4.7.0.68
 pyserial==3.5
 redis==4.4.2
 screeninfo==0.8.1
-tensorflow-gpu==2.12.0
+tensorflow==2.11.0
 xmltodict==0.13.0

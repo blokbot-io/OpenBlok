@@ -73,11 +73,11 @@ def continuous_capture():
         #     redis_db.add_frame(last_frame, time.time(), "rotated")
 
         # Remove stale frame from queue
-        if config.frame_queue.full():
-            config.frame_queue.get()
+        # if config.frame_queue.full():
+        #     config.frame_queue.get()
 
-        config.frame_queue.put([np.copy(last_frame), Decimal(time.time())])
-        continue
+        # config.frame_queue.put([np.copy(last_frame), Decimal(time.time())])
+        # continue
 
 
 # ---------------------------- Grab Frame Function --------------------------- #

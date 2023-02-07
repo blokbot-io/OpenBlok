@@ -2,11 +2,12 @@
 
 import config
 
-from bloks import camera
+# from bloks import camera
 from bloks.utils import get_aruco, get_aruco_details
 from modules import ob_storage
 
 metadata_storage = ob_storage.LocalStorageManager()
+redis_db = ob_storage.RedisStorageManager()
 
 
 def rotation_correction():
@@ -14,7 +15,8 @@ def rotation_correction():
     Corrects for the rotation of the camera.
     '''
     if config.rotational_offset is None:
-        frame = camera.grab_frame()[0]  # Grab frame
+        frame = redis_db.get_frame("raw")['frame']  # Grab frame
+
         marker_locations, marker_ids = get_aruco(frame)[:2]
         aruco_center_x, aruco_center_y, _, angle_offset = get_aruco_details(
             marker_locations, marker_ids, 0)  # pylint: disable=C0301
@@ -35,7 +37,8 @@ def calibration():
     '''
     # 3 Attempt to get the ArUco marker locations
     for _ in range(3):
-        frame = camera.grab_frame()[0]
+        frame = redis_db.get_frame("raw")['frame']
+
         marker_locations = get_aruco(frame)[0]
         if marker_locations is not None:
             break
