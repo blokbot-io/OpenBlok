@@ -26,7 +26,7 @@ def rotation_correction():
         }
         metadata_storage.session_metadata(rotational_offset)
 
-        config.rotational_offset = aruco_center_x, aruco_center_y, angle_offset
+        config.rotational_offset = rotational_offset
 
 
 def calibration():
