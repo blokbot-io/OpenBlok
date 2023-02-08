@@ -130,83 +130,83 @@ def predict_and_show():
             category = predictions["category"][0]
             category_confidence = predictions["category"][1]
 
-            if predictions is not None:
+        #     if predictions is not None:
 
-                if design_confidence < 60 or category_confidence < 60:
-                    combined_layers = cv2.putText(
-                        combined_layers,
-                        "CONFIDENCE TOO LOW",
-                        (combined_layers.shape[1]//3, 200),
-                        cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
-                    )
+        #         if design_confidence < 60 or category_confidence < 60:
+        #             combined_layers = cv2.putText(
+        #                 combined_layers,
+        #                 "CONFIDENCE TOO LOW",
+        #                 (combined_layers.shape[1]//3, 200),
+        #                 cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
+        #             )
 
-                else:
-                    combined_layers = cv2.putText(
-                        combined_layers,
-                        f"Design | #{design} | {design_confidence:.2f}%",
-                        (combined_layers.shape[1]//3, 200),
-                        cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
-                    )
+        #         else:
+        #             combined_layers = cv2.putText(
+        #                 combined_layers,
+        #                 f"Design | #{design} | {design_confidence:.2f}%",
+        #                 (combined_layers.shape[1]//3, 200),
+        #                 cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+        #             )
 
-                    combined_layers = cv2.putText(
-                        combined_layers,
-                        f"Category | {category} | {category_confidence:.2f}%",
-                        (combined_layers.shape[1]//3, 300),
-                        cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
-                    )
+        #             combined_layers = cv2.putText(
+        #                 combined_layers,
+        #                 f"Category | {category} | {category_confidence:.2f}%",
+        #                 (combined_layers.shape[1]//3, 300),
+        #                 cv2.FONT_HERSHEY_DUPLEX, 2, (0, 0, 255), 5
+        #             )
 
-                    # Set bin location to prediction
-                    bin_schedule = serial.update_position_schedule(
-                        frame_time, top[0],
-                        design, design_confidence
-                    )
+        #             # Set bin location to prediction
+        #             bin_schedule = serial.update_position_schedule(
+        #                 frame_time, top[0],
+        #                 design, design_confidence
+        #             )
 
-                    # # Save procesed frame
-                    # cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
+        #             # # Save procesed frame
+        #             # cv2.imwrite(f"/opt/toupload/{int(frame_time)}.png", preprocessed_frame)
 
-        else:
+        # else:
 
-            combined_layers = cv2.putText(
-                combined_layers,
-                "LEGO NOT FOUND",
-                (combined_layers.shape[1]//3, 200),
-                cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
-            )
-        if bin_schedule is not None:
-            for count, next_bin in enumerate(bin_schedule):
-                combined_layers = cv2.putText(
-                    combined_layers,
-                    f"Bin #{next_bin[0]}",
-                    (20, (count*60)+60),
-                    cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
-                )
+        #     combined_layers = cv2.putText(
+        #         combined_layers,
+        #         "LEGO NOT FOUND",
+        #         (combined_layers.shape[1]//3, 200),
+        #         cv2.FONT_HERSHEY_DUPLEX, 4, (128, 128, 128), 5
+        #     )
+        # if bin_schedule is not None:
+        #     for count, next_bin in enumerate(bin_schedule):
+        #         combined_layers = cv2.putText(
+        #             combined_layers,
+        #             f"Bin #{next_bin[0]}",
+        #             (20, (count*60)+60),
+        #             cv2.FONT_HERSHEY_DUPLEX, 2, (255, 0, 0), 5
+        #         )
 
-        # Display part velocity in lower left
-        combined_layers = cv2.putText(
-            combined_layers,
-            f"Part Velocity: {config.part_velocity:.2f} in/s",
-            (20, combined_layers.shape[0]-200),
-            cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
-        )
+        # # Display part velocity in lower left
+        # combined_layers = cv2.putText(
+        #     combined_layers,
+        #     f"Part Velocity: {config.part_velocity:.2f} in/s",
+        #     (20, combined_layers.shape[0]-200),
+        #     cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
+        # )
 
-        # Display FPS in the upper right
-        combined_layers = cv2.putText(
-            combined_layers,
-            f"FPS: {session_stats.fps()}",
-            (combined_layers.shape[1]-500, 100),
-            cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
-        )
+        # # Display FPS in the upper right
+        # combined_layers = cv2.putText(
+        #     combined_layers,
+        #     f"FPS: {session_stats.fps()}",
+        #     (combined_layers.shape[1]-500, 100),
+        #     cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
+        # )
 
-        # ----------------------------- Display ----------------------------- #
-        # Resize image to fit monitor (does not maintain aspect ratio)
-        frame_resized = cv2.resize(
-            combined_layers, (monitor.width, monitor.height))
+        # # ----------------------------- Display ----------------------------- #
+        # # Resize image to fit monitor (does not maintain aspect ratio)
+        # frame_resized = cv2.resize(
+        #     combined_layers, (monitor.width, monitor.height))
 
-        # ----------------------------- Display Image ------------------------------- #
-        cv2.imshow('Combined', frame_resized)
+        # # ----------------------------- Display Image ------------------------------- #
+        # cv2.imshow('Combined', frame_resized)
 
-        if cv2.waitKey(10) & 0xFF == ord('q'):
-            break
+        # if cv2.waitKey(10) & 0xFF == ord('q'):
+        #     break
 
     cv2.destroyAllWindows()
 
