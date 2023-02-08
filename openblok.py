@@ -8,9 +8,11 @@ from queue import Queue
 
 import config
 
-from bloks import camera, calibrate, display, precheck, serial, updater
+from bloks import camera, calibrate, precheck, serial, updater  # , display
 from sub_processes import ob_rotate_frame, ob_roi_frame, ob_predictions
 from modules import ob_storage
+
+multiprocessing.set_start_method('spawn')
 
 print("INFO | OpenBlok Loading...")
 
@@ -94,9 +96,10 @@ roi_process = multiprocessing.Process(target=ob_roi_frame.capture_regions)
 roi_process.daemon = True
 roi_process.start()
 
-predict_process = multiprocessing.Process(target=ob_predictions.run_models)
-predict_process.daemon = True
-predict_process.start()
+for _ in range(2):  # Starts 2 multiprocessing processes to predict.
+    predict_process = multiprocessing.Process(target=ob_predictions.run_models)
+    predict_process.daemon = True
+    predict_process.start()
 
 # ---------------------------------------------------------------------------- #
 #                                   Main Loop                                  #
