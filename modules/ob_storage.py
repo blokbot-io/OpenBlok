@@ -155,3 +155,10 @@ class RedisStorageManager():
 
         for key, value in metadata.items():
             self.redis.hset(f"{queue_name}:{frame_uuid}", key, value)
+
+    def move_frame(self, queue_name, new_queue_name, frame_uuid):
+        '''
+        Moves a frame from one queue to another
+        '''
+        self.redis.rename(f"{queue_name}:{frame_uuid}", f"{new_queue_name}:{frame_uuid}")
+        self.redis.rpush(new_queue_name, frame_uuid)
