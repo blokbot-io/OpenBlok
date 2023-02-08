@@ -36,5 +36,3 @@ def capture_regions():
 
         # Save the frame to Redis
         redis_db.add_frame("roi", combined, metadata)
-
-        return combined
