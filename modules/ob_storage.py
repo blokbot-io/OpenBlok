@@ -136,7 +136,8 @@ class RedisStorageManager():
         }
 
         for key, value in other_metadata.items():
-            frame_object[key.decode("utf-8")] = value.decode("utf-8")
+            if key not in ["frame", "timestamp"]:
+                frame_object[key.decode("utf-8")] = value.decode("utf-8")
 
         if delete_frame:
             self.redis.delete(f"{queue_name}:{frame_uuid}")
