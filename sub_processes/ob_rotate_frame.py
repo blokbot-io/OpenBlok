@@ -29,5 +29,7 @@ def rotation_correction(rotation_info):
             (frame_object['frame'].shape[1], frame_object['frame'].shape[0])
         )
 
+        metadata = {'timestamp': frame_object['timestamp']}
+
         # Save the frame to Redis
-        redis_db.add_frame(last_frame, frame_object['timestamp'], "rotated")
+        redis_db.add_frame("rotated", last_frame, metadata)

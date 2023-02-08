@@ -95,7 +95,7 @@ class RedisStorageManager():
         for key in self.redis.scan_iter("*"):
             self.redis.delete(key)
 
-    def add_frame(self, frame, frame_timestamp, queue_name):
+    def add_frame(self, queue_name, frame, metadata):
         '''
         Adds a frame to the redis queue
         '''
@@ -107,15 +107,19 @@ class RedisStorageManager():
         )[1].tostring()
 
         self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
-        self.redis.hset(f"{queue_name}:{frame_uuid}", "timestamp", frame_timestamp)
+
+        for key, value in metadata.items():
+            self.redis.hset(f"{queue_name}:{frame_uuid}", key, value)
 
         self.redis.rpush(queue_name, frame_uuid)
+
+        return frame_uuid
 
     def get_frame(self, queue_name, delete_frame=True):
         '''
         Gets a frame from the redis queue
         '''
-        frame_uuid = self.redis.blpop([queue_name], timeout=10)[1].decode("utf-8")
+        frame_uuid = self.redis.blpop([queue_name], timeout=30)[1].decode("utf-8")
 
         frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
         frame_nparray = np.asarray(bytearray(frame_bytes), dtype="uint8")
@@ -123,11 +127,16 @@ class RedisStorageManager():
 
         frame_timestamp = self.redis.hget(f"{queue_name}:{frame_uuid}", "timestamp")
 
+        other_metadata = self.redis.hgetall(f"{queue_name}:{frame_uuid}")
+
         frame_object = {
             "uuid": frame_uuid,
             "frame": frame_decoded,
             "timestamp": frame_timestamp.decode("utf-8")
         }
+
+        for key, value in other_metadata.items():
+            frame_object[key.decode("utf-8")] = value.decode("utf-8")
 
         if delete_frame:
             self.redis.delete(f"{queue_name}:{frame_uuid}")
