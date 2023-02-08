@@ -42,13 +42,19 @@ def predict_and_show():
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        next_frame = redis_db.get_frame("rotated")
+        next_ready_frame = redis_db.get_frame("roi")
+
+        next_frame = redis_db.get_frame("rotated", frame_uuid=next_ready_frame['source_frame'])
+        # next_frame = redis_db.get_frame("rotated")
+
         frame = next_frame['frame']
         frame_time = Decimal(next_frame['timestamp'])
 
         session_stats.add_frame_time(frame_time)    # Add frame time to stats
 
-        preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
+        preprocessed_frame = next_ready_frame['frame']  # Cropped to ROI
+        # preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
+
         # Frame to add annotations to
         combined_layers = np.copy(frame)
 
