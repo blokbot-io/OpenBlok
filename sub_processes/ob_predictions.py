@@ -23,7 +23,8 @@ def run_models():
     runs models on frames in the queue, stores results in Redis
     '''
     while True:
-        preprocessed_frame = redis_db.get_frame("roi")
+        next_ready_frame = redis_db.get_frame("roi")
+        preprocessed_frame = next_ready_frame['frame']
 
         new_metadata = {}
 
@@ -53,4 +54,4 @@ def run_models():
             new_metadata['side_crop'] = side_crop
             new_metadata['top_crop'] = top_crop
 
-        redis_db.add_metadata("rotated", preprocessed_frame['uuid'], new_metadata)
+        redis_db.add_metadata("rotated", next_ready_frame['uuid'], new_metadata)
