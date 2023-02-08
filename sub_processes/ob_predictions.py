@@ -14,14 +14,14 @@ from modeled import location, e2e
 
 redis_db = ob_storage.RedisStorageManager()
 
-location_model = location.LocationInference()
-e2e_model = e2e.PartInference()
-
 
 def run_models():
     '''
     runs models on frames in the queue, stores results in Redis
     '''
+    location_model = location.LocationInference()
+    e2e_model = e2e.PartInference()
+
     while True:
         next_ready_frame = redis_db.get_frame("roi")
         preprocessed_frame = next_ready_frame['frame']
