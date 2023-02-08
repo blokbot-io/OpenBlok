@@ -92,6 +92,7 @@ class RedisStorageManager():
     def __init__(self):
         self.redis = redis.Redis(host=self.HOST, port=self.PORT, password=self.PASSWORD)
 
+    def clear_db(self):
         for key in self.redis.scan_iter("*"):
             self.redis.delete(key)
 
@@ -120,7 +121,7 @@ class RedisStorageManager():
         Gets a frame from the redis queue
         '''
         if frame_uuid is None:
-            frame_uuid = self.redis.blpop([queue_name], timeout=60)[1].decode("utf-8")
+            frame_uuid = self.redis.blpop([queue_name], timeout=30)[1].decode("utf-8")
         elif isinstance(frame_uuid, bytes):
             frame_uuid = frame_uuid.decode("utf-8")
 

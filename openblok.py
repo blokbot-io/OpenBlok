@@ -10,10 +10,14 @@ import config
 
 from bloks import camera, calibrate, display, precheck, serial, updater
 from sub_processes import ob_rotate_frame, ob_roi_frame, ob_predictions
+from modules import ob_storage
 
 multiprocessing.set_start_method('spawn')
 
 print("INFO | OpenBlok Loading...")
+
+redis_db = ob_storage.RedisStorageManager()
+redis_db.clear_db()
 
 # ---------------------------------------------------------------------------- #
 #                              Flags and Variables                             #
