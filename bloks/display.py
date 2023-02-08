@@ -210,10 +210,10 @@ def predict_and_show():
             combined_layers, (monitor.width, monitor.height))
 
         # ----------------------------- Display Image ------------------------------- #
-        cv2.imshow('Combined', frame_resized)
+        # cv2.imshow('Combined', frame_resized)
 
-        if cv2.waitKey(10) & 0xFF == ord('q'):
-            break
+        # if cv2.waitKey(10) & 0xFF == ord('q'):
+        #     break
 
     cv2.destroyAllWindows()
 
