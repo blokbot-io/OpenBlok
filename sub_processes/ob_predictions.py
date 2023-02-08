@@ -59,4 +59,4 @@ def run_models():
             source_metadata['side_crop'] = str(side_crop)
             source_metadata['top_crop'] = str(top_crop)
 
-        redis_db.store_frame("predictions", source['frame'], source_metadata)
+        redis_db.add_frame("predictions", source['frame'], source_metadata)
