@@ -120,7 +120,7 @@ class RedisStorageManager():
         Gets a frame from the redis queue
         '''
         if frame_uuid is None:
-            frame_uuid = self.redis.blpop([queue_name], timeout=30)[1].decode("utf-8")
+            frame_uuid = self.redis.blpop([queue_name], timeout=10)[1].decode("utf-8")
         elif type(frame_uuid) is bytes:
             frame_uuid = frame_uuid.decode("utf-8")
 
