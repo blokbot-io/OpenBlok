@@ -49,7 +49,7 @@ class LocationInference:
         frame_tensor = tf.convert_to_tensor(frame_rgb, dtype=tf.float32)
         frame_batch = tf.expand_dims(frame_tensor, 0)
 
-        predictions = self.model.predict(frame_batch, use_multiprocessing=False)
+        predictions = self.model.predict(frame_batch)
         _, side, top = predictions
 
         side_x = int(side[0][0] * frame_shape[1])
