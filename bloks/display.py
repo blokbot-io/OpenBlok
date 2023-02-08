@@ -45,7 +45,7 @@ def predict_and_show():
         next_ready_frame = redis_db.get_frame("roi")
 
         next_frame = redis_db.get_frame(
-            "rotated", frame_uuid=next_ready_frame['source_frame'].decode("utf-8"))
+            "rotated", frame_uuid=next_ready_frame['source_frame'])
         # next_frame = redis_db.get_frame("rotated")
 
         frame = next_frame['frame']
