@@ -144,3 +144,13 @@ class RedisStorageManager():
             self.redis.delete(f"{queue_name}:{frame_uuid}")
 
         return frame_object
+
+    def add_metadata(self, queue_name, frame_uuid, metadata):
+        '''
+        Adds metadata to a frame in the redis queue
+        '''
+        if isinstance(frame_uuid, bytes):
+            frame_uuid = frame_uuid.decode("utf-8")
+
+        for key, value in metadata.items():
+            self.redis.hset(f"{queue_name}:{frame_uuid}", key, value)
