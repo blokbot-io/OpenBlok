@@ -54,4 +54,4 @@ def run_models():
             new_metadata['side_crop'] = str(side_crop)
             new_metadata['top_crop'] = str(top_crop)
 
-        redis_db.add_metadata("rotated", next_ready_frame['uuid'], new_metadata)
+        redis_db.add_metadata("rotated", next_ready_frame['source_frame'], new_metadata)
