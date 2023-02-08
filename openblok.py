@@ -12,7 +12,7 @@ from bloks import camera, calibrate, precheck, serial, updater  # , display
 from sub_processes import ob_rotate_frame, ob_roi_frame, ob_predictions
 from modules import ob_storage
 
-multiprocessing.set_start_method('spawn')
+# multiprocessing.set_start_method('spawn')
 
 print("INFO | OpenBlok Loading...")
 
