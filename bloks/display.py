@@ -48,7 +48,7 @@ def predict_and_show():
             "rotated", frame_uuid=next_ready_frame['source_frame'])
         # next_frame = redis_db.get_frame("rotated")
 
-        frame = next_frame['frame']
+        # frame = next_frame['frame']
         frame_time = Decimal(next_frame['timestamp'])
 
         session_stats.add_frame_time(frame_time)    # Add frame time to stats
@@ -56,23 +56,23 @@ def predict_and_show():
         preprocessed_frame = next_ready_frame['frame']  # Cropped to ROI
         # preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
 
-        # Frame to add annotations to
-        combined_layers = np.copy(frame)
+        # # Frame to add annotations to
+        # combined_layers = np.copy(frame)
 
-        # Marker Layer
-        cv2.aruco.drawDetectedMarkers(
-            combined_layers, config.AruCo_corners, config.AruCo_ids)
+        # # Marker Layer
+        # cv2.aruco.drawDetectedMarkers(
+        #     combined_layers, config.AruCo_corners, config.AruCo_ids)
 
-        # Split Line Layer
-        cut_distance = int(config.AruCo_center_x +
-                           (config.mirror_offset*config.AruCo_px_per_inch))
-        cv2.line(combined_layers, (cut_distance, 0),
-                 (cut_distance, frame.shape[0]), (0, 0, 255), 2)
+        # # Split Line Layer
+        # cut_distance = int(config.AruCo_center_x +
+        #                    (config.mirror_offset*config.AruCo_px_per_inch))
+        # cv2.line(combined_layers, (cut_distance, 0),
+        #          (cut_distance, frame.shape[0]), (0, 0, 255), 2)
 
-        # Bounding Box Layer
-        bound_corners = bounding_boxes()
-        combined_layers = annotate.bounding_areas(
-            combined_layers, bound_corners)
+        # # Bounding Box Layer
+        # bound_corners = bounding_boxes()
+        # combined_layers = annotate.bounding_areas(
+        #     combined_layers, bound_corners)
 
         # Get Object Locations
         side, top = location_model.get_location(preprocessed_frame)
@@ -82,44 +82,44 @@ def predict_and_show():
 
             # ----------------------------- Object Locations ----------------------------- #
             # Side View
-            combined_layers = annotate.mark_object_center(
-                combined_layers,
-                (side[0]+bound_corners[2][0], side[1]+bound_corners[0][1]),
-                (255, 0, 0)
-            )
+            # combined_layers = annotate.mark_object_center(
+            #     combined_layers,
+            #     (side[0]+bound_corners[2][0], side[1]+bound_corners[0][1]),
+            #     (255, 0, 0)
+            # )
 
             side_crop = crop_square(
                 preprocessed_frame[:, :preprocessed_frame.shape[1]//3],
                 (side[0], side[1])
             )
 
-            combined_layers = annotate.visualize_crop(
-                combined_layers,
-                (side_crop[1][0]+bound_corners[2][0],
-                 side_crop[1][1]+bound_corners[2][1]),
-                (side_crop[2][0]+bound_corners[2][0],
-                 side_crop[2][1]+bound_corners[2][1]),
-                (255, 0, 0)
-            )
+            # combined_layers = annotate.visualize_crop(
+            #     combined_layers,
+            #     (side_crop[1][0]+bound_corners[2][0],
+            #      side_crop[1][1]+bound_corners[2][1]),
+            #     (side_crop[2][0]+bound_corners[2][0],
+            #      side_crop[2][1]+bound_corners[2][1]),
+            #     (255, 0, 0)
+            # )
 
             # Top View
-            combined_layers = annotate.mark_object_center(
-                combined_layers,
-                (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
-            )
+            # combined_layers = annotate.mark_object_center(
+            #     combined_layers,
+            #     (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
+            # )
 
             top_crop = crop_square(
                 preprocessed_frame[:, preprocessed_frame.shape[1]//3:],
                 (top[0], top[1])
             )
 
-            combined_layers = annotate.visualize_crop(
-                combined_layers,
-                (top_crop[1][0]+bound_corners[0][0],
-                 top_crop[1][1]+bound_corners[0][1]),
-                (top_crop[2][0]+bound_corners[0][0],
-                 top_crop[2][1]+bound_corners[0][1])
-            )
+            # combined_layers = annotate.visualize_crop(
+            #     combined_layers,
+            #     (top_crop[1][0]+bound_corners[0][0],
+            #      top_crop[1][1]+bound_corners[0][1]),
+            #     (top_crop[2][0]+bound_corners[0][0],
+            #      top_crop[2][1]+bound_corners[0][1])
+            # )
 
             # --------------------------- object Classification -------------------------- #
             view_concatenated = np.concatenate(
