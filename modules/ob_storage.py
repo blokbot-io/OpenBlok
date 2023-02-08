@@ -115,29 +115,29 @@ class RedisStorageManager():
 
         return frame_uuid
 
-    def get_frame(self, queue_name, delete_frame=True):
+    def get_frame(self, queue_name, delete_frame=True, frame_uuid=None):
         '''
         Gets a frame from the redis queue
         '''
-        frame_uuid = self.redis.blpop([queue_name], timeout=30)[1].decode("utf-8")
+        if frame_uuid is None:
+            frame_uuid = self.redis.blpop([queue_name], timeout=10)[1].decode("utf-8")
+        elif isinstance(frame_uuid, bytes):
+            frame_uuid = frame_uuid.decode("utf-8")
 
         frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
         frame_nparray = np.asarray(bytearray(frame_bytes), dtype="uint8")
         frame_decoded = cv2.imdecode(frame_nparray, cv2.IMREAD_COLOR)
-
-        frame_timestamp = self.redis.hget(f"{queue_name}:{frame_uuid}", "timestamp")
 
         other_metadata = self.redis.hgetall(f"{queue_name}:{frame_uuid}")
 
         frame_object = {
             "uuid": frame_uuid,
             "frame": frame_decoded,
-            "timestamp": frame_timestamp.decode("utf-8")
         }
 
         for key, value in other_metadata.items():
             key = key.decode("utf-8")
-            if key not in ["frame", "timestamp"]:
+            if key not in ["frame"]:
                 frame_object[key] = value.decode("utf-8")
 
         if delete_frame:
