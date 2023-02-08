@@ -58,12 +58,12 @@ camera_process.start()
 print("INFO | Camera thread started.")
 
 # Start Serial Listener
-threading.Thread(target=serial.serial_listener).start()
-print("Serial listener thread started.")
+# threading.Thread(target=serial.serial_listener).start()
+# print("Serial listener thread started.")
 
 # Start Carousel Position Thread
-threading.Thread(target=serial.carousel_position).start()
-print("INFO | Carousel position thread started.")
+# threading.Thread(target=serial.carousel_position).start()
+# print("INFO | Carousel position thread started.")
 
 # Display Thread
 # start_display = threading.Thread(target=display.show)
