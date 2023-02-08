@@ -54,7 +54,7 @@ class PartInference:
         img_array = tf.expand_dims(img_array, 0)
 
         # ----------------------------- Make Predictions ----------------------------- #
-        predictions = self.model.predict(img_array)
+        predictions = self.model.predict(img_array, use_multiprocessing=False)
 
         design = designs[np.argmax(predictions[0])]
         design_confidence = 100 * np.max(predictions[0])
