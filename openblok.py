@@ -51,7 +51,10 @@ updater.update_models()  # Update models
 #                                 Start Threads                                #
 # ---------------------------------------------------------------------------- #
 # Camera Thread
-threading.Thread(target=camera.continuous_capture).start()
+# threading.Thread(target=camera.continuous_capture).start()
+camera_process = multiprocessing.Process(target=camera.continuous_capture)
+camera_process.daemon = True
+camera_process.start()
 print("INFO | Camera thread started.")
 
 # Start Serial Listener
