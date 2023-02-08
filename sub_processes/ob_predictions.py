@@ -54,5 +54,5 @@ def run_models():
             new_metadata['side_crop'] = str(side_crop)
             new_metadata['top_crop'] = str(top_crop)
 
-        redis_db.move_frame("rotated", "predicted")
+        redis_db.move_frame("rotated", "predicted", next_ready_frame['source_frame'])
         redis_db.add_metadata("predicted", next_ready_frame['source_frame'], new_metadata)
