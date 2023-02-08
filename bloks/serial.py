@@ -39,10 +39,10 @@ def update_position_schedule(capture_time, position, part_number, confidence):
     Part Number - The predicted part number.
     Confidence - The confidence of the prediction.
     '''
-    print("--- Updating Bin Position Schedule ---")
-    print(f"Capture Time: {capture_time} | Position: {position}")
-    print(f"Part Number: {part_number} | Confidence: {confidence}")
-    print(f"Current timestamp: {time.time()}")
+    # print("--- Updating Bin Position Schedule ---")
+    # print(f"Capture Time: {capture_time} | Position: {position}")
+    # print(f"Part Number: {part_number} | Confidence: {confidence}")
+    # print(f"Current timestamp: {time.time()}")
 
     # Assign the part to a bin if it is not already assigned.
     if str(part_number) not in BIN_ASSIGNMENT:
@@ -76,7 +76,7 @@ def update_position_schedule(capture_time, position, part_number, confidence):
             Decimal(config.part_velocity[1] - relative_position)
         ) / (capture_time - config.part_velocity[0])
 
-        print(f"-----> Part Velocity: {config.part_velocity} <-----")
+        # print(f"-----> Part Velocity: {config.part_velocity} <-----")
         drop_time = time.time()
     else:
 
@@ -94,13 +94,13 @@ def update_position_schedule(capture_time, position, part_number, confidence):
         time_difference = Decimal(drop_time) - Decimal(leading_part[1])
 
         # Checks if the leading and current part are the same.
-        print(f"Time Difference | {time_difference}s")
+        # print(f"Time Difference | {time_difference}s")
         if 0 < time_difference < 15:
             if Decimal(confidence) > Decimal(leading_part[4]):
                 leading_part[0] = bin_number
-                print("Updated position schedule with better confidence.")
+                # print("Updated position schedule with better confidence.")
 
-            print("Did not update position schedule with better confidence.")
+            # print("Did not update position schedule with better confidence.")
             return POSITION_SCHEDULE
 
         # Moves bin into position between the drop time of the leading and current part.
@@ -112,10 +112,9 @@ def update_position_schedule(capture_time, position, part_number, confidence):
         relative_position, confidence
     ])
 
-    print("--- Bin Schedule Updated ---")
-    for bin_position in POSITION_SCHEDULE:
-        print(
-            f"Bin: {bin_position[0]} Drop Time: {bin_position[1]} Bin Time: {bin_position[2]}")
+    # print("--- Bin Schedule Updated ---")
+    # for bin_position in POSITION_SCHEDULE:
+    #     print(f"Bin: {bin_position[0]} Drop Time: {bin_position[1]} Bin Time: {bin_position[2]}")
 
     return POSITION_SCHEDULE
 
@@ -134,13 +133,12 @@ def carousel_position():
 
             # Move the carousel to the bin position if the time is current or passed.
             if bin_time <= Decimal(time.time()) and current_bin != bin_number:
-                write_serial(f"{bin_number}")
-                print(f"Carousel is at bin {bin_number}")
+                # write_serial(f"{bin_number}")
+                # print(f"Carousel is at bin {bin_number}")
                 current_bin = bin_number
 
             if drop_time <= time.time():
-                print(
-                    f"Part {POSITION_SCHEDULE[0][0]} is falling into bin {bin_number}")
+                # print(f"Part {POSITION_SCHEDULE[0][0]} is falling into bin {bin_number}")
                 POSITION_SCHEDULE.pop(0)
         time.sleep(3)
 
