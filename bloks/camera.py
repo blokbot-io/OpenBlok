@@ -12,8 +12,6 @@ import time
 # from decimal import Decimal
 
 import cv2
-import config
-# import numpy as np
 
 from modules import ob_storage
 
@@ -25,9 +23,8 @@ FPS = 30  # Frames per second
 save_local = ob_storage.LocalStorageManager()
 redis_db = ob_storage.RedisStorageManager()
 
+
 # ------------------------ Continuous Capture Thread ------------------------ #
-
-
 def continuous_capture():
     '''
     Camera continues streaming frames. Only the last frame is saved when requested.
@@ -54,39 +51,7 @@ def continuous_capture():
         save_local.add_image(last_frame, frame_count)
         frame_count += 1
 
+        metadata = {'timestamp': time.time()}
+
         # Save the frame to Redis
-        redis_db.add_frame(last_frame, time.time(), "raw")
-
-        # Rotate the frame if needed
-        # if config.rotational_offset is not None:
-
-        #     # Get frame from queue
-        #     frame_object = redis_db.get_frame("raw")
-
-        #     rotation_matrix = cv2.getRotationMatrix2D(
-        #         (config.rotational_offset[0], config.rotational_offset[1]),
-        #         config.rotational_offset[2], 1)
-        #     last_frame = cv2.warpAffine(frame_object['frame'], rotation_matrix,
-        #                                 (frame_object['frame'].shape[1], frame_object['frame'].shape[0]))
-
-        #     # Save the frame to Redis
-        #     redis_db.add_frame(last_frame, time.time(), "rotated")
-
-        # Remove stale frame from queue
-        # if config.frame_queue.full():
-        #     config.frame_queue.get()
-
-        # config.frame_queue.put([np.copy(last_frame), Decimal(time.time())])
-        # continue
-
-
-# ---------------------------- Grab Frame Function --------------------------- #
-def grab_frame():
-    '''
-    Call to get frame, returns the last taken frame.
-    Returns: frame, time_stamp
-    '''
-    frame = config.frame_queue.get()
-    config.requested_frame = [frame[0], frame[1]]
-
-    return config.requested_frame[0], config.requested_frame[1]
+        redis_db.add_frame("raw", last_frame, metadata)

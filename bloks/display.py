@@ -42,29 +42,15 @@ def predict_and_show():
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        # frame, frame_time = camera.grab_frame()     # Grab frame
         next_frame = redis_db.get_frame("rotated")
         frame = next_frame['frame']
-        frame_time = next_frame['timestamp']
+        frame_time = Decimal(next_frame['timestamp'])
 
-        frame_time = Decimal(frame_time)            # Copy frame & time
         session_stats.add_frame_time(frame_time)    # Add frame time to stats
 
         preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
         # Frame to add annotations to
         combined_layers = np.copy(frame)
-
-        # threading.Thread(
-        #     target=upload.stream_upload,
-        #     args=(
-        #         "conveyor", f"raw/{int(frame_time)}.png",
-        #         cv2.imencode(
-        #             '.png', preprocessed_frame,
-        #             [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
-        #         )[1].tostring(),
-        #         'image/png'
-        #     )
-        # ).start()
 
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(
