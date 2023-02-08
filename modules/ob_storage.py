@@ -121,7 +121,7 @@ class RedisStorageManager():
         '''
         if frame_uuid is None:
             frame_uuid = self.redis.blpop([queue_name], timeout=10)[1].decode("utf-8")
-        elif type(frame_uuid) is bytes:
+        elif isinstance(frame_uuid, bytes):
             frame_uuid = frame_uuid.decode("utf-8")
 
         frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
