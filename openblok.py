@@ -112,6 +112,12 @@ annotate_process.start()
 # ---------------------------------------------------------------------------- #
 #                                   Main Loop                                  #
 # ---------------------------------------------------------------------------- #
-display.predict_and_show_thread()
+# display.predict_and_show_thread()
+
+display_process = multiprocessing.Process(target=display.predict_and_show_thread)
+display_process.daemon = True
+display_process.start()
+
+
 print("Starting Infinite Loop...")
 signal.pause()      # Run until interrupted.
