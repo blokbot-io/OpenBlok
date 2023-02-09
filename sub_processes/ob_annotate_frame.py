@@ -28,8 +28,6 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
 
         predicted_preprocessed_shape = predicted_frame.shape
 
-        print(predicted_preprocessed_shape)
-
         session_stats.add_frame_time(float(predicted['timestamp']))    # Add frame time to stats
 
         # Marker Layer
@@ -45,17 +43,8 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
         bound_corners = bounding_boxes()
         predicted_frame = annotate.bounding_areas(predicted_frame, bound_corners)
 
-        print(type(predicted['side']))
-        print(predicted['top'])
-
         side = json.loads(predicted['side'])
         top = json.loads(predicted['top'])
-
-        print(side)
-        print(top)
-
-        # side = [float(i) for i in side]
-        # top = [float(i) for i in top]
 
         if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > predicted_preprocessed_shape[1]//3:
             top[0] = top[0] - predicted_preprocessed_shape[1]//3
