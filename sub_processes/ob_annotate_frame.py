@@ -23,11 +23,9 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
         predicted = redis_db.get_frame("predicted")
         predicted_frame = predicted['frame']
 
-        predicted_preprocessed_shape = list(predicted['preprocessed_shape'])
+        predicted_preprocessed_shape = predicted_frame.shape
 
         print(predicted_preprocessed_shape)
-
-        predicted_preprocessed_shape = [float(i) for i in predicted_preprocessed_shape]
 
         session_stats.add_frame_time(predicted['timestamp'])    # Add frame time to stats
 
