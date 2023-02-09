@@ -96,7 +96,7 @@ class RedisStorageManager():
         for key in self.redis.scan_iter("*"):
             self.redis.delete(key)
 
-    def add_frame(self, queue_name, frame, metadata):
+    def add_frame(self, queue_name, frame, metadata=None):
         '''
         Adds a frame to the redis queue
         '''
@@ -109,8 +109,9 @@ class RedisStorageManager():
 
         self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
 
-        for key, value in metadata.items():
-            self.redis.hset(f"{queue_name}:{frame_uuid}", key, value)
+        if metadata is not None:
+            for key, value in metadata.items():
+                self.redis.hset(f"{queue_name}:{frame_uuid}", key, value)
 
         self.redis.rpush(queue_name, frame_uuid)
 
