@@ -8,7 +8,7 @@ from queue import Queue
 
 import config
 
-from bloks import camera, calibrate, precheck, serial, updater  # , display
+from bloks import camera, calibrate, precheck, serial, updater, display
 from sub_processes import ob_rotate_frame, ob_roi_frame, ob_predictions, ob_annotate_frame
 from modules import ob_storage
 
@@ -112,6 +112,6 @@ annotate_process.start()
 # ---------------------------------------------------------------------------- #
 #                                   Main Loop                                  #
 # ---------------------------------------------------------------------------- #
-# display.predict_and_show_thread()
+display.predict_and_show_thread()
 print("Starting Infinite Loop...")
 signal.pause()      # Run until interrupted.
