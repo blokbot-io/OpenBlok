@@ -50,9 +50,12 @@ def run_models():
                 (side_crop['croppedFrame'], top_crop['croppedFrame']), axis=1)
             predictions = e2e_model.get_predictions(view_concatenated)
 
+            side_crop = side_crop.pop('croppedFrame')
+            top_crop = top_crop.pop('croppedFrame')
+
             new_metadata['predictions'] = str(predictions)
-            new_metadata['sideCoordinates'] = str(side_crop[1:])
-            new_metadata['topCoordinates'] = str(top_crop[1:])
+            new_metadata['sideCoordinates'] = str(side_crop)
+            new_metadata['topCoordinates'] = str(top_crop)
 
         new_metadata['preprocessed_shape'] = str(list(preprocessed_frame.shape))
 
