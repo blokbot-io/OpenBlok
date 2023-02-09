@@ -7,6 +7,7 @@ Takes a predicted frame and annotates it with the predictions.
 import json
 
 import cv2
+import config
 
 from bloks.utils import annotate, stats, bounding_boxes
 from modules import ob_storage
