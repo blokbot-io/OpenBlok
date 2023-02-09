@@ -45,8 +45,11 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
         side = list(predicted['side'])
         top = list(predicted['top'])
 
-        side = [float(i) for i in side]
-        top = [float(i) for i in top]
+        print(side)
+        print(top)
+
+        # side = [float(i) for i in side]
+        # top = [float(i) for i in top]
 
         if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > predicted_preprocessed_shape[1]//3:
             top[0] = top[0] - predicted_preprocessed_shape[1]//3
@@ -62,8 +65,8 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
             side_crop = list(predicted['side_crop'])
             top_crop = list(predicted['top_crop'])
 
-            side_crop = [float(i) for i in side_crop]
-            top_crop = [float(i) for i in top_crop]
+            # side_crop = [float(i) for i in side_crop]
+            # top_crop = [float(i) for i in top_crop]
 
             predicted_frame = annotate.visualize_crop(
                 predicted_frame,
