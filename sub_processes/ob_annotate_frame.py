@@ -57,13 +57,11 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
                 (255, 0, 0)
             )
 
-            side_crop = predicted['side_crop']
-            side_crop[1] = json.loads(side_crop[1])
-            side_crop[2] = json.loads(side_crop[2])
+            side_crop = predicted['sideCoordinates']
+            side_crop = json.loads(side_crop)
 
-            top_crop = predicted['top_crop']
-            top_crop[1] = json.loads(top_crop[1])
-            top_crop[2] = json.loads(top_crop[2])
+            top_crop = predicted['topCoordinates']
+            top_crop = json.loads(top_crop)
 
             # side_crop = [float(i) for i in side_crop]
             # top_crop = [float(i) for i in top_crop]

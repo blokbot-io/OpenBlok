@@ -69,9 +69,9 @@ def crop_square(frame, location_xy, cut_distance=0, pixels=600):
         if part_square.shape[0] != pixels:
             part_square = cv2.resize(part_square, (pixels, pixels), interpolation=cv2.INTER_AREA)
 
-        top_left = (int(part_center_x)-int(final_width/2), int(part_center_y)-int(final_height/2))
-        bottom_right = (int(part_center_x)+int(final_width/2),
-                        int(part_center_y)+int(final_height/2))
+        top_left = [int(part_center_x)-int(final_width/2), int(part_center_y)-int(final_height/2)]
+        bottom_right = [int(part_center_x)+int(final_width/2),
+                        int(part_center_y)+int(final_height/2)]
 
         return {
             "croppedFrame": part_square,
