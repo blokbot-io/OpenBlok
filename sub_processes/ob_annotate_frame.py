@@ -42,6 +42,9 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
         bound_corners = bounding_boxes()
         predicted_frame = annotate.bounding_areas(predicted_frame, bound_corners)
 
+        print(predicted['side'])
+        print(predicted['top'])
+
         side = list(predicted['side'])
         top = list(predicted['top'])
 
