@@ -155,5 +155,4 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
             cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
         )
 
-        predicted = predicted.pop('frame')
-        redis_db.add_frame("annotated", predicted_frame, predicted)
+        redis_db.add_frame("annotated", predicted_frame, None)
