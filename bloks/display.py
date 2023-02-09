@@ -28,32 +28,32 @@ def predict_and_show():
     Results are displayed on the screen.
     Grabs a frame and then predicts the blok.
     '''
-    session_stats = stats.Stats()
+    # session_stats = stats.Stats()
 
     # --------------------------- Display Configuration -------------------------- #
     if os.environ.get('DISPLAY', '') == '':
         os.environ.__setitem__('DISPLAY', ':0')
     monitor = get_monitors()[0]  # Return monitor parameters (width, height)
 
-    bin_schedule = None
+    # bin_schedule = None
 
-    location_model = location.LocationInference()
-    e2e_model = e2e.PartInference()
+    # location_model = location.LocationInference()
+    # e2e_model = e2e.PartInference()
 
     # ---------------------------- Identification Loop --------------------------- #
     while True:
-        next_ready_frame = redis_db.get_frame("roi")
+        # next_ready_frame = redis_db.get_frame("roi")
 
-        next_frame = redis_db.get_frame(
-            "rotated", frame_uuid=next_ready_frame['source_frame'])
-        # next_frame = redis_db.get_frame("rotated")
+        # next_frame = redis_db.get_frame(
+        #     "rotated", frame_uuid=next_ready_frame['source_frame'])
+        # # next_frame = redis_db.get_frame("rotated")
 
-        # frame = next_frame['frame']
-        frame_time = Decimal(next_frame['timestamp'])
+        # # frame = next_frame['frame']
+        # frame_time = Decimal(next_frame['timestamp'])
 
-        session_stats.add_frame_time(frame_time)    # Add frame time to stats
+        # session_stats.add_frame_time(frame_time)    # Add frame time to stats
 
-        preprocessed_frame = next_ready_frame['frame']  # Cropped to ROI
+        # preprocessed_frame = next_ready_frame['frame']  # Cropped to ROI
         # preprocessed_frame = preprocess.capture_regions(frame)      # Preprocess frame
 
         # # Frame to add annotations to
@@ -75,60 +75,60 @@ def predict_and_show():
         #     combined_layers, bound_corners)
 
         # Get Object Locations
-        side, top = location_model.get_location(preprocessed_frame)
+        # side, top = location_model.get_location(preprocessed_frame)
 
-        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > preprocessed_frame.shape[1]//3:
-            top[0] = top[0] - preprocessed_frame.shape[1]//3
+        # if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > preprocessed_frame.shape[1]//3:
+        #     top[0] = top[0] - preprocessed_frame.shape[1]//3
 
-            # ----------------------------- Object Locations ----------------------------- #
-            # Side View
-            # combined_layers = annotate.mark_object_center(
-            #     combined_layers,
-            #     (side[0]+bound_corners[2][0], side[1]+bound_corners[0][1]),
-            #     (255, 0, 0)
-            # )
+        # ----------------------------- Object Locations ----------------------------- #
+        # Side View
+        # combined_layers = annotate.mark_object_center(
+        #     combined_layers,
+        #     (side[0]+bound_corners[2][0], side[1]+bound_corners[0][1]),
+        #     (255, 0, 0)
+        # )
 
-            side_crop = crop_square(
-                preprocessed_frame[:, :preprocessed_frame.shape[1]//3],
-                (side[0], side[1])
-            )
+        # side_crop = crop_square(
+        #     preprocessed_frame[:, :preprocessed_frame.shape[1]//3],
+        #     (side[0], side[1])
+        # )
 
-            # combined_layers = annotate.visualize_crop(
-            #     combined_layers,
-            #     (side_crop[1][0]+bound_corners[2][0],
-            #      side_crop[1][1]+bound_corners[2][1]),
-            #     (side_crop[2][0]+bound_corners[2][0],
-            #      side_crop[2][1]+bound_corners[2][1]),
-            #     (255, 0, 0)
-            # )
+        # combined_layers = annotate.visualize_crop(
+        #     combined_layers,
+        #     (side_crop[1][0]+bound_corners[2][0],
+        #      side_crop[1][1]+bound_corners[2][1]),
+        #     (side_crop[2][0]+bound_corners[2][0],
+        #      side_crop[2][1]+bound_corners[2][1]),
+        #     (255, 0, 0)
+        # )
 
-            # Top View
-            # combined_layers = annotate.mark_object_center(
-            #     combined_layers,
-            #     (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
-            # )
+        # Top View
+        # combined_layers = annotate.mark_object_center(
+        #     combined_layers,
+        #     (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
+        # )
 
-            top_crop = crop_square(
-                preprocessed_frame[:, preprocessed_frame.shape[1]//3:],
-                (top[0], top[1])
-            )
+        # top_crop = crop_square(
+        #     preprocessed_frame[:, preprocessed_frame.shape[1]//3:],
+        #     (top[0], top[1])
+        # )
 
-            # combined_layers = annotate.visualize_crop(
-            #     combined_layers,
-            #     (top_crop[1][0]+bound_corners[0][0],
-            #      top_crop[1][1]+bound_corners[0][1]),
-            #     (top_crop[2][0]+bound_corners[0][0],
-            #      top_crop[2][1]+bound_corners[0][1])
-            # )
+        # combined_layers = annotate.visualize_crop(
+        #     combined_layers,
+        #     (top_crop[1][0]+bound_corners[0][0],
+        #      top_crop[1][1]+bound_corners[0][1]),
+        #     (top_crop[2][0]+bound_corners[0][0],
+        #      top_crop[2][1]+bound_corners[0][1])
+        # )
 
-            # --------------------------- object Classification -------------------------- #
-            view_concatenated = np.concatenate(
-                (side_crop[0], top_crop[0]), axis=1)
-            predictions = e2e_model.get_predictions(view_concatenated)
-            design = predictions["design"][0]
-            design_confidence = predictions["design"][1]
-            category = predictions["category"][0]
-            category_confidence = predictions["category"][1]
+        # --------------------------- object Classification -------------------------- #
+        # view_concatenated = np.concatenate(
+        #     (side_crop[0], top_crop[0]), axis=1)
+        # predictions = e2e_model.get_predictions(view_concatenated)
+        # design = predictions["design"][0]
+        # design_confidence = predictions["design"][1]
+        # category = predictions["category"][0]
+        # category_confidence = predictions["category"][1]
 
         #     if predictions is not None:
 
@@ -197,16 +197,18 @@ def predict_and_show():
         #     cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
         # )
 
-        # # ----------------------------- Display ----------------------------- #
-        # # Resize image to fit monitor (does not maintain aspect ratio)
-        # frame_resized = cv2.resize(
-        #     combined_layers, (monitor.width, monitor.height))
+        combined_layers = redis_db.get_frame("annotated")['frame']
 
-        # # ----------------------------- Display Image ------------------------------- #
-        # cv2.imshow('Combined', frame_resized)
+        # ----------------------------- Display ----------------------------- #
+        # Resize image to fit monitor (does not maintain aspect ratio)
+        frame_resized = cv2.resize(
+            combined_layers, (monitor.width, monitor.height))
 
-        # if cv2.waitKey(10) & 0xFF == ord('q'):
-        #     break
+        # ----------------------------- Display Image ------------------------------- #
+        cv2.imshow('Combined', frame_resized)
+
+        if cv2.waitKey(10) & 0xFF == ord('q'):
+            break
 
     cv2.destroyAllWindows()
 
