@@ -25,7 +25,7 @@ def annotate(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_px_p
 
         predicted_preprocessed_shape = list(predicted['preprocessed_shape'])
 
-        session_stats.add_frame_time(frame_time)    # Add frame time to stats
+        session_stats.add_frame_time(predicted['timestamp'])    # Add frame time to stats
 
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(predicted_frame, AruCo_corners, AruCo_ids)
