@@ -47,7 +47,7 @@ def run_models():
             )
 
             view_concatenated = np.concatenate(
-                (side_crop[0], top_crop[0]), axis=1)
+                (side_crop['croppedFrame'], top_crop['croppedFrame']), axis=1)
             predictions = e2e_model.get_predictions(view_concatenated)
 
             new_metadata['predictions'] = str(predictions)

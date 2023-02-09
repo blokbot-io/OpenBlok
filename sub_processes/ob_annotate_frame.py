@@ -70,10 +70,10 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
 
             predicted_frame = annotate.visualize_crop(
                 predicted_frame,
-                (side_crop[1][0]+bound_corners[2][0],
-                 side_crop[1][1]+bound_corners[2][1]),
-                (side_crop[2][0]+bound_corners[2][0],
-                 side_crop[2][1]+bound_corners[2][1]),
+                (side_crop['topLeftCoordinate'][0]+bound_corners[2][0],
+                 side_crop['topLeftCoordinate'][1]+bound_corners[2][1]),
+                (side_crop['bottomRightCoordinate'][0]+bound_corners[2][0],
+                 side_crop['bottomRightCoordinate'][1]+bound_corners[2][1]),
                 (255, 0, 0)
             )
 
@@ -85,10 +85,10 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
 
             predicted_frame = annotate.visualize_crop(
                 predicted_frame,
-                (top_crop[1][0]+bound_corners[0][0],
-                 top_crop[1][1]+bound_corners[0][1]),
-                (top_crop[2][0]+bound_corners[0][0],
-                 top_crop[2][1]+bound_corners[0][1])
+                (top_crop['topLeftCoordinate'][0]+bound_corners[0][0],
+                 top_crop['topLeftCoordinate'][1]+bound_corners[0][1]),
+                (top_crop['bottomRightCoordinate'][0]+bound_corners[0][0],
+                 top_crop['bottomRightCoordinate'][1]+bound_corners[0][1])
             )
 
             # --------------------------- object Classification -------------------------- #

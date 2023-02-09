@@ -73,7 +73,11 @@ def crop_square(frame, location_xy, cut_distance=0, pixels=600):
         bottom_right = (int(part_center_x)+int(final_width/2),
                         int(part_center_y)+int(final_height/2))
 
-        return part_square, top_left, bottom_right
+        return {
+            "croppedFrame": part_square,
+            "topLeftCoordinate": top_left,
+            "bottomRightCoordinate": bottom_right
+        }
     except IndexError as err:
         print(f"Unable to crop square: {err}")
         return None, None, None
