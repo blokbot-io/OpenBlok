@@ -4,6 +4,8 @@ OpenBlok | sub_process | ob_annotate_frame.py
 Takes a predicted frame and annotates it with the predictions.
 '''
 
+import json
+
 import cv2
 
 from bloks.utils import annotate, stats, bounding_boxes
@@ -45,8 +47,8 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
         print(type(predicted['side']))
         print(predicted['top'])
 
-        side = list(predicted['side'])
-        top = list(predicted['top'])
+        side = json.loads(predicted['side'])
+        top = json.loads(predicted['top'])
 
         print(side)
         print(top)
@@ -65,8 +67,8 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
                 (255, 0, 0)
             )
 
-            side_crop = list(predicted['side_crop'])
-            top_crop = list(predicted['top_crop'])
+            side_crop = json.loads(predicted['side_crop'])
+            top_crop = json.loads(predicted['top_crop'])
 
             # side_crop = [float(i) for i in side_crop]
             # top_crop = [float(i) for i in top_crop]

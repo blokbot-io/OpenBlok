@@ -140,7 +140,7 @@ class RedisStorageManager():
             key = key.decode("utf-8")
             if key not in ["frame"]:
                 frame_object[key] = value.decode("utf-8")
-                frame_object[key] = json.loads(frame_object[key])
+                # frame_object[key] = json.loads(frame_object[key])
 
         if delete_frame:
             self.redis.delete(f"{queue_name}:{frame_uuid}")
