@@ -9,7 +9,7 @@ from queue import Queue
 import config
 
 from bloks import camera, calibrate, precheck, serial, updater  # , display
-from sub_processes import ob_rotate_frame, ob_roi_frame, ob_predictions
+from sub_processes import ob_rotate_frame, ob_roi_frame, ob_predictions, ob_annotate_frame
 from modules import ob_storage
 
 # multiprocessing.set_start_method('spawn')
@@ -100,6 +100,14 @@ roi_process.start()
 predict_process = multiprocessing.Process(target=ob_predictions.run_models)
 predict_process.daemon = True
 predict_process.start()
+
+annotate_process = multiprocessing.Process(
+    target=ob_annotate_frame.annotate_frame,
+    args=(config.AruCo_corners, config.AruCo_ids, config.AruCo_center_x,
+          config.mirror_offset, config.AruCo_px_per_inch)
+)
+annotate_process.daemon = True
+annotate_process.start()
 
 # ---------------------------------------------------------------------------- #
 #                                   Main Loop                                  #
