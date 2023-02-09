@@ -12,7 +12,7 @@ from modules import ob_storage
 redis_db = ob_storage.RedisStorageManager()
 
 
-def annotate(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_px_per_inch):
+def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_px_per_inch):
     '''
     Take a rotated frame that has been predicted and annotate it.
     '''

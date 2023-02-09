@@ -102,7 +102,7 @@ predict_process.daemon = True
 predict_process.start()
 
 annotate_process = multiprocessing.Process(
-    target=ob_annotate_frame.annotate,
+    target=ob_annotate_frame.annotations,
     args=(config.AruCo_corners, config.AruCo_ids, config.AruCo_center_x,
           config.mirror_offset, config.AruCo_px_per_inch)
 )
