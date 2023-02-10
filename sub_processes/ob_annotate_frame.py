@@ -39,7 +39,11 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
                  (cut_distance, predicted_frame.shape[0]), (0, 0, 255), 2)
 
         # Bounding Box Layer
-        bound_corners = bounding_boxes()
+        bound_corners = [
+            predicted_metadata['roi']['topView']['upperLeft'], predicted_metadata['roi']['topView']['lowerRight'],
+            predicted_metadata['roi']['sideView']['upperLeft'], predicted_metadata['roi']['sideView']['lowerRight']
+        ]
+
         predicted_frame = annotate.bounding_areas(predicted_frame, bound_corners)
 
         side = predicted_metadata['roi']['inferences']['location']['sideMidpoint']
