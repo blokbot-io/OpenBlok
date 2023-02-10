@@ -142,7 +142,7 @@ class RedisStorageManager():
 
         return frame_object
 
-    def add_metadata(self, queue_name, frame_uuid, metadata):
+    def add_metadata(self, queue_name, frame_uuid, metadata={}):
         '''
         Adds metadata to a frame in the redis queue
         '''
