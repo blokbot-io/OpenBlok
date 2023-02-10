@@ -107,11 +107,10 @@ class RedisStorageManager():
             [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
         )[1].tostring()
 
-        self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
+        metadata[f"{queue_name}UUID"] = frame_uuid
 
-        if metadata is not None:
-            for key, value in metadata.items():
-                self.redis.hset(f"{queue_name}:{frame_uuid}", key, value)
+        self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
+        self.redis.hset(f"{queue_name}:{frame_uuid}", "metadata", json.dumps(metadata))
 
         self.redis.rpush(queue_name, frame_uuid)
 
@@ -126,22 +125,17 @@ class RedisStorageManager():
         elif isinstance(frame_uuid, bytes):
             frame_uuid = frame_uuid.decode("utf-8")
 
-        frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
+        frame_object = self.redis.hgetall(f"{queue_name}:{frame_uuid}")
+
+        # frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
+        frame_bytes = frame_object[b"frame"]
         frame_nparray = np.asarray(bytearray(frame_bytes), dtype="uint8")
         frame_decoded = cv2.imdecode(frame_nparray, cv2.IMREAD_COLOR)
 
-        other_metadata = self.redis.hgetall(f"{queue_name}:{frame_uuid}")
-
         frame_object = {
-            "uuid": frame_uuid,
             "frame": frame_decoded,
+            "metadata": json.loads(frame_object[b"metadata"].decode("utf-8"))
         }
-
-        for key, value in other_metadata.items():
-            key = key.decode("utf-8")
-            if key not in ["frame"]:
-                frame_object[key] = value.decode("utf-8")
-                # frame_object[key] = json.loads(frame_object[key])
 
         if delete_frame:
             self.redis.delete(f"{queue_name}:{frame_uuid}")

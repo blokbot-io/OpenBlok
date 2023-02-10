@@ -23,6 +23,7 @@ def capture_regions():
         frame_object = redis_db.get_frame("rotated", delete_frame=False)
 
         frame = frame_object['frame']
+        metadata = frame_object['metadata']
 
         top_ul, top_ll, side_ul, side_ll = bounding_boxes()
         side_crop = frame[side_ul[1]:side_ll[1], side_ul[0]:side_ll[0]]
@@ -30,8 +31,16 @@ def capture_regions():
 
         combined = np.concatenate((side_crop, top_crop), axis=1)
 
-        metadata = {
-            "source_frame": frame_object["uuid"]
+        metadata["roi"] = {
+            "topView": {
+                "upperLeft": [top_ul[0], top_ul[1]],
+                "lowerRight": [top_ll[0], top_ll[1]]
+            },
+            "sideView": {
+                "upperLeft": [side_ul[0], side_ul[1]],
+                "lowerRight": [side_ll[0], side_ll[1]]
+            },
+            "shape": combined.shape,
         }
 
         # Save the frame to Redis

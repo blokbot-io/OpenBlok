@@ -15,7 +15,6 @@ def rotation_correction(rotation_info):
     '''
     Grabs a frame from the queue and rotates it.
     '''
-    print("Rotating frame", flush=True)
     while True:
         # Get frame from queue
         frame_object = redis_db.get_frame("raw")
@@ -29,7 +28,14 @@ def rotation_correction(rotation_info):
             (frame_object['frame'].shape[1], frame_object['frame'].shape[0])
         )
 
-        metadata = {'timestamp': frame_object['timestamp']}
+        metadata = {
+            'timestamp': frame_object['metadata']['timestamp'],
+            'rotationCorrection': {
+                "arucoCenterX": rotation_info['aruco_center_x'],
+                "arucoCenterY": rotation_info['aruco_center_y'],
+                "angleOffset": rotation_info['angle_offset']
+            }
+        }
 
         # Save the frame to Redis
         redis_db.add_frame("rotated", last_frame, metadata)

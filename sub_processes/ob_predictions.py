@@ -23,26 +23,27 @@ def run_models():
     e2e_model = e2e.PartInference()
 
     while True:
-        next_ready_frame = redis_db.get_frame("roi")
-        preprocessed_frame = next_ready_frame['frame']
+        roi_frame_object = redis_db.get_frame("roi")
 
-        new_metadata = {}
+        roi_frame = roi_frame_object['frame']
+        predicted_metadata = roi_frame_object['metadata']
 
-        side, top = location_model.get_location(preprocessed_frame)
+        # Run location model
+        side, top = location_model.get_location(roi_frame)
 
-        new_metadata['side'] = str(side)
-        new_metadata['top'] = str(top)
+        predicted_metadata['roi']['inferences']['location']['side'] = [side[0], side[1]]
+        predicted_metadata['roi']['inferences']['location']['top'] = [top[0], top[1]]
 
-        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > preprocessed_frame.shape[1]//3:
-            top[0] = top[0] - preprocessed_frame.shape[1]//3
+        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > roi_frame.shape[1]//3:
+            top[0] = top[0] - roi_frame.shape[1]//3
 
             side_crop = crop_square(
-                preprocessed_frame[:, :preprocessed_frame.shape[1]//3],
+                roi_frame[:, :roi_frame.shape[1]//3],
                 (side[0], side[1])
             )
 
             top_crop = crop_square(
-                preprocessed_frame[:, preprocessed_frame.shape[1]//3:],
+                roi_frame[:, roi_frame.shape[1]//3:],
                 (top[0], top[1])
             )
 
@@ -50,14 +51,15 @@ def run_models():
                 (side_crop['croppedFrame'], top_crop['croppedFrame']), axis=1)
             predictions = e2e_model.get_predictions(view_concatenated)
 
-            side_crop = side_crop.pop('croppedFrame')
-            top_crop = top_crop.pop('croppedFrame')
+            predicted_metadata['roi']['inferences']['location']['crop']['topView']['upperLeft'] = top_crop[1]
+            predicted_metadata['roi']['inferences']['location']['crop']['topView']['lowerRight'] = top_crop[2]
 
-            new_metadata['predictions'] = str(predictions)
-            new_metadata['sideCoordinates'] = str(side_crop)
-            new_metadata['topCoordinates'] = str(top_crop)
+            predicted_metadata['roi']['inferences']['location']['crop']['sideView']['upperLeft'] = side_crop[1]
+            predicted_metadata['roi']['inferences']['location']['crop']['sideView']['lowerRight'] = side_crop[2]
 
-        new_metadata['preprocessed_shape'] = str(list(preprocessed_frame.shape))
+            predicted_metadata['roi']['inferences']['e2e']['design'] = predictions['design']
+            predicted_metadata['roi']['inferences']['e2e']['category'] = predictions['category']
 
-        redis_db.move_frame("rotated", "predicted", next_ready_frame['source_frame'])
-        redis_db.add_metadata("predicted", next_ready_frame['source_frame'], new_metadata)
+        rotated_frame_object = redis_db.get_frame(
+            "rotated", frame_uuid=predicted_metadata['rotatedUUID'])
+        redis_db.add_frame("predicted", rotated_frame_object['frame'], predicted_metadata)
