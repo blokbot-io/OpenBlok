@@ -58,11 +58,11 @@ def run_models():
             predicted_metadata['roi']['inferences']['location']['crop']['sideView'] = {}
             predicted_metadata['roi']['inferences']['e2e'] = {}
 
-            predicted_metadata['roi']['inferences']['location']['crop']['topView']['upperLeft'] = top_crop[1]
-            predicted_metadata['roi']['inferences']['location']['crop']['topView']['lowerRight'] = top_crop[2]
+            predicted_metadata['roi']['inferences']['location']['crop']['topView']['upperLeft'] = top_crop['topLeftCoordinate']
+            predicted_metadata['roi']['inferences']['location']['crop']['topView']['lowerRight'] = top_crop['bottomRightCoordinate']
 
-            predicted_metadata['roi']['inferences']['location']['crop']['sideView']['upperLeft'] = side_crop[1]
-            predicted_metadata['roi']['inferences']['location']['crop']['sideView']['lowerRight'] = side_crop[2]
+            predicted_metadata['roi']['inferences']['location']['crop']['sideView']['upperLeft'] = side_crop['topLeftCoordinate']
+            predicted_metadata['roi']['inferences']['location']['crop']['sideView']['lowerRight'] = side_crop['bottomRightCoordinate']
 
             predicted_metadata['roi']['inferences']['e2e']['design'] = predictions['design']
             predicted_metadata['roi']['inferences']['e2e']['category'] = predictions['category']
