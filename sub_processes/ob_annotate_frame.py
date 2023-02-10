@@ -23,19 +23,18 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
     session_stats = stats.Stats()
 
     while True:
-        predicted = redis_db.get_frame("predicted")
-        predicted_frame = predicted['frame']
+        predicted_frame_object = redis_db.get_frame("predicted")
+        predicted_frame = predicted_frame_object['frame']
+        predicted_metadata = predicted_frame_object['metadata']
 
-        predicted_preprocessed_shape = predicted_frame.shape
-
-        session_stats.add_frame_time(float(predicted['timestamp']))    # Add frame time to stats
+        # Add frame time to stats
+        session_stats.add_frame_time(float(predicted_metadata['timestamp']))
 
         # Marker Layer
         cv2.aruco.drawDetectedMarkers(predicted_frame, AruCo_corners, AruCo_ids)
 
         # Split Line Layer
-        cut_distance = int(AruCo_center_x +
-                           (mirror_offset*AruCo_px_per_inch))
+        cut_distance = int(AruCo_center_x + (mirror_offset*AruCo_px_per_inch))
         cv2.line(predicted_frame, (cut_distance, 0),
                  (cut_distance, predicted_frame.shape[0]), (0, 0, 255), 2)
 
@@ -43,11 +42,11 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
         bound_corners = bounding_boxes()
         predicted_frame = annotate.bounding_areas(predicted_frame, bound_corners)
 
-        side = json.loads(predicted['side'])
-        top = json.loads(predicted['top'])
+        side = predicted_metadata['roi']['inferences']['location']['sideMidpoint']
+        top = predicted_metadata['roi']['inferences']['location']['topMidpoint']
 
-        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > predicted_preprocessed_shape[1]//3:
-            top[0] = top[0] - predicted_preprocessed_shape[1]//3
+        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > predicted_frame.shape[1]//3:
+            top[0] = top[0] - predicted_frame.shape[1]//3
 
             # ----------------------------- Object Locations ----------------------------- #
             # Side View
@@ -57,21 +56,15 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
                 (255, 0, 0)
             )
 
-            side_crop = predicted['sideCoordinates']
-            side_crop = json.loads(side_crop)
-
-            top_crop = predicted['topCoordinates']
-            top_crop = json.loads(top_crop)
-
-            # side_crop = [float(i) for i in side_crop]
-            # top_crop = [float(i) for i in top_crop]
+            side_crop = predicted_metadata['roi']['inferences']['location']['crop']['sideView']
+            top_crop = predicted_metadata['roi']['inferences']['location']['crop']['topView']
 
             predicted_frame = annotate.visualize_crop(
                 predicted_frame,
-                (side_crop['topLeftCoordinate'][0]+bound_corners[2][0],
-                 side_crop['topLeftCoordinate'][1]+bound_corners[2][1]),
-                (side_crop['bottomRightCoordinate'][0]+bound_corners[2][0],
-                 side_crop['bottomRightCoordinate'][1]+bound_corners[2][1]),
+                (side_crop['upperLeft'][0]+bound_corners[2][0],
+                 side_crop['upperLeft'][1]+bound_corners[2][1]),
+                (side_crop['lowerRight'][0]+bound_corners[2][0],
+                 side_crop['lowerRight'][1]+bound_corners[2][1]),
                 (255, 0, 0)
             )
 
@@ -83,14 +76,14 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
 
             predicted_frame = annotate.visualize_crop(
                 predicted_frame,
-                (top_crop['topLeftCoordinate'][0]+bound_corners[0][0],
-                 top_crop['topLeftCoordinate'][1]+bound_corners[0][1]),
-                (top_crop['bottomRightCoordinate'][0]+bound_corners[0][0],
-                 top_crop['bottomRightCoordinate'][1]+bound_corners[0][1])
+                (top_crop['upperLeft'][0]+bound_corners[0][0],
+                 top_crop['upperLeft'][1]+bound_corners[0][1]),
+                (top_crop['lowerRight'][0]+bound_corners[0][0],
+                 top_crop['lowerRight'][1]+bound_corners[0][1])
             )
 
             # --------------------------- object Classification -------------------------- #
-            predictions = dict(predicted['predictions'])
+            predictions = predicted_metadata['roi']['inferences']['e2e']
 
             design = predictions["design"][0]
             design_confidence = predictions["design"][1]

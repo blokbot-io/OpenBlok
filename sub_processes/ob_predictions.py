@@ -33,8 +33,8 @@ def run_models():
 
         predicted_metadata['roi']['inferences'] = {"location": {}}
 
-        predicted_metadata['roi']['inferences']['location']['side'] = [side[0], side[1]]
-        predicted_metadata['roi']['inferences']['location']['top'] = [top[0], top[1]]
+        predicted_metadata['roi']['inferences']['location']['sideMidpoint'] = [side[0], side[1]]
+        predicted_metadata['roi']['inferences']['location']['topMidpoint'] = [top[0], top[1]]
 
         if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > roi_frame.shape[1]//3:
             top[0] = top[0] - roi_frame.shape[1]//3
