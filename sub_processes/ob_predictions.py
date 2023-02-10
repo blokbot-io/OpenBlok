@@ -31,6 +31,8 @@ def run_models():
         # Run location model
         side, top = location_model.get_location(roi_frame)
 
+        predicted_metadata['roi']['inferences'] = {"location": {}}
+
         predicted_metadata['roi']['inferences']['location']['side'] = [side[0], side[1]]
         predicted_metadata['roi']['inferences']['location']['top'] = [top[0], top[1]]
 
@@ -50,6 +52,11 @@ def run_models():
             view_concatenated = np.concatenate(
                 (side_crop['croppedFrame'], top_crop['croppedFrame']), axis=1)
             predictions = e2e_model.get_predictions(view_concatenated)
+
+            predicted_metadata['roi']['inferences']['location']['crop'] = {}
+            predicted_metadata['roi']['inferences']['location']['crop']['topView'] = {}
+            predicted_metadata['roi']['inferences']['location']['crop']['sideView'] = {}
+            predicted_metadata['roi']['inferences']['e2e'] = {}
 
             predicted_metadata['roi']['inferences']['location']['crop']['topView']['upperLeft'] = top_crop[1]
             predicted_metadata['roi']['inferences']['location']['crop']['topView']['lowerRight'] = top_crop[2]
