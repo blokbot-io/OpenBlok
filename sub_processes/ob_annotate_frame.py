@@ -49,8 +49,8 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
         side_midpoint = predicted_metadata['roi']['inferences']['location']['sideMidpoint']
         top_midpoint = predicted_metadata['roi']['inferences']['location']['topMidpoint']
 
-        if [0, 0] not in [side_midpoint, top_midpoint] and top_midpoint[0] > predicted_frame.shape[1]//3:
-            top_midpoint[0] = top_midpoint[0] - predicted_frame.shape[1]//3
+        if [0, 0] not in [side_midpoint, top_midpoint]:
+            # top_midpoint[0] = top_midpoint[0] - predicted_frame.shape[1]//3
 
             # ----------------------------- Object Locations ----------------------------- #
             # Side View
