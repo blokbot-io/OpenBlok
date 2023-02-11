@@ -101,6 +101,7 @@ class RedisStorageManager():
         Adds a frame to the redis queue
         '''
         try:
+            print(f"roi_queue: {self.redis.scard('roi_queue')}")
             if queue_name == "raw" and self.redis.scard("roi_queue") > 10:
                 return
         except redis.exceptions.ResponseError:
