@@ -114,9 +114,9 @@ for _ in range(2):  # Starts 2 multiprocessing processes to annotate.
 # ---------------------------------------------------------------------------- #
 # display.predict_and_show_thread()
 
-# display_process = multiprocessing.Process(target=display.predict_and_show_thread)
-# display_process.daemon = True
-# display_process.start()
+display_process = multiprocessing.Process(target=display.predict_and_show_thread)
+display_process.daemon = True
+display_process.start()
 
 
 print("Starting Infinite Loop...")
