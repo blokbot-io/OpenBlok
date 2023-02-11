@@ -29,24 +29,26 @@ def run_models():
         predicted_metadata = roi_frame_object['metadata']
 
         # Run location model
-        side, top = location_model.get_location(roi_frame)
+        part_location = location_model.get_location(roi_frame)
+        side_midpoint = part_location['sideMidpoint']
+        top_midpoint = part_location['topMidpoint']
 
         predicted_metadata['roi']['inferences'] = {"location": {}}
 
-        predicted_metadata['roi']['inferences']['location']['sideMidpoint'] = [side[0], side[1]]
-        predicted_metadata['roi']['inferences']['location']['topMidpoint'] = [top[0], top[1]]
+        predicted_metadata['roi']['inferences']['location']['sideMidpoint'] = side_midpoint
+        predicted_metadata['roi']['inferences']['location']['topMidpoint'] = top_midpoint
 
-        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > roi_frame.shape[1]//3:
-            top[0] = top[0] - roi_frame.shape[1]//3
+        if [0, 0] not in [side_midpoint, top_midpoint] and top_midpoint[0] > roi_frame.shape[1]//3:
+            top_midpoint[0] = top_midpoint[0] - roi_frame.shape[1]//3
 
             side_crop = crop_square(
                 roi_frame[:, :roi_frame.shape[1]//3],
-                (side[0], side[1])
+                (side_midpoint[0], side_midpoint[1])
             )
 
             top_crop = crop_square(
                 roi_frame[:, roi_frame.shape[1]//3:],
-                (top[0], top[1])
+                (top_midpoint[0], top_midpoint[1])
             )
 
             view_concatenated = np.concatenate(

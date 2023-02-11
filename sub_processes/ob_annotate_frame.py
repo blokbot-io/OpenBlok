@@ -46,17 +46,17 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
 
         predicted_frame = annotate.bounding_areas(predicted_frame, bound_corners)
 
-        side = predicted_metadata['roi']['inferences']['location']['sideMidpoint']
-        top = predicted_metadata['roi']['inferences']['location']['topMidpoint']
+        side_midpoint = predicted_metadata['roi']['inferences']['location']['sideMidpoint']
+        top_midpoint = predicted_metadata['roi']['inferences']['location']['topMidpoint']
 
-        if 0 not in [side[0], side[1], top[0], top[1]] and top[0] > predicted_frame.shape[1]//3:
-            top[0] = top[0] - predicted_frame.shape[1]//3
+        if [0, 0] not in [side_midpoint, top_midpoint] and top_midpoint[0] > predicted_frame.shape[1]//3:
+            top_midpoint[0] = top_midpoint[0] - predicted_frame.shape[1]//3
 
             # ----------------------------- Object Locations ----------------------------- #
             # Side View
             predicted_frame = annotate.mark_object_center(
                 predicted_frame,
-                (side[0]+bound_corners[2][0], side[1]+bound_corners[0][1]),
+                (side_midpoint[0]+bound_corners[2][0], side_midpoint[1]+bound_corners[0][1]),
                 (255, 0, 0)
             )
 
@@ -75,7 +75,7 @@ def annotations(AruCo_corners, AruCo_ids, AruCo_center_x, mirror_offset, AruCo_p
             # Top View
             predicted_frame = annotate.mark_object_center(
                 predicted_frame,
-                (top[0]+bound_corners[0][0], top[1]+bound_corners[0][1])
+                (top_midpoint[0]+bound_corners[0][0], top_midpoint[1]+bound_corners[0][1])
             )
 
             predicted_frame = annotate.visualize_crop(

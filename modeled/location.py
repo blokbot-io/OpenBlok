@@ -1,4 +1,6 @@
-''' Interacts with the location model to get the location of the object in the frame. '''
+'''
+Interacts with the location model to get the location of the object in the frame.
+'''
 # pylint: disable=R0903
 
 import os
@@ -36,8 +38,6 @@ class LocationInference:
         Get the location of the object in the frame.
         Returns the x,y coordinates for the side and top views.
         '''
-        frame_shape = frame.shape
-
         frame_resized = cv2.resize(
             frame,
             (self.model_properties['input_width'],
@@ -52,10 +52,13 @@ class LocationInference:
         predictions = self.model.predict(frame_batch)
         _, side, top = predictions
 
-        side_x = int(side[0][0] * frame_shape[1])
-        side_y = int(side[0][1] * frame_shape[0])
+        side_x = int(side[0][0] * frame.shape[1])
+        side_y = int(side[0][1] * frame.shape[0])
 
-        top_x = int(top[0][0] * frame_shape[1])
-        top_y = int(top[0][1] * frame_shape[0])
+        top_x = int(top[0][0] * frame.shape[1])
+        top_y = int(top[0][1] * frame.shape[0])
 
-        return [side_x, side_y], [top_x, top_y]
+        return {
+            "sideMidpoint": [side_x, side_y],
+            "topMidpoint": [top_x, top_y]
+        }
