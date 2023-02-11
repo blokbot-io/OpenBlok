@@ -57,10 +57,9 @@ updater.update_models()  # Update models
 #                                 Start Threads                                #
 # ---------------------------------------------------------------------------- #
 # Camera Thread
-# threading.Thread(target=camera.continuous_capture).start()
-camera_process = multiprocessing.Process(target=camera.continuous_capture)
-camera_process.daemon = True
-camera_process.start()
+camera_thread = threading.Thread(target=camera.continuous_capture)
+camera_thread.daemon = True
+camera_thread.start()
 print("INFO | Camera thread started.")
 
 # Start Serial Listener
@@ -113,11 +112,11 @@ for _ in range(2):  # Starts 2 multiprocessing processes to annotate.
 # ---------------------------------------------------------------------------- #
 #                                   Main Loop                                  #
 # ---------------------------------------------------------------------------- #
-display.predict_and_show_thread()
+# display.predict_and_show_thread()
 
-# display_process = multiprocessing.Process(target=display.predict_and_show_thread)
-# display_process.daemon = True
-# display_process.start()
+display_process = multiprocessing.Process(target=display.predict_and_show_thread)
+display_process.daemon = True
+display_process.start()
 
 
 print("Starting Infinite Loop...")
