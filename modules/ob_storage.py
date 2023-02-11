@@ -100,10 +100,8 @@ class RedisStorageManager():
         '''
         Adds a frame to the redis queue
         '''
-        print(self.redis.scard("roi"))
-        # if queue_name == "raw" and self.redis.exists("roi"):
-        #     if self.redis.scard("roi") > 10:
-        #         return
+        if queue_name == "raw" and self.redis.scard("roi_queue") > 10:
+            return
 
         frame_uuid = str(uuid.uuid4())
 
@@ -117,7 +115,7 @@ class RedisStorageManager():
         self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
         self.redis.hset(f"{queue_name}:{frame_uuid}", "metadata", json.dumps(metadata))
 
-        self.redis.rpush(queue_name, frame_uuid)
+        self.redis.rpush(f"{queue_name}_queue", frame_uuid)
 
         return frame_uuid
 
@@ -126,7 +124,7 @@ class RedisStorageManager():
         Gets a frame from the redis queue
         '''
         if frame_uuid is None:
-            frame_uuid = self.redis.blpop([queue_name], timeout=30)[1].decode("utf-8")
+            frame_uuid = self.redis.blpop([f"{queue_name}_queue"], timeout=30)[1].decode("utf-8")
         elif isinstance(frame_uuid, bytes):
             frame_uuid = frame_uuid.decode("utf-8")
 
