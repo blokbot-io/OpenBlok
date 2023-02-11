@@ -100,8 +100,11 @@ class RedisStorageManager():
         '''
         Adds a frame to the redis queue
         '''
-        if queue_name == "raw" and self.redis.scard("roi_queue") > 10:
-            return
+        try:
+            if queue_name == "raw" and self.redis.scard("roi_queue") > 10:
+                return
+        except redis.exceptions.ResponseError:
+            pass
 
         frame_uuid = str(uuid.uuid4())
 
