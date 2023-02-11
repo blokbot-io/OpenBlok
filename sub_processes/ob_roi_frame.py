@@ -3,12 +3,11 @@ OpenBlok | sub_process | ob_roi_frame.py
 
 Cuts out the region of interest from the frame.
 '''
+import time
 import numpy as np
 
 from bloks.utils.bounding_areas import bounding_boxes
 from modules import ob_storage
-
-redis_db = ob_storage.RedisStorageManager()
 
 
 def capture_regions():
@@ -19,6 +18,8 @@ def capture_regions():
     side_ul - side upper left (x,y)
     side_ll - side lower left (x,y)
     '''
+    redis_db = ob_storage.RedisStorageManager()
+
     while True:
         frame_object = redis_db.get_frame("rotated", delete_frame=False)
 
@@ -45,3 +46,6 @@ def capture_regions():
 
         # Save the frame to Redis
         redis_db.add_frame("roi", combined, metadata)
+
+        # Sleep to maintain FPS
+        time.sleep(1/30)

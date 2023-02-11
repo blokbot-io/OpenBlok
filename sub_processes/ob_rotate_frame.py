@@ -3,21 +3,21 @@ OpenBlok | sub_process | ob_rotate_frame.py
 Ran as a subprocess to correct for the rotation of the camera.
 '''
 
+import time
+
 import cv2
 
 from modules import ob_storage
-
-
-redis_db = ob_storage.RedisStorageManager()
 
 
 def rotation_correction(rotation_info):
     '''
     Grabs a frame from the queue and rotates it.
     '''
+    redis_db = ob_storage.RedisStorageManager()
+
     while True:
-        # Get frame from queue
-        frame_object = redis_db.get_frame("raw")
+        frame_object = redis_db.get_frame("raw")    # Get frame from queue
 
         rotation_matrix = cv2.getRotationMatrix2D(
             (rotation_info['aruco_center_x'], rotation_info['aruco_center_y']),
@@ -39,3 +39,6 @@ def rotation_correction(rotation_info):
 
         # Save the frame to Redis
         redis_db.add_frame("rotated", last_frame, metadata)
+
+        # Sleep to maintain FPS
+        time.sleep(1/30)
