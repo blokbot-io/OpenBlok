@@ -14,7 +14,7 @@ from modules import ob_storage
 
 print("INFO | camera module loaded")
 
-FPS = 10  # Frames per second
+FPS = 2  # Frames per second
 
 
 def continuous_capture():
