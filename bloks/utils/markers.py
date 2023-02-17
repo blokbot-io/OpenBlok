@@ -16,9 +16,7 @@ def get_aruco(img):
     Called to get the location of AruCo markers in the image.
     '''
     if config.AruCo_corners is None:
-        # aruco_dict = aruco.Dictionary_get(aruco.DICT_4X4_50)
         aruco_dict = aruco.getPredefinedDictionary(aruco.DICT_4X4_50)
-        # parameters = aruco.DetectorParameters_create()
         parameters = aruco.DetectorParameters()
         parameters.adaptiveThreshWinSizeMin = 2  # 3
         parameters.adaptiveThreshWinSizeMax = 75  # 23
