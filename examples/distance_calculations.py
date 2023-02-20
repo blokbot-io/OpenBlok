@@ -90,20 +90,64 @@ tvbr = [
 # ---------------------------------------------------------------------------- #
 #                          Point Distance Calculations                         #
 # ---------------------------------------------------------------------------- #
+# Marker to Side View Top Left
 mtl_svtl = math.dist(mtl, svtl)
 mtr_svtl = math.dist(mtr, svtl)
 mbl_svtl = math.dist(mbl, svtl)
 mbr_svtl = math.dist(mbr, svtl)
 
+# Marker to Side View Top Right
+mtl_svtr = math.dist(mtl, svtr)
+mtr_svtr = math.dist(mtr, svtr)
+mbl_svtr = math.dist(mbl, svtr)
+mbr_svtr = math.dist(mbr, svtr)
+
+# Marker to Side View Bottom Left
+mtl_svbl = math.dist(mtl, svbl)
+mtr_svbl = math.dist(mtr, svbl)
+mbl_svbl = math.dist(mbl, svbl)
+mbr_svbl = math.dist(mbr, svbl)
+
+# Marker to Side View Bottom Right
+mtl_svbr = math.dist(mtl, svbr)
+mtr_svbr = math.dist(mtr, svbr)
+mbl_svbr = math.dist(mbl, svbr)
+mbr_svbr = math.dist(mbr, svbr)
+
+# Marker to Top View Top Left
+mtl_tvtl = math.dist(mtl, tvtl)
+mtr_tvtl = math.dist(mtr, tvtl)
+mbl_tvtl = math.dist(mbl, tvtl)
+mbr_tvtl = math.dist(mbr, tvtl)
+
+# Marker to Top View Top Right
+mtl_tvtr = math.dist(mtl, tvtr)
+mtr_tvtr = math.dist(mtr, tvtr)
+mbl_tvtr = math.dist(mbl, tvtr)
+mbr_tvtr = math.dist(mbr, tvtr)
+
+# Marker to Top View Bottom Left
+mtl_tvbl = math.dist(mtl, tvbl)
+mtr_tvbl = math.dist(mtr, tvbl)
+mbl_tvbl = math.dist(mbl, tvbl)
+mbr_tvbl = math.dist(mbr, tvbl)
+
+# Marker to Top View Bottom Right
+mtl_tvbr = math.dist(mtl, tvbr)
+mtr_tvbr = math.dist(mtr, tvbr)
+mbl_tvbr = math.dist(mbl, tvbr)
+mbr_tvbr = math.dist(mbr, tvbr)
 
 # ---------------------------------------------------------------------------- #
 #                                 Trilateration                                #
 # ---------------------------------------------------------------------------- #
-def intersectionPoint(p1, p2, p3):
 
-    x1, y1, dist_1 = (p1[0], p1[1], p1[2])
-    x2, y2, dist_2 = (p2[0], p2[1], p2[2])
-    x3, y3, dist_3 = (p3[0], p3[1], p3[2])
+
+def intersectionPoint(point_1, point_2, point_3):
+
+    x1, y1, dist_1 = point_1
+    x2, y2, dist_2 = point_2
+    x3, y3, dist_3 = point_3
 
     def eq(g):
         x, y = g
@@ -111,21 +155,22 @@ def intersectionPoint(p1, p2, p3):
         return (
             (x - x1)**2 + (y - y1)**2 - dist_1**2,
             (x - x2)**2 + (y - y2)**2 - dist_2**2,
-            (x - x3)**2 + (y - y3)**2 - dist_3**2)
+            (x - x3)**2 + (y - y3)**2 - dist_3**2
+        )
 
-    guess = (x1 + dist_3, y1 + dist_1)
-
-    ans = least_squares(eq, guess, ftol=None, xtol=None)
+    guess = (3840/2, 2160/2)
+    bounds = [[0, 0], [3840, 2160]]
+    ans = least_squares(eq, guess, bounds=bounds, method='dogbox')
 
     return ans
 
 
-ans = intersectionPoint(
-    (mtl[0], mtl[1], mtl_svtl),
-    (mbr[0], mbr[1], mbr_svtl),
-    (mbl[0], mbl[1], mbl_svtl)
-)
-print("Center: ", ans.x[0], ans.x[1])
+# ans = intersectionPoint(
+#     (mtl[0], mtl[1], mtl_svtl),
+#     (mbr[0], mbr[1], mbr_svtl),
+#     (mbl[0], mbl[1], mbl_svtl)
+# )
+# print("Center: ", ans.x[0], ans.x[1])
 
 # ---------------------------------------------------------------------------- #
 #                                   plotting                                   #
