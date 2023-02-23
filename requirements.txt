@@ -1,8 +1,10 @@
 config==0.5.1
 boto3==1.26.65
+matplotlib==3.7.0
 opencv-contrib-python==4.7.0.68
 pyserial==3.5
 redis==4.4.2
 screeninfo==0.8.1
+scipy==1.10.1
 tensorflow==2.11.0
 xmltodict==0.13.0

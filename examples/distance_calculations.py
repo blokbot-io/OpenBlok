@@ -11,7 +11,6 @@ r - right
 
 import math
 import matplotlib.pyplot as plt
-from scipy.optimize import least_squares
 
 
 # ---------------------------------------------------------------------------- #
@@ -138,70 +137,38 @@ mtr_tvbr = math.dist(mtr, tvbr)
 mbl_tvbr = math.dist(mbl, tvbr)
 mbr_tvbr = math.dist(mbr, tvbr)
 
-# ---------------------------------------------------------------------------- #
-#                                 Trilateration                                #
-# ---------------------------------------------------------------------------- #
 
+if __name__ == "__main__":
+    # ---------------------------------------------------------------------------- #
+    #                                   plotting                                   #
+    # ---------------------------------------------------------------------------- #
+    x_points = [
+        mtl[0], mtr[0], mbr[0], mbl[0], mtl[0],
+        svtr[0], svbr[0], svbl[0], svtl[0],
+        tvtl[0], tvtr[0], tvbr[0], tvbl[0], tvtl[0]
+    ]
+    y_points = [
+        mtl[1], mtr[1], mbr[1], mbl[1], mtl[1],
+        svtr[1], svbr[1], svbl[1], svtl[1],
+        tvtl[1], tvtr[1], tvbr[1], tvbl[1], tvtl[1]
+    ]
 
-def intersectionPoint(point_1, point_2, point_3):
+    figure, axes = plt.subplots()
+    plt.plot(x_points, y_points, 'ro')
 
-    x1, y1, dist_1 = point_1
-    x2, y2, dist_2 = point_2
-    x3, y3, dist_3 = point_3
+    mtlc = plt.Circle((mtl[0], mtl[1]),
+                      mtl_svtl, color='r', fill=False, clip_on=False)
+    mblc = plt.Circle((mbl[0], mbl[1]),
+                      mbl_svtl, color='r', fill=False, clip_on=False)
+    mbrc = plt.Circle((mbr[0], mbr[1]),
+                      mbr_svtl, color='r', fill=False, clip_on=False)
+    mtrc = plt.Circle((mtr[0], mtr[1]),
+                      mtr_svtl, color='r', fill=False, clip_on=False)
 
-    def eq(g):
-        x, y = g
+    axes.set_aspect(1)
+    axes.add_artist(mtlc)
+    axes.add_artist(mblc)
+    axes.add_artist(mbrc)
+    axes.add_artist(mtrc)
 
-        return (
-            (x - x1)**2 + (y - y1)**2 - dist_1**2,
-            (x - x2)**2 + (y - y2)**2 - dist_2**2,
-            (x - x3)**2 + (y - y3)**2 - dist_3**2
-        )
-
-    guess = (3840/2, 2160/2)
-    bounds = [[0, 0], [3840, 2160]]
-    ans = least_squares(eq, guess, bounds=bounds, method='dogbox')
-
-    return ans
-
-
-# ans = intersectionPoint(
-#     (mtl[0], mtl[1], mtl_svtl),
-#     (mbr[0], mbr[1], mbr_svtl),
-#     (mbl[0], mbl[1], mbl_svtl)
-# )
-# print("Center: ", ans.x[0], ans.x[1])
-
-# ---------------------------------------------------------------------------- #
-#                                   plotting                                   #
-# ---------------------------------------------------------------------------- #
-x_points = [
-    mtl[0], mtr[0], mbr[0], mbl[0], mtl[0],
-    svtr[0], svbr[0], svbl[0], svtl[0],
-    tvtl[0], tvtr[0], tvbr[0], tvbl[0], tvtl[0]
-]
-y_points = [
-    mtl[1], mtr[1], mbr[1], mbl[1], mtl[1],
-    svtr[1], svbr[1], svbl[1], svtl[1],
-    tvtl[1], tvtr[1], tvbr[1], tvbl[1], tvtl[1]
-]
-
-figure, axes = plt.subplots()
-plt.plot(x_points, y_points, 'ro')
-
-mtlc = plt.Circle((mtl[0], mtl[1]),
-                  mtl_svtl, color='r', fill=False, clip_on=False)
-mblc = plt.Circle((mbl[0], mbl[1]),
-                  mbl_svtl, color='r', fill=False, clip_on=False)
-mbrc = plt.Circle((mbr[0], mbr[1]),
-                  mbr_svtl, color='r', fill=False, clip_on=False)
-mtrc = plt.Circle((mtr[0], mtr[1]),
-                  mtr_svtl, color='r', fill=False, clip_on=False)
-
-axes.set_aspect(1)
-axes.add_artist(mtlc)
-axes.add_artist(mblc)
-axes.add_artist(mbrc)
-axes.add_artist(mtrc)
-
-# plt.show()
+    plt.show()
