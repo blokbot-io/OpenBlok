@@ -26,7 +26,7 @@ from distance_calculations import (
     mtl_tvbr, mtr_tvbr, mbr_tvbr, mbl_tvbr,
 )
 
-TEST_IMAGE = "examples/sample_images/raw-no_part.png"
+TEST_IMAGE = "examples/sample_images/raw-part.png"
 
 # Load the image
 sampled_image = cv2.imread(TEST_IMAGE)

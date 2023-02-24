@@ -55,18 +55,74 @@ def four_point_transform(image, rect):
     return warped
 
 
-time_now = time.time()
-warped_side = four_point_transform(sampled_image, side_rect)
-warped_top = four_point_transform(sampled_image, top_rect)
-print("Time to transform: {}".format(time.time() - time_now))
+def combined_roi_views(image, side_rect, top_rect):
+    '''
+    Compensates for missed mixes to ensure:
+    - top view as a h:w ratio of 1:1
+    - side view h is equal to top view h
+    - side view as a h:w ratio of 1:2
+    '''
+    (side_tl, side_tr, side_br, side_bl) = side_rect
+    (top_tl, top_tr, top_br, top_bl) = top_rect
+    # Calculate the max height for the side and top views then get the average.
 
-# show the original and warped images
+    # Side Max Height
+    side_heightA = np.sqrt(((side_tr[0] - side_br[0]) ** 2) + ((side_tr[1] - side_br[1]) ** 2))
+    side_heightB = np.sqrt(((side_tl[0] - side_bl[0]) ** 2) + ((side_tl[1] - side_bl[1]) ** 2))
+    side_maxHeight = max(int(side_heightA), int(side_heightB))
 
-cv2.namedWindow("Side View ROI", cv2.WINDOW_NORMAL)
-cv2.imshow("Side View ROI", warped_side)
+    # Top Max Height
+    top_heightA = np.sqrt(((top_tr[0] - top_br[0]) ** 2) + ((top_tr[1] - top_br[1]) ** 2))
+    top_heightB = np.sqrt(((top_tl[0] - top_bl[0]) ** 2) + ((top_tl[1] - top_bl[1]) ** 2))
+    top_maxHeight = max(int(top_heightA), int(top_heightB))
 
-cv2.namedWindow("Top View ROI", cv2.WINDOW_NORMAL)
-cv2.imshow("Top View ROI", warped_top)
+    average_height = int((side_maxHeight + top_maxHeight) / 2)
+
+    # Subtract 1 if average_height is not divisible by 2
+    if average_height % 2 != 0:
+        average_height -= 1
+
+    side_dst = np.array([
+        [0, 0],
+        [average_height/2 - 1, 0],
+        [average_height/2 - 1, average_height - 1],
+        [0, average_height - 1]], dtype="float32")
+
+    top_dst = np.array([
+        [0, 0],
+        [average_height - 1, 0],
+        [average_height - 1, average_height - 1],
+        [0, average_height - 1]], dtype="float32")
+
+    side_M = cv2.getPerspectiveTransform(side_rect, side_dst)
+    top_M = cv2.getPerspectiveTransform(top_rect, top_dst)
+
+    side_warped = cv2.warpPerspective(image, side_M, (int(average_height/2), average_height))
+    top_warped = cv2.warpPerspective(image, top_M, (average_height, average_height))
+
+    return np.concatenate((side_warped, top_warped), axis=1)
+
+
+# time_now = time.time()
+# warped_side = four_point_transform(sampled_image, side_rect)
+# warped_top = four_point_transform(sampled_image, top_rect)
+# print("Time to transform: {}".format(time.time() - time_now))
+
+# # show the original and warped images
+
+# cv2.namedWindow("Side View ROI", cv2.WINDOW_NORMAL)
+# cv2.imshow("Side View ROI", warped_side)
+
+# cv2.namedWindow("Top View ROI", cv2.WINDOW_NORMAL)
+# cv2.imshow("Top View ROI", warped_top)
+
+
+time_start = time.time()
+combined_roi = combined_roi_views(sampled_image, side_rect, top_rect)
+print(f"Time to transform: {time.time() - time_start}")
+
+cv2.namedWindow("Combined View ROI", cv2.WINDOW_NORMAL)
+cv2.imshow("Combined View ROI", combined_roi)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
