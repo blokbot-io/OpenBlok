@@ -17,7 +17,7 @@ def rotation_correction(rotation_info):
     redis_db = ob_storage.RedisStorageManager()
 
     while True:
-        frame_object = redis_db.get_frame("raw")    # Get frame from queue
+        frame_object = redis_db.get_frame("raw", delete_frame=False)    # Get frame from queue
 
         rotation_matrix = cv2.getRotationMatrix2D(
             (rotation_info['aruco_center_x'], rotation_info['aruco_center_y']),

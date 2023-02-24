@@ -71,7 +71,7 @@ def capture_regions():
     redis_db = ob_storage.RedisStorageManager()
 
     while True:
-        frame_object = redis_db.get_frame("rotated", delete_frame=False)
+        frame_object = redis_db.get_frame("raw", delete_frame=False)
 
         frame = frame_object['frame']
         metadata = frame_object['metadata']
