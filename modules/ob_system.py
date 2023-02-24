@@ -168,12 +168,12 @@ def marker_roi_distances():
     r - right
     '''
     return {
-        "svtl": [mtl_svtl, mtr_svtl, mbr_svtl, mbl_svtl],
-        "svtr": [mtl_svtr, mtr_svtr, mbr_svtr, mbl_svtr],
-        "svbl": [mtl_svbl, mtr_svbl, mbr_svbl, mbl_svbl],
-        "svbr": [mtl_svbr, mtr_svbr, mbr_svbr, mbl_svbr],
-        "tvtl": [mtl_tvtl, mtr_tvtl, mbr_tvtl, mbl_tvtl],
-        "tvtr": [mtl_tvtr, mtr_tvtr, mbr_tvtr, mbl_tvtr],
-        "tvbl": [mtl_tvbl, mtr_tvbl, mbr_tvbl, mbl_tvbl],
-        "tvbr": [mtl_tvbr, mtr_tvbr, mbr_tvbr, mbl_tvbr]
+        "svtl": (mtl_svtl, mtr_svtl, mbr_svtl, mbl_svtl),
+        "svtr": (mtl_svtr, mtr_svtr, mbr_svtr, mbl_svtr),
+        "svbl": (mtl_svbl, mtr_svbl, mbr_svbl, mbl_svbl),
+        "svbr": (mtl_svbr, mtr_svbr, mbr_svbr, mbl_svbr),
+        "tvtl": (mtl_tvtl, mtr_tvtl, mbr_tvtl, mbl_tvtl),
+        "tvtr": (mtl_tvtr, mtr_tvtr, mbr_tvtr, mbl_tvtr),
+        "tvbl": (mtl_tvbl, mtr_tvbl, mbr_tvbl, mbl_tvbl),
+        "tvbr": (mtl_tvbr, mtr_tvbr, mbr_tvbr, mbl_tvbr)
     }

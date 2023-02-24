@@ -10,14 +10,14 @@ from . import ob_system
 roi_point_distances = ob_system.marker_roi_distances()
 print(roi_point_distances)
 
-mtl_svtl, mtr_svtl, mbr_svtl, mbl_svtl = roi_point_distances.get("stvl")
-mtl_svtr, mtr_svtr, mbr_svtr, mbl_svtr = roi_point_distances.get("stvr")
-mtl_svbl, mtr_svbl, mbr_svbl, mbl_svbl = roi_point_distances.get("stbl")
-mtl_svbr, mtr_svbr, mbr_svbr, mbl_svbr = roi_point_distances.get("stbr")
-mtl_tvtl, mtr_tvtl, mbr_tvtl, mbl_tvtl = roi_point_distances.get("tvtl")
-mtl_tvtr, mtr_tvtr, mbr_tvtr, mbl_tvtr = roi_point_distances.get("tvtr")
-mtl_tvbl, mtr_tvbl, mbr_tvbl, mbl_tvbl = roi_point_distances.get("tvbl")
-mtl_tvbr, mtr_tvbr, mbr_tvbr, mbl_tvbr = roi_point_distances.get("tvbr")
+mtl_svtl, mtr_svtl, mbr_svtl, mbl_svtl = roi_point_distances["stvl"]
+mtl_svtr, mtr_svtr, mbr_svtr, mbl_svtr = roi_point_distances["stvr"]
+mtl_svbl, mtr_svbl, mbr_svbl, mbl_svbl = roi_point_distances["stbl"]
+mtl_svbr, mtr_svbr, mbr_svbr, mbl_svbr = roi_point_distances["stbr"]
+mtl_tvtl, mtr_tvtl, mbr_tvtl, mbl_tvtl = roi_point_distances["tvtl"]
+mtl_tvtr, mtr_tvtr, mbr_tvtr, mbl_tvtr = roi_point_distances["tvtr"]
+mtl_tvbl, mtr_tvbl, mbr_tvbl, mbl_tvbl = roi_point_distances["tvbl"]
+mtl_tvbr, mtr_tvbr, mbr_tvbr, mbl_tvbr = roi_point_distances["tvbr"]
 
 # ---------------------------------------------------------------------------- #
 #                                 Trilateration                                #
