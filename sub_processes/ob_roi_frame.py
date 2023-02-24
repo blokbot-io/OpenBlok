@@ -100,12 +100,12 @@ def capture_regions():
 
         metadata["roi"] = {
             "topView": {
-                "upperLeft": [view_points["tvtl"][0:2]],
-                "lowerRight": [view_points["tvbr"][0:2]]
+                "upperLeft": [view_points["tvtl"][0], view_points["tvtl"][1]],
+                "lowerRight": [view_points["tvbr"][0], view_points["tvbr"][1]]
             },
             "sideView": {
-                "upperLeft": [view_points["svtl"][0:2]],
-                "lowerRight": [view_points["svbr"][0:2]]
+                "upperLeft": [view_points["svtl"][0], view_points["svtl"][1]],
+                "lowerRight": [view_points["svbr"][0], view_points["svbr"][1]]
             },
             "shape": combined.shape,
         }
