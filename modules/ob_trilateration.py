@@ -8,7 +8,7 @@ from scipy.optimize import least_squares
 from . import ob_system
 
 roi_point_distances = ob_system.marker_roi_distances()
-print(roi_point_distances)
+print(roi_point_distances["stvl"])
 
 mtl_svtl, mtr_svtl, mbr_svtl, mbl_svtl = roi_point_distances["stvl"]
 mtl_svtr, mtr_svtr, mbr_svtr, mbl_svtr = roi_point_distances["stvr"]
