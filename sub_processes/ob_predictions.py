@@ -69,6 +69,10 @@ def run_models():
             predicted_metadata['roi']['inferences']['e2e']['design'] = predictions['design']
             predicted_metadata['roi']['inferences']['e2e']['category'] = predictions['category']
 
+        # rotated_frame_object = redis_db.get_frame(
+        #     "rotated", frame_uuid=predicted_metadata['rotatedUUID'])
+
         rotated_frame_object = redis_db.get_frame(
-            "rotated", frame_uuid=predicted_metadata['rotatedUUID'])
+            "raw", frame_uuid=predicted_metadata['rawUUID'])
+
         redis_db.add_frame("predicted", rotated_frame_object['frame'], predicted_metadata)
