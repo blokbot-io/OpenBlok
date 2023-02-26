@@ -71,47 +71,50 @@ def capture_regions():
     redis_db = ob_storage.RedisStorageManager()
 
     while True:
-        frame_object = redis_db.get_frame("raw", delete_frame=False)
+        try:
+            frame_object = redis_db.get_frame("raw", delete_frame=False)
 
-        frame = frame_object['frame']
-        metadata = frame_object['metadata']
+            frame = frame_object['frame']
+            metadata = frame_object['metadata']
 
-        # top_ul, top_ll, side_ul, side_ll = bounding_boxes()
-        # side_crop = frame[side_ul[1]:side_ll[1], side_ul[0]:side_ll[0]]
-        # top_crop = frame[top_ul[1]:top_ll[1], top_ul[0]:top_ll[0]]
+            # top_ul, top_ll, side_ul, side_ll = bounding_boxes()
+            # side_crop = frame[side_ul[1]:side_ll[1], side_ul[0]:side_ll[0]]
+            # top_crop = frame[top_ul[1]:top_ll[1], top_ul[0]:top_ll[0]]
 
-        # combined = np.concatenate((side_crop, top_crop), axis=1)
+            # combined = np.concatenate((side_crop, top_crop), axis=1)
 
-        view_points = ob_trilateration.calculated_roi_corners(frame)
+            view_points = ob_trilateration.calculated_roi_corners(frame)
 
-        side_rect = np.array([
-            view_points["svtl"][0:2],
-            view_points["svtr"][0:2],
-            view_points["svbr"][0:2],
-            view_points["svbl"][0:2]], dtype=np.float32)
+            side_rect = np.array([
+                view_points["svtl"][0:2],
+                view_points["svtr"][0:2],
+                view_points["svbr"][0:2],
+                view_points["svbl"][0:2]], dtype=np.float32)
 
-        top_rect = np.array([
-            view_points["tvtl"][0:2],
-            view_points["tvtr"][0:2],
-            view_points["tvbr"][0:2],
-            view_points["tvbl"][0:2]], dtype=np.float32)
+            top_rect = np.array([
+                view_points["tvtl"][0:2],
+                view_points["tvtr"][0:2],
+                view_points["tvbr"][0:2],
+                view_points["tvbl"][0:2]], dtype=np.float32)
 
-        combined = combined_roi_views(frame, side_rect, top_rect)
+            combined = combined_roi_views(frame, side_rect, top_rect)
 
-        metadata["roi"] = {
-            "topView": {
-                "upperLeft": [int(view_points["tvtl"][0]), int(view_points["tvtl"][1])],
-                "lowerRight": [int(view_points["tvbr"][0]), int(view_points["tvbr"][1])]
-            },
-            "sideView": {
-                "upperLeft": [int(view_points["svtl"][0]), int(view_points["svtl"][1])],
-                "lowerRight": [int(view_points["svbr"][0]), int(view_points["svbr"][1])]
-            },
-            "shape": combined.shape,
-        }
+            metadata["roi"] = {
+                "topView": {
+                    "upperLeft": [int(view_points["tvtl"][0]), int(view_points["tvtl"][1])],
+                    "lowerRight": [int(view_points["tvbr"][0]), int(view_points["tvbr"][1])]
+                },
+                "sideView": {
+                    "upperLeft": [int(view_points["svtl"][0]), int(view_points["svtl"][1])],
+                    "lowerRight": [int(view_points["svbr"][0]), int(view_points["svbr"][1])]
+                },
+                "shape": combined.shape,
+            }
 
-        # Save the frame to Redis
-        redis_db.add_frame("roi", combined, metadata)
+            # Save the frame to Redis
+            redis_db.add_frame("roi", combined, metadata)
 
-        # Sleep to maintain FPS
-        time.sleep(1/30)
+            # Sleep to maintain FPS
+            time.sleep(1/30)
+        except Exception as e:
+            print(e)
