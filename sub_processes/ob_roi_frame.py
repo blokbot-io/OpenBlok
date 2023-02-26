@@ -72,6 +72,7 @@ def capture_regions():
 
     while True:
         try:
+            time_start = time.time()
             frame_object = redis_db.get_frame("raw", delete_frame=False)
 
             frame = frame_object['frame']
@@ -111,10 +112,11 @@ def capture_regions():
                 "shape": combined.shape,
             }
 
+            metadata["benchmarking"] = {}
+            metadata["benchmarking"]["roi"] = time.time() - time_start
+
             # Save the frame to Redis
             redis_db.add_frame("roi", combined, metadata)
 
-            # Sleep to maintain FPS
-            time.sleep(1/30)
         except Exception as e:
             print(e)
