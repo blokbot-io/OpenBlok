@@ -4,6 +4,8 @@ OpenBlok | sub_processes | ob_predictions.py
 Performs predictions on the frames in the queue.
 '''
 
+import time
+
 import numpy as np
 
 from bloks.utils import crop_square
@@ -27,6 +29,10 @@ def run_models():
 
         roi_frame = roi_frame_object['frame']
         predicted_metadata = roi_frame_object['metadata']
+
+        if time.time() - predicted_metadata['timestamp'] > 1:
+            redis_db.get_frame("raw", frame_uuid=predicted_metadata['rawUUID'])
+            continue
 
         # Run location model
         part_location = location_model.get_location(roi_frame)
