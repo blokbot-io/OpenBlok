@@ -144,6 +144,8 @@ class RedisStorageManager():
         h, w = struct.unpack('>II', frame_object[b"frame"][:8])
         frame_decoded = np.frombuffer(frame_object[b"frame"][8:], dtype=np.uint8).reshape(h, w, 3)
 
+        frame_decoded.setflags(write=1)
+
         frame_object = {
             "frame": frame_decoded,
             "metadata": json.loads(frame_object[b"metadata"].decode("utf-8"))
