@@ -7,6 +7,7 @@ import os
 import uuid
 import json
 import time
+import struct
 
 import cv2
 import redis
@@ -103,10 +104,14 @@ class RedisStorageManager():
         time_start = time.time()
         frame_uuid = str(uuid.uuid4())
 
-        frame_bytes = cv2.imencode(
-            '.png', frame,
-            [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
-        )[1].tostring()
+        # frame_bytes = cv2.imencode(
+        #     '.png', frame,
+        #     [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
+        # )[1].tostring()
+
+        h, w = frame.shape[]
+        shape = struct.pack('>II', h, w)
+        frame_bytes = shape + frame.tobytes()
 
         metadata[f"{queue_name}UUID"] = frame_uuid
 
@@ -131,9 +136,12 @@ class RedisStorageManager():
         frame_object = self.redis.hgetall(f"{queue_name}:{frame_uuid}")
 
         # frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
-        frame_bytes = frame_object[b"frame"]
-        frame_nparray = np.asarray(bytearray(frame_bytes), dtype="uint8")
-        frame_decoded = cv2.imdecode(frame_nparray, cv2.IMREAD_COLOR)
+        # frame_bytes = frame_object[b"frame"]
+        # frame_nparray = np.asarray(bytearray(frame_bytes), dtype="uint8")
+        # frame_decoded = cv2.imdecode(frame_nparray, cv2.IMREAD_COLOR)
+
+        h, w = struct.unpack('>II', frame_object[b"frame"][:8])
+        frame_decoded = np.frombuffer(frame_object[b"frame"][8:], dtype=np.uint8).reshape(h, w)
 
         frame_object = {
             "frame": frame_decoded,
