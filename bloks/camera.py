@@ -80,7 +80,7 @@ def continuous_capture():
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)    # Set the height of the frame
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 10)         # Set the buffer size to 1
     cap.set(cv2.CAP_PROP_FPS, FPS)              # Set frames per second
-    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y', 'U', 'Y', '2'))
 
     frame_count = 0                             # Frame counter
     while True:
