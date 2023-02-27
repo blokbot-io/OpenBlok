@@ -172,3 +172,9 @@ class RedisStorageManager():
         '''
         self.redis.rename(f"{queue_name}:{frame_uuid}", f"{new_queue_name}:{frame_uuid}")
         self.redis.rpush(new_queue_name, frame_uuid)
+
+    def delete_frame(self, queue_name, frame_uuid):
+        '''
+        Deletes a frame from the redis queue
+        '''
+        self.redis.delete(f"{queue_name}:{frame_uuid}")

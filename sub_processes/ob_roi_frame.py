@@ -70,57 +70,54 @@ def capture_regions():
     redis_db = ob_storage.RedisStorageManager()
 
     while True:
-        try:
-            time_start = time.time()
 
-            frame_object = redis_db.get_frame("raw", delete_frame=False)
-            time_get_frame = time.time() - time_start
+        time_start = time.time()
 
-            frame = frame_object['frame']
-            metadata = frame_object['metadata']
+        frame_object = redis_db.get_frame("raw", delete_frame=False)
+        time_get_frame = time.time() - time_start
 
-            time_start_trilateration = time.time()
-            view_points = ob_trilateration.calculated_roi_corners(frame)
-            time_trilateration = time.time() - time_start_trilateration
+        frame = frame_object['frame']
+        metadata = frame_object['metadata']
 
-            side_rect = np.array([
-                view_points["svtl"][0:2],
-                view_points["svtr"][0:2],
-                view_points["svbr"][0:2],
-                view_points["svbl"][0:2]], dtype=np.float32)
+        time_start_trilateration = time.time()
+        view_points = ob_trilateration.calculated_roi_corners(frame)
+        time_trilateration = time.time() - time_start_trilateration
 
-            top_rect = np.array([
-                view_points["tvtl"][0:2],
-                view_points["tvtr"][0:2],
-                view_points["tvbr"][0:2],
-                view_points["tvbl"][0:2]], dtype=np.float32)
+        side_rect = np.array([
+            view_points["svtl"][0:2],
+            view_points["svtr"][0:2],
+            view_points["svbr"][0:2],
+            view_points["svbl"][0:2]], dtype=np.float32)
 
-            time_start_combined = time.time()
-            combined = combined_roi_views(frame, side_rect, top_rect)
-            time_combined = time.time() - time_start_combined
+        top_rect = np.array([
+            view_points["tvtl"][0:2],
+            view_points["tvtr"][0:2],
+            view_points["tvbr"][0:2],
+            view_points["tvbl"][0:2]], dtype=np.float32)
 
-            metadata["roi"] = {
-                "topView": {
-                    "upperLeft": [int(view_points["tvtl"][0]), int(view_points["tvtl"][1])],
-                    "lowerRight": [int(view_points["tvbr"][0]), int(view_points["tvbr"][1])]
-                },
-                "sideView": {
-                    "upperLeft": [int(view_points["svtl"][0]), int(view_points["svtl"][1])],
-                    "lowerRight": [int(view_points["svbr"][0]), int(view_points["svbr"][1])]
-                },
-                "shape": combined.shape,
-            }
+        time_start_combined = time.time()
+        combined = combined_roi_views(frame, side_rect, top_rect)
+        time_combined = time.time() - time_start_combined
 
-            metadata["benchmarking"] = {}
-            metadata["benchmarking"]["roi"] = {
-                "get_frame": time_get_frame,
-                "trilateration": time_trilateration,
-                "combined": time_combined,
-                "total": time.time() - time_start
-            }
+        metadata["roi"] = {
+            "topView": {
+                "upperLeft": [int(view_points["tvtl"][0]), int(view_points["tvtl"][1])],
+                "lowerRight": [int(view_points["tvbr"][0]), int(view_points["tvbr"][1])]
+            },
+            "sideView": {
+                "upperLeft": [int(view_points["svtl"][0]), int(view_points["svtl"][1])],
+                "lowerRight": [int(view_points["svbr"][0]), int(view_points["svbr"][1])]
+            },
+            "shape": combined.shape,
+        }
 
-            # Save the frame to Redis
-            redis_db.add_frame("roi", combined, metadata)
+        metadata["benchmarking"] = {}
+        metadata["benchmarking"]["roi"] = {
+            "get_frame": time_get_frame,
+            "trilateration": time_trilateration,
+            "combined": time_combined,
+            "total": time.time() - time_start
+        }
 
-        except Exception as e:
-            print(e)
+        # Save the frame to Redis
+        redis_db.add_frame("roi", combined, metadata)
