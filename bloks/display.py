@@ -208,11 +208,11 @@ def predict_and_show():
             # ----------------------------- Display Image ------------------------------- #
             cv2.imshow('Combined', frame_resized)
 
+            if cv2.waitKey(10) & 0xFF == ord('q'):
+                break
+
         except Exception as e:
             print(e)
-
-        if cv2.waitKey(10) & 0xFF == ord('q'):
-            break
 
     cv2.destroyAllWindows()
 
