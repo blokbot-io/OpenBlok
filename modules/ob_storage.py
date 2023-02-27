@@ -100,6 +100,7 @@ class RedisStorageManager():
         '''
         Adds a frame to the redis queue
         '''
+        time_start = time.time()
         frame_uuid = str(uuid.uuid4())
 
         frame_bytes = cv2.imencode(
@@ -111,6 +112,7 @@ class RedisStorageManager():
 
         self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
         self.redis.hset(f"{queue_name}:{frame_uuid}", "metadata", json.dumps(metadata))
+        self.redis.hset(f"{queue_name}:{frame_uuid}", "add_frame_time", time.time()-time_start)
 
         self.redis.rpush(f"{queue_name}_queue", frame_uuid)
 
@@ -120,6 +122,7 @@ class RedisStorageManager():
         '''
         Gets a frame from the redis queue
         '''
+        time_start = time.time()
         if frame_uuid is None:
             frame_uuid = self.redis.blpop([f"{queue_name}_queue"], timeout=30)[1].decode("utf-8")
         elif isinstance(frame_uuid, bytes):
@@ -136,6 +139,8 @@ class RedisStorageManager():
             "frame": frame_decoded,
             "metadata": json.loads(frame_object[b"metadata"].decode("utf-8"))
         }
+
+        frame_object["metadata"]["get_frame_time"] = time.time()-time_start
 
         if delete_frame:
             self.redis.delete(f"{queue_name}:{frame_uuid}")
