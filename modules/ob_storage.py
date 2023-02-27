@@ -142,7 +142,7 @@ class RedisStorageManager():
         # frame_decoded = cv2.imdecode(frame_nparray, cv2.IMREAD_COLOR)
 
         h, w = struct.unpack('>II', frame_object[b"frame"][:8])
-        frame_decoded = np.frombuffer(frame_object[b"frame"][8:], dtype=np.uint8).reshape(h, w)
+        frame_decoded = np.frombuffer(frame_object[b"frame"][8:], dtype=np.uint8).reshape(h, w, 3)
 
         frame_object = {
             "frame": frame_decoded,
