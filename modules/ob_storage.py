@@ -133,27 +133,26 @@ class RedisStorageManager():
         elif isinstance(frame_uuid, bytes):
             frame_uuid = frame_uuid.decode("utf-8")
 
-        frame_object = self.redis.hgetall(f"{queue_name}:{frame_uuid}")
+        with self.redis.pipeline() as pipe:
+            pipe.hgetall(f"{queue_name}:{frame_uuid}")
+            if delete_frame:
+                pipe.delete(f"{queue_name}:{frame_uuid}")
+            frame_object = pipe.execute()[0]
 
-        # frame_bytes = self.redis.hget(f"{queue_name}:{frame_uuid}", "frame")
-        # frame_bytes = frame_object[b"frame"]
-        # frame_nparray = np.asarray(bytearray(frame_bytes), dtype="uint8")
-        # frame_decoded = cv2.imdecode(frame_nparray, cv2.IMREAD_COLOR)
+        frame_object = {key.decode("utf-8"): value for key, value in frame_object.items()}
 
-        h, w = struct.unpack('>II', frame_object[b"frame"][:8])
+        frame_height, frame_width = struct.unpack('>II', frame_object[b"frame"][:8])
         frame_decoded = np.frombuffer(
-            frame_object[b"frame"][8:], dtype=np.uint8, count=h*w*3).reshape(h, w, 3)
-        frame_decoded = frame_decoded.copy()
+            frame_object[b"frame"][8:],
+            dtype=np.uint8, count=frame_height*frame_width*3
+        ).reshape(frame_height, frame_width, 3)
 
         frame_object = {
-            "frame": frame_decoded,
+            "frame": frame_decoded.copy(),
             "metadata": json.loads(frame_object[b"metadata"].decode("utf-8"))
         }
 
         frame_object["metadata"]["get_frame_time"] = time.time()-time_start
-
-        if delete_frame:
-            self.redis.delete(f"{queue_name}:{frame_uuid}")
 
         return frame_object
 
