@@ -119,7 +119,7 @@ class RedisStorageManager():
             pipe.hset(key, "frame", frame_bytes)
             pipe.hset(key, "metadata", json.dumps(metadata))
             pipe.hset(key, "add_frame_time", time.time()-time_start)
-            pipe.rpush(key, frame_uuid)
+            pipe.rpush(f"{queue_name}_queue", frame_uuid)
             pipe.execute()
 
         # self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
