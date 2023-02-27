@@ -91,7 +91,7 @@ if calibrate.calibration():
 #     rotate_process.daemon = True
 #     rotate_process.start()
 
-for _ in range(3):
+for _ in range(2):
     roi_process = multiprocessing.Process(target=ob_roi_frame.capture_regions)
     roi_process.daemon = True
     roi_process.start()
