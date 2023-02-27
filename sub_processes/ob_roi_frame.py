@@ -78,7 +78,7 @@ def capture_regions():
         frame = frame_object['frame']
         metadata = frame_object['metadata']
 
-        if time.time() - metadata["timestamp"] > .2:
+        if time.time() - metadata["timestamp"] > .15:
             redis_db.delete_frame("raw", metadata["rawUUID"])
             continue
 
