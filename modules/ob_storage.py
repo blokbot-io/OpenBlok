@@ -97,30 +97,39 @@ class RedisStorageManager():
         for key in self.redis.scan_iter("*"):
             self.redis.delete(key)
 
-    def add_frame(self, queue_name, frame, metadata={}):
+    def add_frame(self, queue_name, frame, metadata=None):
         '''
         Adds a frame to the redis queue
         '''
         time_start = time.time()
         frame_uuid = str(uuid.uuid4())
 
-        # frame_bytes = cv2.imencode(
-        #     '.png', frame,
-        #     [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
-        # )[1].tostring()
+        if metadata is None:
+            metadata = {}
 
-        # print("frame.shape", frame.shape)
-        h, w = frame.shape[:2]
-        shape = struct.pack('>II', h, w)
+        frame_height, frame_width = frame.shape[:2]
+        shape = struct.pack('>II', frame_height, frame_width)
         frame_bytes = shape + frame.tobytes()
 
         metadata[f"{queue_name}UUID"] = frame_uuid
 
-        self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
-        self.redis.hset(f"{queue_name}:{frame_uuid}", "metadata", json.dumps(metadata))
-        self.redis.hset(f"{queue_name}:{frame_uuid}", "add_frame_time", time.time()-time_start)
+        frame_key = f"{queue_name}:{frame_uuid}"
+        metadata_key = f"{frame_key}:metadata"
+        add_frame_time_key = f"{frame_key}:add_time"
+        queue_key = f"{queue_name}_queue"
 
-        self.redis.rpush(f"{queue_name}_queue", frame_uuid)
+        with self.redis.pipeline() as pipe:
+            pipe.hset(frame_key, "frame", frame_bytes)
+            pipe.hset(metadata_key, json.dumps(metadata))
+            pipe.hset(add_frame_time_key, time.time()-time_start)
+            pipe.rpush(queue_key, frame_uuid)
+            pipe.execute()
+
+        # self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
+        # self.redis.hset(f"{queue_name}:{frame_uuid}", "metadata", json.dumps(metadata))
+        # self.redis.hset(f"{queue_name}:{frame_uuid}", "add_frame_time", time.time()-time_start)
+
+        # self.redis.rpush(f"{queue_name}_queue", frame_uuid)
 
         return frame_uuid
 
