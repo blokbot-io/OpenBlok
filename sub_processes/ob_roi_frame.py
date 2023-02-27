@@ -8,7 +8,6 @@ import numpy as np
 
 import cv2
 
-from bloks.utils.bounding_areas import bounding_boxes
 from modules import ob_storage, ob_trilateration
 
 
@@ -79,12 +78,6 @@ def capture_regions():
 
             frame = frame_object['frame']
             metadata = frame_object['metadata']
-
-            # top_ul, top_ll, side_ul, side_ll = bounding_boxes()
-            # side_crop = frame[side_ul[1]:side_ll[1], side_ul[0]:side_ll[0]]
-            # top_crop = frame[top_ul[1]:top_ll[1], top_ul[0]:top_ll[0]]
-
-            # combined = np.concatenate((side_crop, top_crop), axis=1)
 
             time_start_trilateration = time.time()
             view_points = ob_trilateration.calculated_roi_corners(frame)

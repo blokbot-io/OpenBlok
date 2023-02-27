@@ -25,13 +25,18 @@ def run_models():
     e2e_model = e2e.PartInference()
 
     while True:
+        time_start_get_frame = time.time()
         roi_frame_object = redis_db.get_frame("roi")
+        time_get_frame = time.time() - time_start_get_frame
 
         roi_frame = roi_frame_object['frame']
         predicted_metadata = roi_frame_object['metadata']
 
         # Run location model
+        time_start_location = time.time()
         part_location = location_model.get_location(roi_frame)
+        time_location = time.time() - time_start_location
+
         side_midpoint = part_location['sideMidpoint']
         top_midpoint = part_location['topMidpoint']
 
@@ -55,6 +60,8 @@ def run_models():
 
             view_concatenated = np.concatenate(
                 (side_crop['croppedFrame'], top_crop['croppedFrame']), axis=1)
+
+            # Run e2e model
             predictions = e2e_model.get_predictions(view_concatenated)
 
             predicted_metadata['roi']['inferences']['location']['crop'] = {}
@@ -73,6 +80,10 @@ def run_models():
 
         # rotated_frame_object = redis_db.get_frame(
         #     "rotated", frame_uuid=predicted_metadata['rotatedUUID'])
+
+        predicted_metadata['benchmarking']['prediction'] = {}
+        predicted_metadata['benchmarking']['prediction']['timeGetFrame'] = time_get_frame
+        predicted_metadata['benchmarking']['prediction']['timeLocation'] = time_location
 
         try:
             rotated_frame_object = redis_db.get_frame(
