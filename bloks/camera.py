@@ -42,11 +42,12 @@ def continuous_capture():
             continue
 
         # Save the frame to the local storage
-        start_time = time.time()
-        save_local.add_image(new_frame, frame_count)
-        print("INFO | Saved frame to local storage in {} seconds".format(time.time() - start_time))
 
+        save_local.add_image(new_frame, frame_count)
+
+        start_time = time.time()
         # Save the frame to Redis
         redis_db.add_frame("raw", new_frame, {'timestamp': time.time()})
+        print("INFO | Frame saved to Redis in", time.time() - start_time, "seconds")
 
         frame_count += 1
