@@ -9,8 +9,6 @@ import json
 import cv2
 import tensorflow as tf
 
-tf.get_logger().setLevel('INFO')
-
 
 # ---------------------------------------------------------------------------- #
 #                             Directories and Paths                            #

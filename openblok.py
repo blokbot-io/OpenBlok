@@ -1,6 +1,5 @@
 ''' Main program for OpenBlok '''
 
-import os
 import sys
 import signal
 import threading
@@ -13,7 +12,6 @@ from bloks import camera, calibrate, precheck, serial, updater, display
 from sub_processes import ob_roi_frame, ob_predictions, ob_annotate_frame
 from modules import ob_storage
 
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
 
 print("INFO | OpenBlok Loading...")
 
