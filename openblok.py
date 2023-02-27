@@ -101,7 +101,7 @@ predict_process = multiprocessing.Process(target=ob_predictions.run_models)
 predict_process.daemon = True
 predict_process.start()
 
-for _ in range(2):  # Starts 2 multiprocessing processes to annotate.
+for _ in range(3):  # Starts 2 multiprocessing processes to annotate.
     annotate_process = multiprocessing.Process(
         target=ob_annotate_frame.annotations,
         args=(config.AruCo_corners, config.AruCo_ids, config.AruCo_center_x,
