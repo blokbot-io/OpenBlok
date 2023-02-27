@@ -30,10 +30,6 @@ def run_models():
         roi_frame = roi_frame_object['frame']
         predicted_metadata = roi_frame_object['metadata']
 
-        if time.time() - predicted_metadata['timestamp'] > 5:
-            redis_db.get_frame("raw", frame_uuid=predicted_metadata['rawUUID'])
-            continue
-
         # Run location model
         part_location = location_model.get_location(roi_frame)
         side_midpoint = part_location['sideMidpoint']
