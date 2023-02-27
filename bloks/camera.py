@@ -51,7 +51,7 @@ def continuous_capture():
 
             frame_count += 1
 
-            time.sleep(1/10)
+            time.sleep(1/5)
 
     finally:
         cap.release()
