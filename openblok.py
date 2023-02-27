@@ -9,10 +9,9 @@ from queue import Queue
 import config
 
 from bloks import camera, calibrate, precheck, serial, updater, display
-from sub_processes import ob_rotate_frame, ob_roi_frame, ob_predictions, ob_annotate_frame
+from sub_processes import ob_roi_frame, ob_predictions, ob_annotate_frame
 from modules import ob_storage
 
-# multiprocessing.set_start_method('spawn')
 
 print("INFO | OpenBlok Loading...")
 
@@ -70,11 +69,6 @@ print("INFO | Camera thread started.")
 # threading.Thread(target=serial.carousel_position).start()
 # print("INFO | Carousel position thread started.")
 
-# Display Thread
-# start_display = threading.Thread(target=display.show)
-# start_display.start()
-
-
 # ---------------------------------------------------------------------------- #
 #                                  Calibration                                 #
 # ---------------------------------------------------------------------------- #
@@ -85,18 +79,11 @@ if calibrate.calibration():
 # ---------------------------------------------------------------------------- #
 #                             Start multiprocessing                            #
 # ---------------------------------------------------------------------------- #
-# for _ in range(2):  # Starts 2 multiprocessing processes to correct for rotation.
-#     rotate_process = multiprocessing.Process(
-#         target=ob_rotate_frame.rotation_correction, args=(config.rotational_offset,))
-#     rotate_process.daemon = True
-#     rotate_process.start()
-
 for _ in range(2):
     roi_process = multiprocessing.Process(target=ob_roi_frame.capture_regions)
     roi_process.daemon = True
     roi_process.start()
 
-# for _ in range(2):  # Starts 2 multiprocessing processes to predict.
 predict_process = multiprocessing.Process(target=ob_predictions.run_models)
 predict_process.daemon = True
 predict_process.start()
