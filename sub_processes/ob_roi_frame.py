@@ -78,6 +78,10 @@ def capture_regions():
         frame = frame_object['frame']
         metadata = frame_object['metadata']
 
+        if time.time() - metadata["timestamp"] > 1:
+            redis_db.delete_frame("raw", metadata["rawUUID"])
+            continue
+
         try:
             time_start_trilateration = time.time()
             view_points = ob_trilateration.calculated_roi_corners(frame)
