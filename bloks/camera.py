@@ -161,6 +161,3 @@ def continuous_capture():
 
         except Exception as e:
             print(e)
-
-        # Sleep to maintain FPS
-        time.sleep(1 / FPS)
