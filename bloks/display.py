@@ -197,15 +197,19 @@ def predict_and_show():
         #     cv2.FONT_HERSHEY_DUPLEX, 3, (255, 0, 0), 5
         # )
 
-        combined_layers = redis_db.get_frame("annotated")['frame']
+        try:
+            combined_layers = redis_db.get_frame("annotated")['frame']
 
-        # ----------------------------- Display ----------------------------- #
-        # Resize image to fit monitor (does not maintain aspect ratio)
-        frame_resized = cv2.resize(
-            combined_layers, (monitor.width, monitor.height))
+            # ----------------------------- Display ----------------------------- #
+            # Resize image to fit monitor (does not maintain aspect ratio)
+            frame_resized = cv2.resize(
+                combined_layers, (monitor.width, monitor.height))
 
-        # ----------------------------- Display Image ------------------------------- #
-        cv2.imshow('Combined', frame_resized)
+            # ----------------------------- Display Image ------------------------------- #
+            cv2.imshow('Combined', frame_resized)
+
+        except Exception as e:
+            print(e)
 
         if cv2.waitKey(10) & 0xFF == ord('q'):
             break
