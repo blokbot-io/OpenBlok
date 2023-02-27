@@ -109,7 +109,7 @@ class RedisStorageManager():
         #     [int(cv2.IMWRITE_PNG_COMPRESSION), 0]
         # )[1].tostring()
 
-        print("frame.shape", frame.shape)
+        # print("frame.shape", frame.shape)
         h, w = frame.shape[:2]
         shape = struct.pack('>II', h, w)
         frame_bytes = shape + frame.tobytes()
