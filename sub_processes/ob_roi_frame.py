@@ -70,7 +70,6 @@ def capture_regions():
     redis_db = ob_storage.RedisStorageManager()
 
     while True:
-
         time_start = time.time()
 
         frame_object = redis_db.get_frame("raw", delete_frame=False)
