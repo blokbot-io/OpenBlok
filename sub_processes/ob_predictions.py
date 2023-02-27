@@ -72,7 +72,10 @@ def run_models():
         # rotated_frame_object = redis_db.get_frame(
         #     "rotated", frame_uuid=predicted_metadata['rotatedUUID'])
 
-        rotated_frame_object = redis_db.get_frame(
-            "raw", frame_uuid=predicted_metadata['rawUUID'])
+        try:
+            rotated_frame_object = redis_db.get_frame(
+                "raw", frame_uuid=predicted_metadata['rawUUID'])
 
-        redis_db.add_frame("predicted", rotated_frame_object['frame'], predicted_metadata)
+            redis_db.add_frame("predicted", rotated_frame_object['frame'], predicted_metadata)
+        except Exception as e:
+            print(e)
