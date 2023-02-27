@@ -141,7 +141,7 @@ class RedisStorageManager():
 
         frame_object = {key.decode("utf-8"): value for key, value in frame_object.items()}
 
-        frame_height, frame_width = struct.unpack('>II', frame_object[b"frame"][:8])
+        frame_height, frame_width = struct.unpack('>II', frame_object["frame"][:8])
         frame_decoded = np.frombuffer(
             frame_object["frame"][8:],
             dtype=np.uint8, count=frame_height*frame_width*3
