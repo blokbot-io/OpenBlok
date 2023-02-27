@@ -91,9 +91,10 @@ if calibrate.calibration():
 #     rotate_process.daemon = True
 #     rotate_process.start()
 
-roi_process = multiprocessing.Process(target=ob_roi_frame.capture_regions)
-roi_process.daemon = True
-roi_process.start()
+for _ in range(2):
+    roi_process = multiprocessing.Process(target=ob_roi_frame.capture_regions)
+    roi_process.daemon = True
+    roi_process.start()
 
 # for _ in range(2):  # Starts 2 multiprocessing processes to predict.
 predict_process = multiprocessing.Process(target=ob_predictions.run_models)
