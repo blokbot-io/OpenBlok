@@ -86,8 +86,9 @@ def capture_regions():
 
             # combined = np.concatenate((side_crop, top_crop), axis=1)
 
+            time_start_trilateration = time.time()
             view_points = ob_trilateration.calculated_roi_corners(frame)
-            time_trilateration = time.time() - time_start
+            time_trilateration = time.time() - time_start_trilateration
 
             side_rect = np.array([
                 view_points["svtl"][0:2],
@@ -101,8 +102,9 @@ def capture_regions():
                 view_points["tvbr"][0:2],
                 view_points["tvbl"][0:2]], dtype=np.float32)
 
+            time_start_combined = time.time()
             combined = combined_roi_views(frame, side_rect, top_rect)
-            time_combined = time.time() - time_start
+            time_combined = time.time() - time_start_combined
 
             metadata["roi"] = {
                 "topView": {
@@ -121,7 +123,7 @@ def capture_regions():
                 "get_frame": time_get_frame,
                 "trilateration": time_trilateration,
                 "combined": time_combined,
-                "total": time_combined
+                "total": time.time() - time_start
             }
 
             # Save the frame to Redis
