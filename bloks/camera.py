@@ -30,21 +30,26 @@ def continuous_capture():
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 3840)     # Set the width of the frame
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 2160)    # Set the height of the frame
-    cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)         # Set the buffer size to 1
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)         # Set the buffer size to 1
     cap.set(cv2.CAP_PROP_FPS, FPS)              # Set frames per second
 
     frame_count = 0                             # Frame counter
-    while True:
-        status, new_frame = cap.read()                 # Read the frame
 
-        if not status:
-            print("WARNING | Can't receive frame (stream end?). Exiting ...")
-            continue
+    try:
+        while True:
+            status, new_frame = cap.read()                 # Read the frame
 
-        # Save the frame to the local storage
-        save_local.add_image(new_frame, frame_count)
+            if not status:
+                print("WARNING | Can't receive frame (stream end?). Exiting ...")
+                continue
 
-        # Save the frame to Redis
-        redis_db.add_frame("raw", new_frame, {'timestamp': time.time()})
+            # Save the frame to the local storage
+            save_local.add_image(new_frame, frame_count)
 
-        frame_count += 1
+            # Save the frame to Redis
+            redis_db.add_frame("raw", new_frame, {'timestamp': time.time()})
+
+            frame_count += 1
+
+    finally:
+        cap.release()
