@@ -113,16 +113,13 @@ class RedisStorageManager():
 
         metadata[f"{queue_name}UUID"] = frame_uuid
 
-        frame_key = f"{queue_name}:{frame_uuid}"
-        metadata_key = f"{frame_key}:metadata"
-        add_frame_time_key = f"{frame_key}:add_time"
-        queue_key = f"{queue_name}_queue"
+        key = f"{queue_name}:{frame_uuid}"
 
         with self.redis.pipeline() as pipe:
-            pipe.hset(frame_key, "frame", frame_bytes)
-            pipe.hset(metadata_key, json.dumps(metadata))
-            pipe.hset(add_frame_time_key, time.time()-time_start)
-            pipe.rpush(queue_key, frame_uuid)
+            pipe.hset(key, "frame", frame_bytes)
+            pipe.hset(key, "metadata", json.dumps(metadata))
+            pipe.hset(key, "add_frame_time", time.time()-time_start)
+            pipe.rpush(key, frame_uuid)
             pipe.execute()
 
         # self.redis.hset(f"{queue_name}:{frame_uuid}", "frame", frame_bytes)
