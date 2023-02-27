@@ -79,9 +79,13 @@ def capture_regions():
         frame = frame_object['frame']
         metadata = frame_object['metadata']
 
-        time_start_trilateration = time.time()
-        view_points = ob_trilateration.calculated_roi_corners(frame)
-        time_trilateration = time.time() - time_start_trilateration
+        try:
+            time_start_trilateration = time.time()
+            view_points = ob_trilateration.calculated_roi_corners(frame)
+            time_trilateration = time.time() - time_start_trilateration
+        except AttributeError:
+            redis_db.delete_frame("raw", metadata["rawUUID"])
+            continue
 
         side_rect = np.array([
             view_points["svtl"][0:2],
