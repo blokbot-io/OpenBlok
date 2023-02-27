@@ -25,11 +25,13 @@ def crop_square(frame, location_xy, cut_distance=0, pixels=600):
         # ------------------------------ Crop Dimension ------------------------------ #
         final_width = pixels
         final_height = pixels
+        half_width = final_width // 2
+        half_height = final_height // 2
 
         # ---------------------------------------------------------------------------- #
         #                                    Offsets                                   #
         # ---------------------------------------------------------------------------- #
-        frame_dimensions = frame.shape  # (height, width, channels)
+        frame_height, frame_width = frame.shape[:2]
 
         # --------------------------------- X Offset --------------------------------- #
         part_center_x = location_xy[0]
@@ -38,40 +40,39 @@ def crop_square(frame, location_xy, cut_distance=0, pixels=600):
             right_bound = cut_distance
             left_bound = 0
         else:
-            right_bound = frame_dimensions[1]
-            left_bound = cut_distance
+            right_bound = frame_width
+            left_bound = cut_distance if cut_distance > 0 else 0
 
-        if right_bound - part_center_x < pixels/2:
-            part_center_x = right_bound - pixels/2
+        if right_bound - part_center_x < half_width:
+            part_center_x = right_bound - half_width
 
-        if part_center_x - left_bound < pixels/2:
-            part_center_x = left_bound + pixels/2
+        if part_center_x - left_bound < half_width:
+            part_center_x = left_bound + half_width
 
         # Y Offset
         part_center_y = location_xy[1]
 
         # Y Too Low
-        if frame_dimensions[0] - part_center_y < pixels/2:
-            part_center_y = frame_dimensions[0] - pixels/2
+        if frame_height - part_center_y < half_height:
+            part_center_y = frame_height - half_height
 
         # Y Too High
-        if part_center_y < pixels/2:
-            part_center_y = pixels/2
+        if part_center_y < half_height:
+            part_center_y = half_height
 
         # ----------------------------------- Crop ----------------------------------- #
         # frame[y1:y2, x1:x2]
         part_square = frame[
-            (int(part_center_y)-int(final_width/2)): (int(part_center_y)+int(final_width/2)),
-            (int(part_center_x)-int(final_height/2)): (int(part_center_x)+int(final_height/2))
+            (part_center_y - half_height): (part_center_y + half_height),
+            (part_center_x - half_width): (part_center_x + half_width)
         ]
 
         # ------------------------------- Final Resize ------------------------------- #
         if part_square.shape[0] != pixels:
             part_square = cv2.resize(part_square, (pixels, pixels), interpolation=cv2.INTER_AREA)
 
-        top_left = [int(part_center_x)-int(final_width/2), int(part_center_y)-int(final_height/2)]
-        bottom_right = [int(part_center_x)+int(final_width/2),
-                        int(part_center_y)+int(final_height/2)]
+        top_left = [part_center_x - half_width, part_center_y - half_height]
+        bottom_right = [part_center_x + half_width, part_center_y + half_height]
 
         return {
             "croppedFrame": part_square,
