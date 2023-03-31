@@ -19,28 +19,25 @@ class PartInference:
     ''' Returns both the design and category of a given part.'''
 
     def __init__(self):
-        # -------------------------------- Load Model -------------------------------- #
+
         # Get system info
         with open('/opt/OpenBlok/system.json', 'r', encoding="UTF-8") as system_file:
             system_info = json.load(system_file)
         model_version = system_info['models']['e2e']['version']
 
+        # Load model
         self.model = tf.keras.models.load_model(
             os.path.join(MODELS, f'e2e_{model_version}.h5'), compile=False)
 
-        properties_file_location = os.path.join(
-            MODELS, f'e2e_{model_version}.json')
+        # Load model properties
+        properties_file_location = os.path.join(MODELS, f'e2e_{model_version}.json')
         with open(properties_file_location, encoding="UTF-8") as properties_file:
             self.model_properties = json.load(properties_file)
 
-    def get_predictions(self, raw):
+    def preprocess_input(self, raw):
         '''
-        Uses the AI model to predict the part.
+        Preprocesses the image to be used by the AI model.
         '''
-        designs = self.model_properties['designs']
-        categories = self.model_properties['categories']
-
-        # ----------------------------- Process Raw Frame ---------------------------- #
         raw = cv2.resize(
             raw,
             (self.model_properties['image_width'],
@@ -51,8 +48,19 @@ class PartInference:
         raw = cv2.cvtColor(raw, cv2.COLOR_BGR2RGB)
         raw = tf.convert_to_tensor(raw, dtype=tf.float32)
 
-        img_array = tf.keras.utils.img_to_array(raw)
+        img_array = tf.keras.utils.img_to_array(raw) / 255.0
         img_array = tf.expand_dims(img_array, 0)
+        return img_array
+
+    def get_predictions(self, raw):
+        '''
+        Uses the AI model to predict the part.
+        '''
+        designs = self.model_properties['designs']
+        categories = self.model_properties['categories']
+
+        # Preprocess the image
+        img_array = self.preprocess_input(raw)
 
         # ----------------------------- Make Predictions ----------------------------- #
         predictions = self.model.predict(img_array)
